@@ -11,7 +11,7 @@ import android.app.Activity;
 /**
  * Created by Bomb Shit on 9/30/2015.
  */
-public class StartupActivity {
+public class StartupActivity extends Activity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
