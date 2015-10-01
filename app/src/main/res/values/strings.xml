@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">RangeDiagram</string>
+
+    <string name="HWanglestring">Enter HW Angle</string>
+    <string name="SARstring">Enter SAR</string>
+    <string name="PitWidthstring">Enter Pit Width</string>
+    <string name="BenchWidthstring">Enter Bench Width</string>
+
+    <string name="action_settings">Settings</string>
+</resources>
