@@ -12,6 +12,10 @@ import android.widget.EditText;
 import android.app.Activity;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
 /**
  * Created by Bomb Shit on 9/30/2015.
  */
@@ -30,28 +34,27 @@ public class InputActivity extends Activity{
 
     public void sendPitdim(View ButtonCreatePit){
 
+        //Convert input to String
         final EditText editSAR = (EditText) findViewById(R.id.SAReditView);
         String SARval = editSAR.getText().toString();
-        int SARnum = Integer.parseInt(SARval);
-
         final EditText editHW = (EditText) findViewById(R.id.HWeditView);
         String HWval = editHW.getText().toString();
-        int HWnum = Integer.parseInt(HWval);
-
         final EditText editPW = (EditText) findViewById(R.id.PWeditView);
         String PWval = editPW.getText().toString();
-        int PWnum = Integer.parseInt(PWval);
-
         final EditText editBench = (EditText) findViewById(R.id.BenchwidthView);
         String Benchval = editBench.getText().toString();
-        int Benchnum = Integer.parseInt(Benchval);
 
+        //Convert string to parse int
+        int PWnum = Integer.parseInt(PWval);
+        int Benchnum = Integer.parseInt(Benchval);
+        int HWnum = Integer.parseInt(HWval);
+        int SARnum = Integer.parseInt(SARval);
 
         Log.i(LOG_TAG, "Store Values");
         Log.d(LOG_TAG, "SAR: " + Float.toString(SARnum));
         Log.d(LOG_TAG, "HW: " + Float.toString(HWnum));
-        Log.d(LOG_TAG,"PW: " + Float.toString(PWnum));
-        Log.d(LOG_TAG,"Bench: " + Float.toString(Benchnum));
+        Log.d(LOG_TAG, "PW: " + Float.toString(PWnum));
+        Log.d(LOG_TAG, "Bench: " + Float.toString(Benchnum));
 
         Intent draw = new Intent(InputActivity.this,DrawRange.class);
         draw.putExtra("SAR",SARval);
@@ -59,6 +62,8 @@ public class InputActivity extends Activity{
         draw.putExtra("PW",PWval);
         draw.putExtra("Bench",Benchval);
 
+
         startActivity(draw);
     }
+
 }

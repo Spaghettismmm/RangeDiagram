@@ -28,6 +28,7 @@ public class DrawRange extends Activity {
         Log.i(LOG_TAG, "Retrieve Values");
         /* Get values from Intent */
 
+        //Convert input to String
         TextView SARtext = (TextView) findViewById(R.id.Sardrawview);
         SARtext.setText(getIntent().getStringExtra("SAR"));
         String SARstring = SARtext.getText().toString();
@@ -48,11 +49,10 @@ public class DrawRange extends Activity {
         String BWstring = BWtext.getText().toString();
         int BWnum = Integer.parseInt(BWstring);
 
-
         Log.i(LOG_TAG, "Retrieved");
         Log.d(LOG_TAG, "SAR: " + Float.toString(SARnum));
         Log.d(LOG_TAG, "HW: " + Float.toString(HWnum));
-        Log.d(LOG_TAG, "BW: " + Float.toString(BWnum));
+        Log.d(LOG_TAG, "Bench: " + Float.toString(BWnum));
         Log.d(LOG_TAG, "PW: " + Float.toString(PWnum));
     }
 
@@ -77,24 +77,24 @@ public class DrawRange extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_input, menu);
+        inflater.inflate(R.menu.backtoinput, menu);
         return true;
     }
-
     // Process clicks on Options Menu items
+
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
         switch (item.getItemId()) {
-            case R.id.input:
-
-
-                Toast.makeText(getApplicationContext(), "Weeeeee",
-                        Toast.LENGTH_SHORT).show();
-
-
+            case R.id.InputScreen:
+                Intent intent=new Intent(this,InputActivity.class);
+                startActivity(intent);
                 return true;
+
+
             default:
-                return false;
+                return super.onOptionsItemSelected(item);
         }
     }
 
