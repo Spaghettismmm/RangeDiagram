@@ -1,14 +1,24 @@
 package com.wm.rangediagram;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.BlurMaskFilter;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,7 +30,7 @@ public class DrawRange extends Activity {
     private Paint mTextPaint;
     private float mTextHeight = 0.0f;
     private int mTextColor;
-
+    private double HWx,HWy,SARx,SARy,PWx,PWy,Sx,Sy;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,40 +55,86 @@ public class DrawRange extends Activity {
         int PWnum = Integer.parseInt(PWstring);
 
         TextView BWtext = (TextView) findViewById(R.id.BWdrawview);
-        BWtext.setText(getIntent().getStringExtra("BW"));
+        BWtext.setText(getIntent().getStringExtra("Benchw"));
         String BWstring = BWtext.getText().toString();
         int BWnum = Integer.parseInt(BWstring);
+
+        TextView BHtext = (TextView) findViewById(R.id.BHdrawview);
+        BHtext.setText(getIntent().getStringExtra("Benchh"));
+        String BHstring = BWtext.getText().toString();
+        int BHnum = Integer.parseInt(BHstring);
 
         Log.i(LOG_TAG, "Retrieved");
         Log.d(LOG_TAG, "SAR: " + Float.toString(SARnum));
         Log.d(LOG_TAG, "HW: " + Float.toString(HWnum));
-        Log.d(LOG_TAG, "Bench: " + Float.toString(BWnum));
+        Log.d(LOG_TAG, "Bench width: " + Float.toString(BWnum));
         Log.d(LOG_TAG, "PW: " + Float.toString(PWnum));
+        Log.d(LOG_TAG, "Bench height: " + Float.toString(BHnum));
+
+        docalcs(SARnum, HWnum, BWnum, PWnum, BHnum, 300, 70);
+
+        Log.i(LOG_TAG, "Calculated");
+        Log.d(LOG_TAG, "HWx: " + Double.toString(HWx));
+        Log.d(LOG_TAG, "HWy: " + Double.toString(HWy));
+        Log.d(LOG_TAG, "PWx; " + Double.toString(PWx));
+        Log.d(LOG_TAG, "PWy; " + Double.toString(PWy));
+        Log.d(LOG_TAG, "SARx: " + Double.toString(SARx));
+        Log.d(LOG_TAG, "SARy: " + Double.toString(SARy));
+        Log.d(LOG_TAG, "Sx; " + Double.toString(Sx));
+        Log.d(LOG_TAG, "Sy; " + Double.toString(Sy));
+
+        Drawrangeview rangeview = new Drawrangeview(this);
+        float HWxi = (float) HWx;
+        float HWyi=(float) HWy;
+        float PWxi=(float) PWx;
+        float PWyi=(float) PWy;
+        float SARxi=(float) SARx;
+        float SARyi=(float) SARy;
+        float Sxi=(float) Sx;
+        float Syi=(float) Sy;
+        rangeview.setSides(HWxi, HWyi, PWxi, PWyi, SARxi, SARyi, Sxi, Syi);
+
+        rangeview.invalidate();
+
+
+
+
+
+
+    }
+    private boolean mShowText;
+    public boolean isShowText() {
+        return mShowText;
     }
 
-    private void init() {
-        mTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mTextPaint.setColor(mTextColor);
+
+    public void docalcs(double Sar, double HW, double BW, double PW,double BH, double Reach, double Tub){
+        HWx=BW*1.5;
+        HWy=BH;
+        double HWangle=HW*2*Math.PI/360.0;
+        double SARangle=Sar*2*Math.PI/360.0;
+        PWx=HWx+BH/(Math.tan(HWangle));
+        PWy=HWy-BH;
+        SARy=PWy;
+        SARx=PWx+PW;
+        Sx=SARx+(Reach-Tub/2-SARx);
+        Sy=SARy+Sx*Math.tan(SARangle);
 
 
-        if (mTextHeight == 0) {
-            mTextHeight = mTextPaint.getTextSize();
-        } else {
-            mTextPaint.setTextSize(mTextHeight);
-
-        }
 
 
 
     }
-
-
     // Create Options Menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+
+        super.onCreateOptionsMenu(menu);
+
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.backtoinput, menu);
-        return true;
+        return super.onCreateOptionsMenu(menu);
+
     }
     // Process clicks on Options Menu items
 

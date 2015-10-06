@@ -5,6 +5,7 @@
     <string name="SARstring">Enter SAR</string>
     <string name="PitWidthstring">Enter Pit Width</string>
     <string name="BenchWidthstring">Enter Bench Width</string>
+    <string name="BenchHeightstring">Enter Bench Height</string>
     <string name="BacktoInput">Change Inputs</string>
     <string name="action_settings">Change Inputs</string>
 </resources>
