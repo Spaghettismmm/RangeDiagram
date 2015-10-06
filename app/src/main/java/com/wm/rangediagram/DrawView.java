@@ -2,12 +2,14 @@ package com.wm.rangediagram;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.renderscript.ScriptGroup;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -21,7 +23,11 @@ import android.widget.TextView;
 
 class Drawrangeview extends View {
     private float mTextWidth = 0.0f;
+    private String drawLabel;
+    private Paint drawPaint;
+    private int drawColor, labelColor;
     private float HWx, HWy, PWx, PWy, SARx, SARy, Sx, Sy;
+    private static final String LOG_TAG = "LOG Cat";
 
     public Drawrangeview(Context ctx) {
         this(ctx, null);
@@ -47,6 +53,7 @@ class Drawrangeview extends View {
         this.Sx=Sx;
         this.Sy=Sy;
         this.invalidate();
+        Log.i(LOG_TAG, "Calc'd");
     }
 
     @Override
@@ -63,36 +70,54 @@ class Drawrangeview extends View {
 
         setMeasuredDimension(w, h);
     }
+    //public void init(){
+       // drawPaint = new Paint();
 
+       // drawPaint.setStrokeWidth(3);
+       // drawPaint.setPathEffect(null);
+       // drawPaint.setColor(Color.BLACK);
+        //drawPaint.setStyle(Paint.Style.STROKE);
+
+        //TypedArray a = getContext().getTheme().obtainStyledAttributes(attrs,R.styleable.Drawrangeview,0,0);
+
+
+       // try {
+            //get the text and colors specified using the names in attrs.xml
+        //    drawLabel = a.getString(R.styleable.Drawrangeview_drawLabel);
+       //     drawColor = a.getInteger(R.styleable.Drawrangeview_drawColor, 0);//0 is default
+       //     labelColor = a.getInteger(R.styleable.Drawrangeview_labelColor, 0);
+      //  } finally {
+      //      a.recycle();
+      //  }
+   // }
     @Override
     protected void onDraw(Canvas canvas) {
 
         super.onDraw(canvas);
 
-        Paint paint = new Paint();
+        drawPaint = new Paint();
+
+        drawPaint.setStrokeWidth(3);
+        drawPaint.setPathEffect(null);
+        drawPaint.setColor(Color.BLACK);
+        drawPaint.setStyle(Paint.Style.STROKE);
+
         Path path = new Path();
 
-        paint.setStyle(Paint.Style.FILL);
-        paint.setColor(Color.TRANSPARENT);
-
-        canvas.drawPaint(paint);
+        canvas.drawPaint(drawPaint);
 
         // start the path at the "origin"
         path.moveTo(10, 10); // origin
         // add a line for side A
-        path.lineTo(HWx,HWy);
+        path.lineTo(HWx, HWy);
         // add a line for side B
-        path.lineTo(PWx,PWy);
+        path.lineTo(PWx, PWy);
         // close the path to draw the hypotenuse
-        path.lineTo(SARx,SARy);
-        path.lineTo(Sx,Sy);
+        path.lineTo(SARx, SARy);
+        path.lineTo(Sx, Sy);
 
 
-        paint.setStrokeWidth(3);
-        paint.setPathEffect(null);
-        paint.setColor(Color.BLACK);
-        paint.setStyle(Paint.Style.STROKE);
-
-        canvas.drawPath(path, paint);
+        Log.i(LOG_TAG, "Drawn'd");
+        canvas.drawPath(path, drawPaint);
     }
 }

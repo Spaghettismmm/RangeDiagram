@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="Drawrangeview">
+        <attr name="drawColor" format="color" />
+        <attr name="drawLabel" format="string"></attr>
+        <attr name="labelColor" format="color"></attr>
+    </declare-styleable>
+
+
+
+</resources>

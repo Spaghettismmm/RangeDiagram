@@ -3,6 +3,7 @@ package com.wm.rangediagram;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BlurMaskFilter;
 import android.graphics.Canvas;
@@ -31,6 +32,10 @@ public class DrawRange extends Activity {
     private float mTextHeight = 0.0f;
     private int mTextColor;
     private double HWx,HWy,SARx,SARy,PWx,PWy,Sx,Sy;
+    private Drawrangeview myView;
+    private String drawLabel;
+    private Paint drawPaint;
+    private int drawColor, labelColor;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,6 +88,29 @@ public class DrawRange extends Activity {
         Log.d(LOG_TAG, "Sx; " + Double.toString(Sx));
         Log.d(LOG_TAG, "Sy; " + Double.toString(Sy));
 
+
+
+        drawPaint = new Paint();
+
+        drawPaint.setStrokeWidth(3);
+        drawPaint.setPathEffect(null);
+        drawPaint.setColor(Color.BLACK);
+        drawPaint.setStyle(Paint.Style.STROKE);
+
+        TypedArray a = obtainStyledAttributes(R.styleable.Drawrangeview);
+
+
+        try {
+        //get the text and colors specified using the names in attrs.xml
+        drawLabel = a.getString(R.styleable.Drawrangeview_drawLabel);
+        drawColor = a.getInteger(R.styleable.Drawrangeview_drawColor, 0);//0 is default
+        labelColor = a.getInteger(R.styleable.Drawrangeview_labelColor, 0);
+          } finally {
+              a.recycle();
+          }
+
+
+
         Drawrangeview rangeview = new Drawrangeview(this);
         float HWxi = (float) HWx;
         float HWyi=(float) HWy;
@@ -93,13 +121,7 @@ public class DrawRange extends Activity {
         float Sxi=(float) Sx;
         float Syi=(float) Sy;
         rangeview.setSides(HWxi, HWyi, PWxi, PWyi, SARxi, SARyi, Sxi, Syi);
-
         rangeview.invalidate();
-
-
-
-
-
 
     }
     private boolean mShowText;
