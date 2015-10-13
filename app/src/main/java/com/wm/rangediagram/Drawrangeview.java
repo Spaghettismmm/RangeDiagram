@@ -8,7 +8,9 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.LinearLayout;
 
 /**
  * Created by Will on 10/4/2015.
@@ -26,27 +28,30 @@ public class Drawrangeview extends View {
     private static final String LOG_TAG = "LOG Cat";
     private int w, h;
     private boolean myCalculationsAreReady=false;
-
+    private boolean yes;
     Paint mPaint=new Paint();
     Context context;
-    public Drawrangeview(Context context) {    this(context,null);
-}
+    public Drawrangeview(Context context) {
+
+        super(context);
+    }
+
     public Drawrangeview(Context context, AttributeSet attrs) {
-    this(context, attrs, 0);
-}
+        super(context, attrs);
+        initViews(context, attrs);
+        //LayoutInflater.from(context).inflate(R.layout.key_value, this);
+        }
     public Drawrangeview(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
-        this.context=context;
-        drawPaint = new Paint();
-        drawPaint.setStrokeWidth(3);
-        drawPaint.setPathEffect(null);
-        drawPaint.setColor(Color.BLACK);
-        drawPaint.setStyle(Paint.Style.STROKE);
+        this(context, attrs);
+        initViews(context, attrs);
+        setWillNotDraw(false);
         }
 
-
-    public void onDraw(Canvas canvas) {
-
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        Log.i(LOG_TAG, "onDraw called");
+        Log.d(LOG_TAG, "HWx: " + Double.toString(HWx));
         if (myCalculationsAreReady) {
 
             Drawmystuff (canvas);
@@ -58,19 +63,20 @@ public class Drawrangeview extends View {
 
         }
     }
-    public void setSides(int HWxi, int HWyi, int PWxi,int PWyi,int SARxi,int SARyi,int Sxi,int Syi) {
-        this.HWx =HWxi;
-        this.HWy=HWyi;
-        this.PWx=PWxi;
-        this.PWy=PWyi;
-        this.SARx=SARxi;
-        this.SARy=SARyi;
-        this.Sx = Sxi;
-        this.Sy=Syi;
-
+    public void setSides(int HWxi, int HWyi, int PWxi,int PWyi,int SARxi,int SARyi,int Sxi,int Syi,Boolean yesi) {
+        Log.i(LOG_TAG, "setSides called");
+        HWx =HWxi;
+        HWy=HWyi;
+        PWx=PWxi;
+        PWy=PWyi;
+        SARx=SARxi;
+        SARy=SARyi;
+        Sx = Sxi;
+        Sy=Syi;
+        yes=yesi;
         Log.i(LOG_TAG, "Calc'd");
-
-        myCalculationsAreReady=true;
+        if(yes==true){
+        myCalculationsAreReady=true;}
 
 
 
@@ -118,7 +124,7 @@ public class Drawrangeview extends View {
 
 
         protected void Drawmystuff(Canvas canvas){
-
+            Log.i(LOG_TAG, "Drawmystuff called");
 
             Path path = new Path();
             // start the path at the "origin"
@@ -137,6 +143,28 @@ public class Drawrangeview extends View {
             Log.i(LOG_TAG, "Drawn'd");
 
         }
+    private void initViews(Context context, AttributeSet attrs) {
+        Log.i(LOG_TAG, "initViews called");
+
+        TypedArray a = context.obtainStyledAttributes(R.styleable.Drawrangeview);
+
+
+        try {
+
+            //get the text and colors specified using the names in attrs.xml
+            drawLabel = a.getString(R.styleable.Drawrangeview_drawLabel);
+            drawColor = a.getInteger(R.styleable.Drawrangeview_drawColor, 0);//0 is default
+            labelColor = a.getInteger(R.styleable.Drawrangeview_labelColor, 0);
+        } finally {
+            a.recycle();
+        }
+
+        drawPaint = new Paint();
+        drawPaint.setStrokeWidth(3);
+        drawPaint.setPathEffect(null);
+        drawPaint.setColor(Color.BLACK);
+        drawPaint.setStyle(Paint.Style.STROKE);
+    }
 
 
 

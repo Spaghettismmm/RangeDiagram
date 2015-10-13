@@ -1,22 +1,14 @@
 package com.wm.rangediagram;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.TypedArray;
-import android.graphics.Bitmap;
-import android.graphics.BlurMaskFilter;
-import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Path;
 import android.os.Bundle;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 /**
@@ -27,10 +19,10 @@ public class DrawRange extends Activity {
     private Paint mTextPaint;
     private float mTextHeight = 0.0f;
     private int mTextColor;
-
+    private RelativeLayout containerLayout;
     private double HWx,HWy,SARx,SARy,PWx,PWy,Sx,Sy;
+    private Boolean yes;
 
-    private Drawrangeview myView;
     private String drawLabel;
     private Paint drawPaint;
     private int drawColor, labelColor;
@@ -40,7 +32,7 @@ public class DrawRange extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.drawing_canvas);
+        setContentView(R.layout.key_value);
         Log.i(LOG_TAG, "Retrieve Values");
         /* Get values from Intent */
 
@@ -90,27 +82,6 @@ public class DrawRange extends Activity {
         Log.d(LOG_TAG, "Sy; " + Double.toString(Sy));
 
 
-        drawPaint = new Paint();
-
-        drawPaint.setStrokeWidth(3);
-        drawPaint.setPathEffect(null);
-        drawPaint.setColor(Color.BLACK);
-        drawPaint.setStyle(Paint.Style.STROKE);
-
-        TypedArray a = obtainStyledAttributes(R.styleable.Drawrangeview);
-
-
-        try {
-
-            //get the text and colors specified using the names in attrs.xml
-            drawLabel = a.getString(R.styleable.Drawrangeview_drawLabel);
-            drawColor = a.getInteger(R.styleable.Drawrangeview_drawColor, 0);//0 is default
-            labelColor = a.getInteger(R.styleable.Drawrangeview_labelColor, 0);
-        } finally {
-            a.recycle();
-        }
-
-
         int HWxi = (int) HWx;
         int HWyi = (int) HWy;
         int PWxi = (int) PWx;
@@ -119,8 +90,15 @@ public class DrawRange extends Activity {
         int SARyi = (int) SARy;
         int Sxi = (int) Sx;
         int Syi = (int) Sy;
+
+        yes=true;
+
         Drawrangeview rangeview = new Drawrangeview(DrawRange.this);
-        rangeview.setSides(HWxi, HWyi, PWxi, PWyi, SARxi, SARyi, Sxi, Syi);
+
+        rangeview.setSides(HWxi, HWyi, PWxi, PWyi, SARxi, SARyi, Sxi, Syi, yes);
+
+//        Drawrangeview rangeview1 = (Drawrangeview) findViewById(R.id.drawcanvas);
+//        rangeview1.setSides(HWxi, HWyi, PWxi, PWyi, SARxi, SARyi, Sxi, Syi,yes);
         rangeview.invalidate();
     }
 
