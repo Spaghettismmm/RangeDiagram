@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:rangediagram="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <item
+        android:id="@+id/input"
+        android:title="@string/BacktoInput"
+        rangediagram:showAsAction="never"
+        />
+
+</menu>
