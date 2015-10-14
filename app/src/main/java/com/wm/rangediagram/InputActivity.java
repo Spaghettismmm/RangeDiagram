@@ -74,12 +74,14 @@ public class InputActivity extends Activity {
         Log.d(LOG_TAG, "Bench height: " + Float.toString(Benchheightnum));
 
 
+
         Intent draw = new Intent(InputActivity.this, DrawRange.class);
         draw.putExtra("SAR", SARval);
         draw.putExtra("HW", HWval);
         draw.putExtra("PW", PWval);
         draw.putExtra("Benchw", Benchval);
         draw.putExtra("Benchh", Benchhval);
+
 
         startActivity(draw);
     }

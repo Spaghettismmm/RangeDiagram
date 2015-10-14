@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin">
+
+
+    <view
+        class="com.wm.rangediagram.Drawrangeview"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/draw_canvas_main_activity"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        custom:drawColor="#3f8303"
+        custom:labelColor="#9e0f0f"
+        android:layout_above="@+id/GridLayout"
+        android:background="#e3d6d6"
+        android:layout_alignParentTop="true" />
+
+    <GridLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:useDefaultMargins="true"
+        android:alignmentMode="alignBounds"
+        android:id="@+id/GridLayout"
+        android:columnCount="5"
+        android:columnOrderPreserved="false"
+        android:orientation="vertical"
+        android:background="#000000"
+        android:foreground="#ffffff"
+        android:layout_alignParentBottom="true">
+        <!-- SAR-->
+
+        <TextView
+            android:id="@+id/Sardrawview"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_gravity="start"
+            android:layout_row="1"
+            android:layout_column="0"
+            android:layout_columnSpan="1"
+            />
+        <TextView
+            android:id="@+id/HWdrawview"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_row="1"
+            android:layout_column="1"
+            android:layout_columnSpan="1"
+            />
+        <TextView
+            android:id="@+id/PWdrawview"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_gravity="start"
+            android:layout_row="1"
+            android:layout_column="2"
+            android:layout_columnSpan="1"
+            />
+        <TextView
+            android:id="@+id/BWdrawview"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_gravity="start"
+            android:layout_row="1"
+            android:layout_column="3"
+            android:layout_columnSpan="1"
+            />
+        <TextView
+            android:id="@+id/BHdrawview"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_gravity="start"
+            android:layout_row="1"
+            android:layout_column="4"
+            android:layout_columnSpan="1"
+            />
+        <TextView
+            android:id="@+id/Sardrawlabel"
+            android:text="Spoil Angle"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_gravity="start"
+            android:layout_row="0"
+            android:layout_column="0"
+            android:layout_columnSpan="1"
+            />
+        <TextView
+            android:id="@+id/HWdrawlabel"
+            android:text="HW Angle"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_row="0"
+            android:layout_column="1"
+            android:layout_columnSpan="1"
+            />
+        <TextView
+            android:id="@+id/PWdrawlabel"
+            android:text="Pit Widt"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_gravity="start"
+            android:layout_row="0"
+            android:layout_column="2"
+            android:layout_columnSpan="1"
+            />
+        <TextView
+            android:id="@+id/BWdrawlabel"
+            android:text="Bench Width"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_gravity="start"
+            android:layout_row="0"
+            android:layout_column="3"
+            android:layout_columnSpan="1"
+            />
+        <TextView
+            android:id="@+id/BHdrawlabel"
+            android:text="Bench Height"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_gravity="start"
+            android:layout_row="0"
+            android:layout_column="4"
+            android:layout_columnSpan="1"
+            />
+    </GridLayout>
+</RelativeLayout>

@@ -15,24 +15,17 @@ import android.widget.TextView;
  * Created by Bomb Shit on 9/30/2015.
  */
 public class DrawRange extends Activity {
+    Drawrangeview rangeview;
+
     private static final String LOG_TAG = "LOG Cat";
-    private Paint mTextPaint;
-    private float mTextHeight = 0.0f;
-    private int mTextColor;
-    private RelativeLayout containerLayout;
     private double HWx,HWy,SARx,SARy,PWx,PWy,Sx,Sy;
     private Boolean yes;
 
-    private String drawLabel;
-    private Paint drawPaint;
-    private int drawColor, labelColor;
-
-    private boolean mShowText;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.key_value);
+        setContentView(R.layout.main_activity);
         Log.i(LOG_TAG, "Retrieve Values");
         /* Get values from Intent */
 
@@ -59,7 +52,7 @@ public class DrawRange extends Activity {
 
         TextView BHtext = (TextView) findViewById(R.id.BHdrawview);
         BHtext.setText(getIntent().getStringExtra("Benchh"));
-        String BHstring = BWtext.getText().toString();
+        String BHstring = BHtext.getText().toString();
         int BHnum = Integer.parseInt(BHstring);
 
         Log.i(LOG_TAG, "Retrieved");
@@ -93,18 +86,16 @@ public class DrawRange extends Activity {
 
         yes=true;
 
-        Drawrangeview rangeview = new Drawrangeview(DrawRange.this);
+        rangeview = new Drawrangeview(DrawRange.this);
 
         rangeview.setSides(HWxi, HWyi, PWxi, PWyi, SARxi, SARyi, Sxi, Syi, yes);
+        setContentView(rangeview);
 
-//        Drawrangeview rangeview1 = (Drawrangeview) findViewById(R.id.drawcanvas);
-//        rangeview1.setSides(HWxi, HWyi, PWxi, PWyi, SARxi, SARyi, Sxi, Syi,yes);
-        rangeview.invalidate();
     }
 
 
     public void docalcs(double Sar, double HW, double BW, double PW, double BH, double Reach, double Tub) {
-        HWx = BW * 1.5;
+        HWx = BW;
         HWy = BH;
         double HWangle = HW * 2 * Math.PI / 360.0;
         double SARangle = Sar * 2 * Math.PI / 360.0;

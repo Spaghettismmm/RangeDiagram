@@ -6,11 +6,10 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.LinearLayout;
 
 /**
  * Created by Will on 10/4/2015.
@@ -31,18 +30,21 @@ public class Drawrangeview extends View {
     private boolean yes;
     Paint mPaint=new Paint();
     Context context;
+    private RectF mRangeBounds = new RectF();
+    private Drawrangeview mrangeview;
     public Drawrangeview(Context context) {
 
-        super(context);
+        this(context,null);
     }
 
     public Drawrangeview(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        initViews(context, attrs);
-        //LayoutInflater.from(context).inflate(R.layout.key_value, this);
+        this(context, attrs, 0);
+
+        //LayoutInflater.from(context).inflate(R.layout.main_activity, this);
         }
     public Drawrangeview(Context context, AttributeSet attrs, int defStyle) {
-        this(context, attrs);
+        super(context, attrs, defStyle);
+        Log.i(LOG_TAG, "Constructor called");
         initViews(context, attrs);
         setWillNotDraw(false);
         }
@@ -51,7 +53,6 @@ public class Drawrangeview extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         Log.i(LOG_TAG, "onDraw called");
-        Log.d(LOG_TAG, "HWx: " + Double.toString(HWx));
         if (myCalculationsAreReady) {
 
             Drawmystuff (canvas);
@@ -74,53 +75,64 @@ public class Drawrangeview extends View {
         Sx = Sxi;
         Sy=Syi;
         yes=yesi;
-        Log.i(LOG_TAG, "Calc'd");
+        Log.i(LOG_TAG, "setSides done");
         if(yes==true){
         myCalculationsAreReady=true;}
-
-
-
+        //setWillNotDraw(false);
+        //invalidate();
     }
 
         private void drawDataNotReady(Canvas canvas) {
-            canvas.drawText("Please wait while data is loading ...",1, canvas.getHeight()/2, mPaint);
+            canvas.drawText("Please wait while data is loading ...", 1, canvas.getHeight() / 2, mPaint);
         }
 
 
         @Override
-        protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-
+       protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+            Log.i(LOG_TAG, "onMeasure called");
             // Try for a width based on our minimum
-            int minw = getPaddingLeft() + getPaddingRight() + getSuggestedMinimumWidth();
-            w = resolveSizeAndState(minw, widthMeasureSpec, 1);
 
-            // Whatever the width ends up being, ask for a height that would let the triangle
-            // get as big as it can
-            int minh = MeasureSpec.getSize(w) - (int) mTextWidth + getPaddingBottom() + getPaddingTop();
-            h = resolveSizeAndState(MeasureSpec.getSize(w) - (int) mTextWidth, heightMeasureSpec, 0);
+           int minw=HWx+PWx+SARx+Sx+getPaddingLeft() + getPaddingRight() + getSuggestedMinimumWidth();
+            w = resolveSize(minw, widthMeasureSpec);
+            Math.max(MeasureSpec.getSize(widthMeasureSpec),minw);
+
+            int minh=MeasureSpec.getSize(w)+HWy+PWy+SARy+Sy+getPaddingBottom() + getPaddingTop();
+
+            h = Math.min(MeasureSpec.getSize(heightMeasureSpec),minh);
 
             setMeasuredDimension(w, h);
         }
-        //public void init(){
-        // drawPaint = new Paint();
 
-        // drawPaint.setStrokeWidth(3);
-        // drawPaint.setPathEffect(null);
-        // drawPaint.setColor(Color.BLACK);
-        //drawPaint.setStyle(Paint.Style.STROKE);
+        /*
+        @Override
+        protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        Log.i(LOG_TAG, "onSizeChanged called");
+        //
+        // Set dimensions for text, pie chart, etc
+        //
+        // Account for padding
+        float xpad = (float) (getPaddingLeft() + getPaddingRight());
+        float ypad = (float) (getPaddingTop() + getPaddingBottom());
 
-        //TypedArray a = getContext().getTheme().obtainStyledAttributes(attrs,R.styleable.Drawrangeview,0,0);
+        float ww = (float) w - xpad;
+        float hh = (float) h - ypad;
 
-
-        // try {
-        //get the text and colors specified using the names in attrs.xml
-        //    drawLabel = a.getString(R.styleable.Drawrangeview_drawLabel);
-        //     drawColor = a.getInteger(R.styleable.Drawrangeview_drawColor, 0);//0 is default
-        //     labelColor = a.getInteger(R.styleable.Drawrangeview_labelColor, 0);
-        //  } finally {
-        //      a.recycle();
-        //  }
-        // }
+        // Figure out how big we can make the pie.
+        float diameter = Math.min(ww, hh);
+        mRangeBounds = new RectF(
+                0.0f,
+                0.0f,
+                diameter,
+                diameter);
+        mRangeBounds.offsetTo(getPaddingLeft(), getPaddingTop());
+        // Lay out the child view that actually draws the pie.
+        mrangeview.layout((int) mRangeBounds.left,
+                (int) mRangeBounds.top,
+                (int) mRangeBounds.right,
+                (int) mRangeBounds.bottom);
+        }
+        */
 
 
         protected void Drawmystuff(Canvas canvas){
@@ -128,14 +140,15 @@ public class Drawrangeview extends View {
 
             Path path = new Path();
             // start the path at the "origin"
-            path.moveTo(10, h/3); // origin
+            path.moveTo(0, h-this.HWy); // origin
             // add a line for side A
-            path.lineTo(this.HWx, this.HWy);
+            path.lineTo(this.HWx, h-this.HWy);
             // add a line for side B
-            path.lineTo(this.PWx, this.PWy);
+            path.lineTo(this.PWx, h-this.PWy);
             // close the path to draw the hypotenuse
-            path.lineTo(this.SARx, this.SARy);
-            path.lineTo(this.Sx, this.Sy);
+            path.lineTo(this.SARx, h-this.SARy);
+            path.lineTo(this.Sx, h-this.Sy);
+
 
             canvas.drawPaint(drawPaint);
             canvas.drawPath(path, drawPaint);
@@ -143,8 +156,9 @@ public class Drawrangeview extends View {
             Log.i(LOG_TAG, "Drawn'd");
 
         }
-    private void initViews(Context context, AttributeSet attrs) {
+        private void initViews(Context context, AttributeSet attrs) {
         Log.i(LOG_TAG, "initViews called");
+        //inflate(getContext(), R.layout.main_activity, this);
 
         TypedArray a = context.obtainStyledAttributes(R.styleable.Drawrangeview);
 
