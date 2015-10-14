@@ -79,7 +79,7 @@ public class Drawrangeview extends View {
         if(yes==true){
         myCalculationsAreReady=true;}
         //setWillNotDraw(false);
-        //invalidate();
+        invalidate();
     }
 
         private void drawDataNotReady(Canvas canvas) {
@@ -92,13 +92,13 @@ public class Drawrangeview extends View {
             Log.i(LOG_TAG, "onMeasure called");
             // Try for a width based on our minimum
 
-           int minw=HWx+PWx+SARx+Sx+getPaddingLeft() + getPaddingRight() + getSuggestedMinimumWidth();
-            w = resolveSize(minw, widthMeasureSpec);
-            Math.max(MeasureSpec.getSize(widthMeasureSpec),minw);
+            int minw=HWx+PWx+SARx+Sx+getPaddingLeft() + getPaddingRight() + getSuggestedMinimumWidth();
+            //w = resolveSize(minw, widthMeasureSpec);
+            w=Math.max(MeasureSpec.getSize(widthMeasureSpec),minw);
 
             int minh=MeasureSpec.getSize(w)+HWy+PWy+SARy+Sy+getPaddingBottom() + getPaddingTop();
-
-            h = Math.min(MeasureSpec.getSize(heightMeasureSpec),minh);
+            int canvasdim=resolveSize(MeasureSpec.getSize(R.layout.main_activity),minh);
+            h = Math.min(MeasureSpec.getSize(heightMeasureSpec),canvasdim);
 
             setMeasuredDimension(w, h);
         }
@@ -176,8 +176,9 @@ public class Drawrangeview extends View {
         drawPaint = new Paint();
         drawPaint.setStrokeWidth(3);
         drawPaint.setPathEffect(null);
-        drawPaint.setColor(Color.BLACK);
+        drawPaint.setColor(drawColor);
         drawPaint.setStyle(Paint.Style.STROKE);
+
     }
 
 

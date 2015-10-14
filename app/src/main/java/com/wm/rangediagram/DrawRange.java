@@ -86,10 +86,10 @@ public class DrawRange extends Activity {
 
         yes=true;
 
-        rangeview = new Drawrangeview(DrawRange.this);
+        rangeview =  (Drawrangeview) findViewById(R.id.draw_canvas_main_activity);
 
         rangeview.setSides(HWxi, HWyi, PWxi, PWyi, SARxi, SARyi, Sxi, Syi, yes);
-        setContentView(rangeview);
+        //setContentView(rangeview);
 
     }
 
