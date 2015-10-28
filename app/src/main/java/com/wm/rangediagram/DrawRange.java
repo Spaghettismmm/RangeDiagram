@@ -97,14 +97,14 @@ public class DrawRange extends Activity {
     public void docalcs(double Sar, double HW, double BW, double PW, double BH, double Reach, double Tub) {
         HWx = BW;
         HWy = BH;
-        double HWangle = HW * 2 * Math.PI / 360.0;
-        double SARangle = Sar * 2 * Math.PI / 360.0;
+        double HWangle = Math.toRadians(HW );
+        double SARangle = Math.toRadians(Sar);
         PWx = HWx + BH / (Math.tan(HWangle));
         PWy = HWy - BH;
         SARy = PWy;
         SARx = PWx + PW;
-        Sx = SARx + (Reach - Tub / 2 - SARx);
-        Sy = SARy + Sx * Math.tan(SARangle);
+        Sx = SARx + (Reach);
+        Sy = SARy+(Reach-(Tub/2)) * (Math.tan(SARangle));
     }
 
     // Create Options Menu

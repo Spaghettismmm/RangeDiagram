@@ -16,10 +16,11 @@
         android:id="@+id/draw_canvas_main_activity"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        custom:drawColor="#3f8303"
+        custom:drawColor="@color/greenish"
         custom:labelColor="#9e0f0f"
+        android:layout_alignParentTop="true"
         android:layout_above="@+id/GridLayoutResults"
-        android:layout_alignParentTop="true" />
+        android:background="#f1fcfb" />
 
     <GridLayout
         android:layout_width="fill_parent"
