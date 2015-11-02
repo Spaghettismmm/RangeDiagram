@@ -6,6 +6,12 @@
     <string name="PitWidthstring">Enter Pit Width</string>
     <string name="BenchWidthstring">Enter Bench Width</string>
     <string name="BenchHeightstring">Enter Bench Height</string>
+    <string name="DLreach">Enter DL Reach</string>
+    <string name="TubW">Enter DL Tub Width</string>
+
     <string name="BacktoInput">Change Inputs</string>
     <string name="action_settings">Change Inputs</string>
+    <string name="draglinedims">Adjust DL Dims</string>
+    <string name="listdimensions">List Pit Dims</string>
+    <string name="adjustrangesettings">Adjust Range Settings</string>
 </resources>

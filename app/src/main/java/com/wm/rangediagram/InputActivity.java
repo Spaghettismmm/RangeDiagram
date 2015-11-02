@@ -3,6 +3,7 @@ package com.wm.rangediagram;
 import android.content.Intent;
 import android.os.Bundle;
 import android.renderscript.ScriptGroup;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.util.Log;
 import android.view.Menu;
@@ -24,7 +25,7 @@ import java.util.Scanner;
  */
 
 
-public class InputActivity extends Activity {
+public class InputActivity extends AppCompatActivity {
     private static final String LOG_TAG = "LOG Cat";
 
 
@@ -58,6 +59,11 @@ public class InputActivity extends Activity {
         final EditText editBenchh = (EditText) findViewById(R.id.BenchheightView);
         String Benchhval = editBenchh.getText().toString();
 
+        final EditText editDLreach = (EditText) findViewById(R.id.DLreach);
+        String DLRval = editDLreach.getText().toString();
+
+        final EditText editTubW = (EditText) findViewById(R.id.TubW);
+        String TWval = editTubW.getText().toString();
 
         //Convert string to parse int
         int PWnum = Integer.parseInt(PWval);
@@ -65,13 +71,10 @@ public class InputActivity extends Activity {
         int HWnum = Integer.parseInt(HWval);
         int SARnum = Integer.parseInt(SARval);
         int Benchheightnum = Integer.parseInt(Benchhval);
+        int DLReachnum = Integer.parseInt(DLRval);
+        int TWnum = Integer.parseInt(TWval);
 
         Log.i(LOG_TAG, "Store Values");
-        Log.d(LOG_TAG, "SAR: " + Float.toString(SARnum));
-        Log.d(LOG_TAG, "HW: " + Float.toString(HWnum));
-        Log.d(LOG_TAG, "PW: " + Float.toString(PWnum));
-        Log.d(LOG_TAG, "Bench: " + Float.toString(Benchnum));
-        Log.d(LOG_TAG, "Bench height: " + Float.toString(Benchheightnum));
 
 
 
@@ -81,7 +84,8 @@ public class InputActivity extends Activity {
         draw.putExtra("PW", PWval);
         draw.putExtra("Benchw", Benchval);
         draw.putExtra("Benchh", Benchhval);
-
+        draw.putExtra("DLR", DLRval);
+        draw.putExtra("TW", TWval);
 
         startActivity(draw);
     }

@@ -1,9 +1,13 @@
 package com.wm.rangediagram;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -14,7 +18,7 @@ import android.widget.TextView;
 /**
  * Created by Bomb Shit on 9/30/2015.
  */
-public class DrawRange extends Activity {
+public class DrawRange extends AppCompatActivity {
     Drawrangeview rangeview;
 
     private static final String LOG_TAG = "LOG Cat";
@@ -27,6 +31,13 @@ public class DrawRange extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
         Log.i(LOG_TAG, "Retrieve Values");
+
+        Toolbar myToolbar = (Toolbar)findViewById(R.id.my_toolbar);
+        setSupportActionBar(myToolbar);
+
+        ActionBar br = getSupportActionBar();
+
+        br.setDisplayHomeAsUpEnabled(true);
         /* Get values from Intent */
 
         //Convert input to String
@@ -55,14 +66,19 @@ public class DrawRange extends Activity {
         String BHstring = BHtext.getText().toString();
         int BHnum = Integer.parseInt(BHstring);
 
-        Log.i(LOG_TAG, "Retrieved");
-        Log.d(LOG_TAG, "SAR: " + Float.toString(SARnum));
-        Log.d(LOG_TAG, "HW: " + Float.toString(HWnum));
-        Log.d(LOG_TAG, "Bench width: " + Float.toString(BWnum));
-        Log.d(LOG_TAG, "PW: " + Float.toString(PWnum));
-        Log.d(LOG_TAG, "Bench height: " + Float.toString(BHnum));
+        TextView DLRtext = (TextView) findViewById(R.id.DLRdrawview);
+        DLRtext.setText(getIntent().getStringExtra("DLR"));
+        String DLRstring = DLRtext.getText().toString();
+        int DLRnum = Integer.parseInt(DLRstring);
 
-        docalcs(SARnum, HWnum, BWnum, PWnum, BHnum, 300, 70);
+        TextView TWtext = (TextView) findViewById(R.id.TWdrawview);
+        TWtext.setText(getIntent().getStringExtra("TW"));
+        String TWstring = TWtext.getText().toString();
+        int TWnum = Integer.parseInt(TWstring);
+
+        Log.i(LOG_TAG, "Retrieved");
+
+        docalcs(SARnum, HWnum, BWnum, PWnum, BHnum, DLRnum, TWnum);
 
         Log.i(LOG_TAG, "Calculated");
         Log.d(LOG_TAG, "HWx: " + Double.toString(HWx));
@@ -88,7 +104,7 @@ public class DrawRange extends Activity {
 
         rangeview =  (Drawrangeview) findViewById(R.id.draw_canvas_main_activity);
 
-        rangeview.setSides(HWxi, HWyi, PWxi, PWyi, SARxi, SARyi, Sxi, Syi, yes);
+        rangeview.setSides(HWxi, HWyi, PWxi, PWyi, SARxi, SARyi, Sxi, Syi, yes, DLRnum, TWnum);
         //setContentView(rangeview);
 
     }
@@ -103,30 +119,29 @@ public class DrawRange extends Activity {
         PWy = HWy - BH;
         SARy = PWy;
         SARx = PWx + PW;
-        Sx = SARx + (Reach);
-        Sy = SARy+(Reach-(Tub/2)) * (Math.tan(SARangle));
+        Sx = SARx + ((Reach-(Tub/2)-(SARx-HWx)));
+        Sy = SARy+((Reach-(Tub/2)-(SARx-HWx)) * (Math.tan(SARangle)));
     }
-
-    // Create Options Menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
-        super.onCreateOptionsMenu(menu);
-
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.backtoinput, menu);
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu1, menu);
         return super.onCreateOptionsMenu(menu);
-
     }
-
     // Process clicks on Options Menu items
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
         switch (item.getItemId()) {
-            case R.id.InputScreen:
-                Intent intent = new Intent(this, InputActivity.class);
-                startActivity(intent);
+
+            case R.id.draglinedims:
+                //
+                return true;
+            case R.id.listdimensions:
+                //
+                return true;
+            case R.id.adjustrangesettings:
+                //
                 return true;
 
 
@@ -134,6 +149,7 @@ public class DrawRange extends Activity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
 }
 
 
