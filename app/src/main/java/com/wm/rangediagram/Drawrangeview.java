@@ -185,8 +185,8 @@ public class Drawrangeview extends View {
 
             TWX1p=w*(TWX1/totallength)+drawpadl;
             TWX2p=w*(TWX2/totallength)+drawpadl;
-            TWY1p=h-h*(TWY1/totalheight)-drawpadh;
-            TWY2p=h-h*(TWY2/totalheight)-drawpadh;
+            TWY2p=h-h*(TWY1/totalheight)-drawpadh;
+            TWY1p=h-h*(TWY2/totalheight)-drawpadh;
 
             Sxfp=w*((Sxf)/totallength)+drawpadl;
             Syfp=h-h*(Syf/totalheight)-drawpadh;
@@ -330,7 +330,7 @@ public class Drawrangeview extends View {
         }
 
         drawPaint = new Paint();
-            drawPaint.setStrokeWidth(5);
+            drawPaint.setStrokeWidth(4);
             drawPaint.setPathEffect(null);
             int myColor=context.getResources().getColor(R.color.greenish);
             drawPaint.setColor(myColor);
@@ -340,7 +340,7 @@ public class Drawrangeview extends View {
 
 
         drawoldpitPaint = new Paint();
-            drawoldpitPaint.setStrokeWidth(5);
+            drawoldpitPaint.setStrokeWidth(4);
             drawoldpitPaint.setPathEffect(null);
             drawoldpitPaint.setColor(Color.RED);
             drawoldpitPaint.setStyle(Paint.Style.STROKE);
