@@ -33,7 +33,7 @@ public class Drawrangeview extends View {
     Context context;
     private RectF mRangeBounds = new RectF();
     private float totallength,totalheight,drawpadl,drawpadh,HWxp,HWyp, PWxp,PWyp,SARxp,SARyp,Sxp,Syp, DLRx1,DLRy1,DLRx2,DLRy2,textSize, DLRX1p,DLRX2p,DLRY1p,DLRY2p;
-    private float TWX1,TWX2,TWY1,TWY2, TWX1p,TWX2p,TWY1p,TWY2p;
+    private float TWX1,TWX2,TWY1,TWY2, TWX1p,TWX2p,TWY1p,TWY2p,HWxpo,HWypo, PWxpo,PWypo,SARxpo,SARypo,Sxpo,Sypo;
     private int gridintervaly = 20,gridintervalx = 50, dlheight = 150;
     private int ccount, grdcounty, grdcountx;
     private float[] gridpntsy, gridpntsx;
@@ -143,6 +143,16 @@ public class Drawrangeview extends View {
             Sxp=w*(Sx/totallength)+drawpadl;
             Syp=h-h*(Sy/totalheight)-drawpadh;
 
+            HWxpo=w*((HWx)/totallength)+drawpadl;
+            HWypo=h-h*(HWy/totalheight)-drawpadh;
+            PWxpo=w*(PWx/totallength)+drawpadl;
+            PWypo=h-h*(PWy/totalheight)-drawpadh;
+            SARxpo=w*(SARx/totallength)+drawpadl;
+            SARypo=h-h*(SARy/totalheight)-drawpadh;
+            Sxpo=w*(Sx/totallength)+drawpadl;
+            Sypo=h-h*(Sy/totalheight)-drawpadh;
+
+
             DLRX1p=w*(DLRx1/totallength)+drawpadl;
             DLRX2p=w*(DLRx2/totallength)+drawpadl;
             DLRY1p=h-h*(DLRy1/totalheight)-drawpadh;
@@ -217,11 +227,11 @@ public class Drawrangeview extends View {
             // start the path at the "origin"
             oldpit.moveTo(SARxp, SARyp); // origin
             // add a line for side A
-            oldpit.lineTo(PWxp*2, PWyp);
+            oldpit.lineTo(SARxp+PWxp, PWyp);
             // add a line for side B
             oldpit.lineTo(2*SARxp, SARyp);
             // close the path to draw the hypotenuse
-            oldpit.lineTo(Sxp*2, Syp);
+            oldpit.lineTo(, Syp);
 
  //           canvas.drawRect(r,drawPaint);
             canvas.drawLines(gridpntsy, gridPaint);
