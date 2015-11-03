@@ -22,7 +22,9 @@ public class DrawRange extends AppCompatActivity {
     Drawrangeview rangeview;
 
     private static final String LOG_TAG = "LOG Cat";
-    private double HWx,HWy,SARx,SARy,PWx,PWy,Sx,Sy;
+    private double HWx,HWy,SARx,SARy,PWx,PWy,Sx,Sy,HWxo, HWyo, PWxo, PWyo, SARxo, SARyo, Sxo, Syo;
+    private double Syf, Sxf, Syfo, Sxfo, Sxftest;
+    private double Pitarea, Spoilarea;
     private Boolean yes;
 
 
@@ -109,12 +111,24 @@ public class DrawRange extends AppCompatActivity {
         int SARyi = (int) SARy;
         int Sxi = (int) Sx;
         int Syi = (int) Sy;
-
+        int HWxio = (int) HWxo;
+        int HWyio = (int) HWyo;
+        int PWxio = (int) PWxo;
+        int PWyio = (int) PWyo;
+        int SARxio = (int) SARxo;
+        int SARyio = (int) SARyo;
+        int Sxio = (int) Sxo;
+        int Syio = (int) Syo;
+        int Sxfio = (int) Sxfo;
+        int Syfio = (int) Syfo;
+        int Sxfi = (int) Sxf;
+        int Syfi = (int) Syf;
         yes=true;
 
         rangeview =  (Drawrangeview) findViewById(R.id.draw_canvas_main_activity);
 
-        rangeview.setSides(HWxi, HWyi, PWxi, PWyi, SARxi, SARyi, Sxi, Syi, yes, DLRnum, TWnum);
+        rangeview.setSides(HWxi, HWyi, PWxi, PWyi, SARxi, SARyi, Sxi, Syi, Sxfi, Syfi, yes, DLRnum, TWnum,
+                HWxio, HWyio, PWxio, PWyio, SARxio, SARyio, Sxio, Syio, Sxfio, Syfio, Pitarea, Spoilarea);
         //setContentView(rangeview);
 
     }
@@ -129,14 +143,58 @@ public class DrawRange extends AppCompatActivity {
         PWy = HWy - BH;
         SARy = PWy;
         SARx = PWx + PW;
-        Sx = SARx + ((Reach-(Tub/2)-(SARx-HWx)));
-        if (SARy+((Reach-(Tub/2)-(SARx-HWx)) * (Math.tan(SARangle)))>SARy+DH)
+
+       double Newreach= (Reach-(Tub/2)-(SARx-BW));
+
+        Sx = SARx + (Newreach);
+        if ((SARy+(Newreach * (Math.tan(SARangle))))<(HWy+DH))
             {
-                Sy=SARy+((Reach-(Tub/2)-(SARx-HWx)) * (Math.tan(SARangle)));
+                Sy=SARy+(Newreach  * (Math.tan(SARangle)));
             }
         else{
-                Sy=SARy+DH;
+                Sy=HWy+DH;
             }
+
+        //for old pit
+        HWxo = BW*2;
+        HWyo = BH;
+        PWxo = HWxo + BH / (Math.tan(HWangle));
+        PWyo = HWyo - BH;
+        SARyo = PWyo;
+        SARxo = PWxo + PW;
+        Sxo = SARxo + (Newreach);
+        if (SARyo+(Newreach  * (Math.tan(SARangle)))<(HWyo+DH))
+        {
+            Syo=SARyo+(Newreach  * (Math.tan(SARangle)));
+        }
+        else{
+            Syo=HWyo+DH;
+        }
+        //Calculate Intercept for Spoil Toe between old and new spoil
+        Sxftest=(((Sx+Newreach)*Math.tan(SARangle)-(-Math.tan(SARangle)*SARxo))/(2*(Math.tan(SARangle))));
+
+        if (Sxftest>SARxo){
+            Sxf=Sxftest;
+            Syf=-Math.tan(SARangle)*(Sxf)+((Sx+Newreach)*Math.tan(SARangle));
+        }
+        else {
+            Sxf=Sx+((Newreach));
+            Syf=SARy;
+        }
+
+        Sxfo=Sxo+(Newreach);
+        Syfo=Syf;
+
+
+        //Areas
+        Pitarea=(SARx-PWx)*HWy+2*(.5*HWy*(PWx-HWx));
+
+        if (Sxf>SARxo) {
+            Spoilarea = (.5 * (Sx - SARx) * Sy)+((.5 * (Sx - SARx) * Sy)-(Syf/Math.tan(SARangle)*Syf));
+        }
+        else {
+            Spoilarea = (.5 * (Sx - SARx) * Sy)*2;
+        }
 
     }
     @Override
