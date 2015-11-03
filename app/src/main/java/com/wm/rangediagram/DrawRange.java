@@ -76,9 +76,19 @@ public class DrawRange extends AppCompatActivity {
         String TWstring = TWtext.getText().toString();
         int TWnum = Integer.parseInt(TWstring);
 
+        TextView DHtext = (TextView) findViewById(R.id.DHdrawview);
+        DHtext.setText(getIntent().getStringExtra("DH"));
+        String DHstring = DHtext.getText().toString();
+        int DHnum = Integer.parseInt(DHstring);
+
+        TextView DDtext = (TextView) findViewById(R.id.DDdrawview);
+        DDtext.setText(getIntent().getStringExtra("DD"));
+        String DDstring = DDtext.getText().toString();
+        int DDnum = Integer.parseInt(DDstring);
+
         Log.i(LOG_TAG, "Retrieved");
 
-        docalcs(SARnum, HWnum, BWnum, PWnum, BHnum, DLRnum, TWnum);
+        docalcs(SARnum, HWnum, BWnum, PWnum, BHnum, DLRnum, TWnum, DHnum, DDnum);
 
         Log.i(LOG_TAG, "Calculated");
         Log.d(LOG_TAG, "HWx: " + Double.toString(HWx));
@@ -110,7 +120,7 @@ public class DrawRange extends AppCompatActivity {
     }
 
 
-    public void docalcs(double Sar, double HW, double BW, double PW, double BH, double Reach, double Tub) {
+    public void docalcs(double Sar, double HW, double BW, double PW, double BH, double Reach, double Tub, double DD, double DH) {
         HWx = BW;
         HWy = BH;
         double HWangle = Math.toRadians(HW );
@@ -120,7 +130,14 @@ public class DrawRange extends AppCompatActivity {
         SARy = PWy;
         SARx = PWx + PW;
         Sx = SARx + ((Reach-(Tub/2)-(SARx-HWx)));
-        Sy = SARy+((Reach-(Tub/2)-(SARx-HWx)) * (Math.tan(SARangle)));
+        if (SARy+((Reach-(Tub/2)-(SARx-HWx)) * (Math.tan(SARangle)))>SARy+DH)
+            {
+                Sy=SARy+((Reach-(Tub/2)-(SARx-HWx)) * (Math.tan(SARangle)));
+            }
+        else{
+                Sy=SARy+DH;
+            }
+
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -65,14 +65,20 @@ public class InputActivity extends AppCompatActivity {
         final EditText editTubW = (EditText) findViewById(R.id.TubW);
         String TWval = editTubW.getText().toString();
 
+        final EditText editDD = (EditText) findViewById(R.id.DigDView);
+        String DDval = editDD.getText().toString();
+
+        final EditText editDH = (EditText) findViewById(R.id.DumpHView);
+        String DHval = editDH.getText().toString();
+
         //Convert string to parse int
-        int PWnum = Integer.parseInt(PWval);
-        int Benchnum = Integer.parseInt(Benchval);
-        int HWnum = Integer.parseInt(HWval);
-        int SARnum = Integer.parseInt(SARval);
-        int Benchheightnum = Integer.parseInt(Benchhval);
-        int DLReachnum = Integer.parseInt(DLRval);
-        int TWnum = Integer.parseInt(TWval);
+       // int PWnum = Integer.parseInt(PWval);
+        //int Benchnum = Integer.parseInt(Benchval);
+        //int HWnum = Integer.parseInt(HWval);
+       // int SARnum = Integer.parseInt(SARval);
+       // int Benchheightnum = Integer.parseInt(Benchhval);
+        //int DLReachnum = Integer.parseInt(DLRval);
+      //  int TWnum = Integer.parseInt(TWval);
 
         Log.i(LOG_TAG, "Store Values");
 
@@ -86,6 +92,8 @@ public class InputActivity extends AppCompatActivity {
         draw.putExtra("Benchh", Benchhval);
         draw.putExtra("DLR", DLRval);
         draw.putExtra("TW", TWval);
+        draw.putExtra("DH", DDval);
+        draw.putExtra("DD", DHval);
 
         startActivity(draw);
     }

@@ -137,4 +137,12 @@
         android:id="@+id/TWdrawview"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"/>
+    <TextView
+        android:id="@+id/DHdrawview"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"/>
+    <TextView
+        android:id="@+id/DDdrawview"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"/>
 </RelativeLayout>

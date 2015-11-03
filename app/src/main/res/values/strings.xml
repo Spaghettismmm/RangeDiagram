@@ -8,6 +8,8 @@
     <string name="BenchHeightstring">Enter Bench Height</string>
     <string name="DLreach">Enter DL Reach</string>
     <string name="TubW">Enter DL Tub Width</string>
+    <string name="DumpHView">Enter Dump Height</string>
+    <string name="DigDView">Enter Dig Depth</string>
 
     <string name="BacktoInput">Change Inputs</string>
     <string name="action_settings">Change Inputs</string>

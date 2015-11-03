@@ -16,7 +16,7 @@ import android.view.View;
  * http://stackoverflow.com/questions/14113177/android-create-a-triangle-based-on-user-inpu
  *
 *
- * Created by xscz on 10/9/2015.
+
  */
 public class Drawrangeview extends View {
     private float mTextWidth = 0.0f;
@@ -29,7 +29,7 @@ public class Drawrangeview extends View {
     private boolean myCalculationsAreReady=false;
     private boolean yes;
     Paint mPaint=new Paint();
-    private Paint gridPaint, dlPaint;
+    private Paint gridPaint, dlPaint, drawoldpitPaint;
     Context context;
     private RectF mRangeBounds = new RectF();
     private float totallength,totalheight,drawpadl,drawpadh,HWxp,HWyp, PWxp,PWyp,SARxp,SARyp,Sxp,Syp, DLRx1,DLRy1,DLRx2,DLRy2,textSize, DLRX1p,DLRX2p,DLRY1p,DLRY2p;
@@ -116,7 +116,7 @@ public class Drawrangeview extends View {
         private void findpath(){
             Log.i(LOG_TAG,"findpath called");
             drawpadl=20;
-            totallength=Math.max(SARx,Math.max(PWx,Math.max(Sx,HWx)))+drawpadl*2;
+            totallength=2*Math.max(SARx,Math.max(PWx,Math.max(Sx,HWx)))+drawpadl*2;
             drawpadh=20;
             totalheight=Math.max(SARy,Math.max(PWy,Math.max(Sy,HWy))) + dlheight+drawpadh*2;
             //Move Drawing to padding distance
@@ -213,9 +213,20 @@ public class Drawrangeview extends View {
             path.lineTo(SARxp, SARyp);
             path.lineTo(Sxp, Syp);
 
+            Path oldpit = new Path();
+            // start the path at the "origin"
+            oldpit.moveTo(SARxp, SARyp); // origin
+            // add a line for side A
+            oldpit.lineTo(PWxp*2, PWyp);
+            // add a line for side B
+            oldpit.lineTo(2*SARxp, SARyp);
+            // close the path to draw the hypotenuse
+            oldpit.lineTo(Sxp*2, Syp);
 
  //           canvas.drawRect(r,drawPaint);
             canvas.drawLines(gridpntsy, gridPaint);
+
+
             int beta=0;
                 for (int alpha=0; alpha<gridlbly.length; alpha++) {
                     canvas.drawText(gridlbly[alpha], gridpntsy[beta]+drawpadl, gridpntsy[beta+1],gridPaint);
@@ -229,7 +240,7 @@ public class Drawrangeview extends View {
                 }
             canvas.drawPaint(drawPaint);
             canvas.drawPath(path, drawPaint);
-
+            canvas.drawPath(oldpit,drawoldpitPaint);
             Path dragline = new Path();
             // start the path at the "origin"
             dragline.moveTo(DLRX1p, DLRY1p); // origin
@@ -242,7 +253,7 @@ public class Drawrangeview extends View {
             Path dragline1 = new Path();
             dragline1.moveTo(DLRX1p, DLRY1p);
             dragline1.lineTo(DLRX2p, DLRY2p);
-            canvas.drawPath(dragline1, drawPaint);
+            canvas.drawPath(dragline1, dlPaint);
             // close the path to draw the hypotenuse
 
             canvas.drawRect(TWX1p,TWY1p,TWX2p,TWY2p,dlPaint);
@@ -274,6 +285,12 @@ public class Drawrangeview extends View {
             drawPaint.setColor(myColor);
             drawPaint.setStyle(Paint.Style.STROKE);
 
+        drawoldpitPaint = new Paint();
+            drawoldpitPaint.setStrokeWidth(5);
+            drawoldpitPaint.setPathEffect(null);
+            drawoldpitPaint.setColor(Color.RED);
+            drawoldpitPaint.setStyle(Paint.Style.STROKE);
+
         gridPaint = new Paint();
             gridPaint.setStrokeWidth(4);
         gridPaint.setColor(Color.GRAY);
@@ -283,6 +300,8 @@ public class Drawrangeview extends View {
             dlPaint = new Paint();
             dlPaint.setStrokeWidth(4);
             dlPaint.setColor(Color.BLUE);
+            dlPaint.setPathEffect(null);
+            dlPaint.setStyle(Paint.Style.STROKE);
     }
       /*
         @Override
