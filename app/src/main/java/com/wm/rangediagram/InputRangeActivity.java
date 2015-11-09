@@ -2,38 +2,26 @@ package com.wm.rangediagram;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.renderscript.ScriptGroup;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Editable;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.app.Activity;
-import android.widget.Toast;
-
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
 
 /**
  * Created by Bomb Shit on 9/30/2015.
  */
 
 
-public class InputActivity extends AppCompatActivity {
+public class InputRangeActivity extends AppCompatActivity {
     private static final String LOG_TAG = "LOG Cat";
-
+    boolean juststarted;
+    private int TWval,DLRval,DDval,DHval;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_input);
-
+        juststarted=true;
     }
 
     public void sendPitdim(View ButtonCreatePit) {
@@ -59,17 +47,32 @@ public class InputActivity extends AppCompatActivity {
         final EditText editBenchh = (EditText) findViewById(R.id.BenchheightView);
         String Benchhval = editBenchh.getText().toString();
 
-        final EditText editDLreach = (EditText) findViewById(R.id.DLreach);
-        String DLRval = editDLreach.getText().toString();
+        final EditText editSF = (EditText) findViewById(R.id.SFView);
+        String SFval = editSF.getText().toString();
 
-        final EditText editTubW = (EditText) findViewById(R.id.TubW);
-        String TWval = editTubW.getText().toString();
+        if(juststarted!=true) {
 
-        final EditText editDD = (EditText) findViewById(R.id.DigDView);
-        String DDval = editDD.getText().toString();
+            final EditText editDLreach = (EditText) findViewById(R.id.DLreach);
+            String DLRval = editDLreach.getText().toString();
 
-        final EditText editDH = (EditText) findViewById(R.id.DumpHView);
-        String DHval = editDH.getText().toString();
+            final EditText editTubW = (EditText) findViewById(R.id.TubW);
+            String TWval = editTubW.getText().toString();
+
+            final EditText editDD = (EditText) findViewById(R.id.DigDView);
+            String DDval = editDD.getText().toString();
+
+            final EditText editDH = (EditText) findViewById(R.id.DumpHView);
+            String DHval = editDH.getText().toString();
+
+
+
+        }else {
+            String DLRval ="300";
+            String TWval ="80";
+            String DDval="150";
+            String DHval= "150";
+
+        }
 
         //Convert string to parse int
        // int PWnum = Integer.parseInt(PWval);
@@ -84,7 +87,7 @@ public class InputActivity extends AppCompatActivity {
 
 
 
-        Intent draw = new Intent(InputActivity.this, DrawRange.class);
+        Intent draw = new Intent(InputRangeActivity.this, DrawRange.class);
         draw.putExtra("SAR", SARval);
         draw.putExtra("HW", HWval);
         draw.putExtra("PW", PWval);
@@ -94,6 +97,8 @@ public class InputActivity extends AppCompatActivity {
         draw.putExtra("TW", TWval);
         draw.putExtra("DH", DDval);
         draw.putExtra("DD", DHval);
+        draw.putExtra("Source",true);
+        draw.putExtra("SF", SFval);
 
         startActivity(draw);
     }

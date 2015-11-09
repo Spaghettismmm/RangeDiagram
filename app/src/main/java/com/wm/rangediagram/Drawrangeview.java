@@ -35,7 +35,7 @@ public class Drawrangeview extends View {
     private float totallength,totalheight,drawpadl,drawpadh,HWxp,HWyp, PWxp,PWyp,SARxp,SARyp,Sxp,Syp, DLRx1,DLRy1,DLRx2,DLRy2,textSize,textSize1, DLRX1p,DLRX2p,DLRY1p,DLRY2p;
     private float TWX1,TWX2,TWY1,TWY2, TWX1p,TWX2p,TWY1p,TWY2p,HWxpo,HWypo, PWxpo,PWypo,SARxpo,SARypo,Sxpo,Sypo, Areacutxp, Areacutyp, Areaspoilxp, Areaspoilyp;
     private float Sxfp,Syfp,Sxfpo,Syfpo;
-    private double Pitarea, Spoilarea;
+    private double Pitarea, Spoilarea, bankspoilarea, SF;
     private int gridintervaly = 20,gridintervalx = 50, dlheight = 150;
     private int ccount, grdcounty, grdcountx;
     private float[] gridpntsy, gridpntsx;
@@ -73,7 +73,7 @@ public class Drawrangeview extends View {
     }
 
     public void setSides(int HWxi, int HWyi, int PWxi,int PWyi,int SARxi,int SARyi,int Sxi,int Syi,int Sxfi, int Syfi, Boolean yesi, int DLRi, int TWi,
-                         int HWxio, int HWyio, int PWxio,int PWyio,int SARxio,int SARyio,int Sxio,int Syio, int Sxfio, int Syfio, double Pitareai, double Spoilareai) {
+                         int HWxio, int HWyio, int PWxio,int PWyio,int SARxio,int SARyio,int Sxio,int Syio, int Sxfio, int Syfio, double Pitareai, double Spoilareai, double SFi, double bankspoilareai) {
         Log.i(LOG_TAG, "setSides called");
         HWx =HWxi;
         HWy=HWyi;
@@ -86,9 +86,10 @@ public class Drawrangeview extends View {
         yes=yesi;
         Pitarea=Pitareai;
         Spoilarea=Spoilareai;
-
+        SF=SFi;
         DLR=DLRi;
         TW=TWi;
+        bankspoilarea=bankspoilareai;
 
         HWxo =HWxio;
         HWyo=HWyio;
@@ -307,6 +308,7 @@ public class Drawrangeview extends View {
             canvas.drawRect(TWX1p, TWY1p, TWX2p, TWY2p, dlPaint);
 
             canvas.drawText(String.valueOf(Math.round(Spoilarea)) + " ft^2", Areaspoilxp, Areaspoilyp, drawPaint);
+            canvas.drawText(String.valueOf(Math.round(bankspoilarea)) + " ft^2" + " @ Swell of " + String.valueOf((SF)), Areaspoilxp-textSize*10, Areaspoilyp + textSize*5, drawPaint);
             canvas.drawText(String.valueOf(Math.round(Pitarea))+" ft^2", Areacutxp, Areacutyp, drawPaint);
             Log.i(LOG_TAG, "Drawn'd");
 

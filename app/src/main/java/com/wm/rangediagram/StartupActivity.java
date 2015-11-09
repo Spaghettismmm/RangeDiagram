@@ -1,11 +1,7 @@
 package com.wm.rangediagram;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
 import android.app.Activity;
 
 /**
@@ -18,7 +14,7 @@ public class StartupActivity extends Activity{
         setContentView(R.layout.startup_activity);
 
 
-        Intent intent = new Intent(StartupActivity.this,InputActivity.class);
+        Intent intent = new Intent(StartupActivity.this,InputRangeActivity.class);
         startActivity(intent);
 
     }

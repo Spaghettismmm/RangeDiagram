@@ -10,6 +10,7 @@
     <string name="TubW">Enter DL Tub Width</string>
     <string name="DumpHView">Enter Dump Height</string>
     <string name="DigDView">Enter Dig Depth</string>
+    <string name="SFView">Enter Swell Factor</string>
 
     <string name="BacktoInput">Change Inputs</string>
     <string name="action_settings">Change Inputs</string>

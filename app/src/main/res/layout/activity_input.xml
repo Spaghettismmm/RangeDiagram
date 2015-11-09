@@ -130,10 +130,11 @@
             android:inputType="number"
 
             />
+
         <TextView
-            android:text="DL Reach"
+            android:text="Swell Factor"
             android:layout_gravity="start"
-            android:layout_row="5"
+            android:layout_row="9"
             android:layout_column="0"
             android:layout_columnSpan="1"
             android:textSize="20sp"/>
@@ -141,70 +142,40 @@
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/SFView"
+            android:hint="@string/SFView"
+            android:layout_gravity="end"
+            android:layout_column="2"
+            android:layout_row="9"
+            android:inputType="number"
+            android:text="1.2"/>
+
+        <TextView
             android:id="@+id/DLreach"
-            android:hint="@string/DLreach"
-            android:layout_gravity="end"
-            android:layout_column="2"
-            android:layout_row="5"
-            android:inputType="number"
-            android:text="300"/>
-        <TextView
-            android:text="Tub Width"
-            android:layout_gravity="start"
-            android:layout_row="6"
-            android:layout_column="0"
-            android:layout_columnSpan="1"
-            android:textSize="20sp"/>
+            android:layout_height="0dp"
+            android:layout_width="0dp"/>
 
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+
+        <TextView
             android:id="@+id/TubW"
-            android:hint="@string/TubW"
-            android:layout_gravity="end"
-            android:layout_column="2"
-            android:layout_row="6"
-            android:inputType="number"
-            android:text="80"/>
+            android:layout_height="0dp"
+            android:layout_width="0dp"/>
+
+
 
         <TextView
-            android:text="Dump Height"
-            android:layout_gravity="start"
-            android:layout_row="7"
-            android:layout_column="0"
-            android:layout_columnSpan="1"
-            android:textSize="20sp"/>
-
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/DumpHView"
-            android:hint="@string/DumpHView"
-            android:layout_gravity="end"
-            android:layout_column="2"
-            android:layout_row="7"
-            android:inputType="number"
-            android:text="150"/>
+            android:layout_height="0dp"
+            android:layout_width="0dp"/>
+
 
         <TextView
-            android:text="Dig Depth"
-            android:layout_gravity="start"
-            android:layout_row="8"
-            android:layout_column="0"
-            android:layout_columnSpan="1"
-            android:textSize="20sp"/>
-
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/DigDView"
-            android:hint="@string/DigDView"
-            android:layout_gravity="end"
-            android:layout_column="2"
-            android:layout_row="8"
-            android:inputType="number"
-            android:text="150"/>
+            android:layout_height="0dp"
+            android:layout_width="0dp"/>
     </GridLayout>
+
+
 </ScrollView>
     <Button
         android:id="@+id/ButtonCreatePit"

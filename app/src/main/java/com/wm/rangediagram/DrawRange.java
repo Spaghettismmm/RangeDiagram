@@ -1,18 +1,17 @@
 package com.wm.rangediagram;
 
-import android.app.Activity;
-import android.content.ContentValues;
 import android.content.Intent;
-import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.RelativeLayout;
+import android.view.View;
 import android.widget.TextView;
 
 /**
@@ -22,11 +21,13 @@ public class DrawRange extends AppCompatActivity {
     Drawrangeview rangeview;
 
     private static final String LOG_TAG = "LOG Cat";
-    private double HWx,HWy,SARx,SARy,PWx,PWy,Sx,Sy,HWxo, HWyo, PWxo, PWyo, SARxo, SARyo, Sxo, Syo;
+    private double HWx, HWy, SARx, SARy, PWx, PWy, Sx, Sy, HWxo, HWyo, PWxo, PWyo, SARxo, SARyo, Sxo, Syo;
     private double Syf, Sxf, Syfo, Sxfo, Sxftest;
-    private double Pitarea, Spoilarea;
-    private Boolean yes;
-
+    private double Pitarea, Spoilarea, bankspoilarea;
+    private int TWtran, DLRtran, DHtran,DDtran, DLRnum,TWnum,DHnum,DDnum;
+    private boolean yes;
+    boolean juststarted;
+    private boolean enterednewdlsettings;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -34,15 +35,50 @@ public class DrawRange extends AppCompatActivity {
         setContentView(R.layout.main_activity);
         Log.i(LOG_TAG, "Retrieve Values");
 
-        Toolbar myToolbar = (Toolbar)findViewById(R.id.my_toolbar);
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
 
         ActionBar br = getSupportActionBar();
 
         br.setDisplayHomeAsUpEnabled(true);
         /* Get values from Intent */
+        enterednewdlsettings=false;
+        grabdata();
+    }
 
+    public void grabdata() {
         //Convert input to String
+
+        if (enterednewdlsettings==false){
+
+            TextView DLRtext = (TextView) findViewById(R.id.DLRdrawview);
+            DLRtext.setText("300");
+            String DLRstring = DLRtext.getText().toString();
+            DLRnum = Integer.parseInt(DLRstring);
+
+            TextView TWtext = (TextView) findViewById(R.id.TWdrawview);
+            TWtext.setText("80");
+            String TWstring = TWtext.getText().toString();
+            TWnum = Integer.parseInt(TWstring);
+
+            TextView DHtext = (TextView) findViewById(R.id.DHdrawview);
+            DHtext.setText("150");
+            String DHstring = DHtext.getText().toString();
+            DHnum = Integer.parseInt(DHstring);
+
+            TextView DDtext = (TextView) findViewById(R.id.DDdrawview);
+            DDtext.setText("150");
+            String DDstring = DDtext.getText().toString();
+            DDnum = Integer.parseInt(DDstring);
+        } else {
+
+            DLRnum=DLRtran;
+            TWnum=TWtran;
+            DHnum=DHtran;
+            DDnum=DDtran;
+
+
+        }
         TextView SARtext = (TextView) findViewById(R.id.Sardrawview);
         SARtext.setText(getIntent().getStringExtra("SAR"));
         String SARstring = SARtext.getText().toString();
@@ -68,29 +104,13 @@ public class DrawRange extends AppCompatActivity {
         String BHstring = BHtext.getText().toString();
         int BHnum = Integer.parseInt(BHstring);
 
-        TextView DLRtext = (TextView) findViewById(R.id.DLRdrawview);
-        DLRtext.setText(getIntent().getStringExtra("DLR"));
-        String DLRstring = DLRtext.getText().toString();
-        int DLRnum = Integer.parseInt(DLRstring);
-
-        TextView TWtext = (TextView) findViewById(R.id.TWdrawview);
-        TWtext.setText(getIntent().getStringExtra("TW"));
-        String TWstring = TWtext.getText().toString();
-        int TWnum = Integer.parseInt(TWstring);
-
-        TextView DHtext = (TextView) findViewById(R.id.DHdrawview);
-        DHtext.setText(getIntent().getStringExtra("DH"));
-        String DHstring = DHtext.getText().toString();
-        int DHnum = Integer.parseInt(DHstring);
-
-        TextView DDtext = (TextView) findViewById(R.id.DDdrawview);
-        DDtext.setText(getIntent().getStringExtra("DD"));
-        String DDstring = DDtext.getText().toString();
-        int DDnum = Integer.parseInt(DDstring);
-
+        TextView SFtext = (TextView) findViewById(R.id.SFdrawview);
+        SFtext.setText(getIntent().getStringExtra("SF"));
+        String SFstring = SFtext.getText().toString();
+        double SFnum = Double.parseDouble(SFstring);
         Log.i(LOG_TAG, "Retrieved");
 
-        docalcs(SARnum, HWnum, BWnum, PWnum, BHnum, DLRnum, TWnum, DHnum, DDnum);
+        docalcs(SARnum, HWnum, BWnum, PWnum, BHnum, DLRnum, TWnum, DHnum, DDnum, SFnum);
 
         Log.i(LOG_TAG, "Calculated");
         Log.d(LOG_TAG, "HWx: " + Double.toString(HWx));
@@ -123,86 +143,84 @@ public class DrawRange extends AppCompatActivity {
         int Syfio = (int) Syfo;
         int Sxfi = (int) Sxf;
         int Syfi = (int) Syf;
-        yes=true;
+        double SFi = SFnum;
+        yes = true;
 
-        rangeview =  (Drawrangeview) findViewById(R.id.draw_canvas_main_activity);
+        rangeview = (Drawrangeview) findViewById(R.id.draw_canvas_main_activity);
 
         rangeview.setSides(HWxi, HWyi, PWxi, PWyi, SARxi, SARyi, Sxi, Syi, Sxfi, Syfi, yes, DLRnum, TWnum,
-                HWxio, HWyio, PWxio, PWyio, SARxio, SARyio, Sxio, Syio, Sxfio, Syfio, Pitarea, Spoilarea);
+                HWxio, HWyio, PWxio, PWyio, SARxio, SARyio, Sxio, Syio, Sxfio, Syfio, Pitarea, Spoilarea, SFi, bankspoilarea);
         //setContentView(rangeview);
 
     }
 
 
-    public void docalcs(double Sar, double HW, double BW, double PW, double BH, double Reach, double Tub, double DD, double DH) {
+    public void docalcs(double Sar, double HW, double BW, double PW, double BH, double Reach, double Tub, double DD, double DH, double SF) {
         HWx = BW;
         HWy = BH;
-        double HWangle = Math.toRadians(HW );
+        double HWangle = Math.toRadians(HW);
         double SARangle = Math.toRadians(Sar);
         PWx = HWx + BH / (Math.tan(HWangle));
         PWy = HWy - BH;
         SARy = PWy;
         SARx = PWx + PW;
 
-       double Newreach= (Reach-(Tub/2)-(SARx-BW));
+        double Newreach = (Reach - (Tub / 2) - (SARx - BW));
 
         Sx = SARx + (Newreach);
-        if ((SARy+(Newreach * (Math.tan(SARangle))))<(HWy+DH))
-            {
-                Sy=SARy+(Newreach  * (Math.tan(SARangle)));
-            }
-        else{
-                Sy=HWy+DH;
-            }
+        if ((SARy + (Newreach * (Math.tan(SARangle)))) < (HWy + DH)) {
+            Sy = SARy + (Newreach * (Math.tan(SARangle)));
+        } else {
+            Sy = HWy + DH;
+        }
 
         //for old pit
-        HWxo = BW*2;
+        HWxo = BW * 2;
         HWyo = BH;
         PWxo = HWxo + BH / (Math.tan(HWangle));
         PWyo = HWyo - BH;
         SARyo = PWyo;
         SARxo = PWxo + PW;
         Sxo = SARxo + (Newreach);
-        if (SARyo+(Newreach  * (Math.tan(SARangle)))<(HWyo+DH))
-        {
-            Syo=SARyo+(Newreach  * (Math.tan(SARangle)));
-        }
-        else{
-            Syo=HWyo+DH;
+        if (SARyo + (Newreach * (Math.tan(SARangle))) < (HWyo + DH)) {
+            Syo = SARyo + (Newreach * (Math.tan(SARangle)));
+        } else {
+            Syo = HWyo + DH;
         }
         //Calculate Intercept for Spoil Toe between old and new spoil
-        Sxftest=(((Sx+Newreach)*Math.tan(SARangle)-(-Math.tan(SARangle)*SARxo))/(2*(Math.tan(SARangle))));
+        Sxftest = (((Sx + Newreach) * Math.tan(SARangle) - (-Math.tan(SARangle) * SARxo)) / (2 * (Math.tan(SARangle))));
 
-        if (Sxftest>SARxo){
-            Sxf=Sxftest;
-            Syf=-Math.tan(SARangle)*(Sxf)+((Sx+Newreach)*Math.tan(SARangle));
-        }
-        else {
-            Sxf=Sx+((Newreach));
-            Syf=SARy;
+        if (Sxftest > SARxo) {
+            Sxf = Sxftest;
+            Syf = -Math.tan(SARangle) * (Sxf) + ((Sx + Newreach) * Math.tan(SARangle));
+        } else {
+            Sxf = Sx + ((Newreach));
+            Syf = SARy;
         }
 
-        Sxfo=Sxo+(Newreach);
-        Syfo=Syf;
+        Sxfo = Sxo + (Newreach);
+        Syfo = Syf;
 
 
         //Areas
-        Pitarea=(SARx-PWx)*HWy+2*(.5*HWy*(PWx-HWx));
+        Pitarea = (SARx - PWx-2*(PWx - HWx)) * HWy + 2 * (.5 * HWy * (PWx - HWx));
 
-        if (Sxf>SARxo) {
-            Spoilarea = (.5 * (Sx - SARx) * Sy)+((.5 * (Sx - SARx) * Sy)-(Syf/Math.tan(SARangle)*Syf));
-        }
-        else {
-            Spoilarea = (.5 * (Sx - SARx) * Sy)*2;
+        if (Sxf > SARxo) {
+            Spoilarea = (.5 * (Sx - SARx) * Sy) + ((.5 * (Sx - SARx) * Sy) - (Syf / Math.tan(SARangle) * Syf));
+        } else {
+            Spoilarea = (.5 * (Sx - SARx) * Sy) * 2;
         }
 
+        bankspoilarea=Spoilarea/SF;
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu1, menu);
+        getMenuInflater().inflate(R.menu.top_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
+
     // Process clicks on Options Menu items
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -210,13 +228,43 @@ public class DrawRange extends AppCompatActivity {
         switch (item.getItemId()) {
 
             case R.id.draglinedims:
-                //
+
+
+                TextView DLRtext = (TextView) findViewById(R.id.DLRdrawview);
+                DLRtext.setText(getIntent().getStringExtra("DLR"));
+                String DLRstring = DLRtext.getText().toString();
+                int DLRnum = Integer.parseInt(DLRstring);
+
+                TextView TWtext = (TextView) findViewById(R.id.TWdrawview);
+                TWtext.setText(getIntent().getStringExtra("TW"));
+                String TWstring = TWtext.getText().toString();
+                int TWnum = Integer.parseInt(TWstring);
+
+                TextView DHtext = (TextView) findViewById(R.id.DHdrawview);
+                DHtext.setText(getIntent().getStringExtra("DH"));
+                String DHstring = DHtext.getText().toString();
+                int DHnum = Integer.parseInt(DHstring);
+
+                TextView DDtext = (TextView) findViewById(R.id.DDdrawview);
+                DDtext.setText(getIntent().getStringExtra("DD"));
+                String DDstring = DDtext.getText().toString();
+                int DDnum = Integer.parseInt(DDstring);
+
+
+                Intent dlsize = new Intent(this, InputDLSizeActivity.class);
+                dlsize.putExtra("DLR", DLRnum);
+                dlsize.putExtra("TW", TWnum);
+                dlsize.putExtra("DH", DHnum);
+                dlsize.putExtra("DD", DDnum);
+
+                startActivityForResult(dlsize, 1);
                 return true;
             case R.id.listdimensions:
                 //
                 return true;
             case R.id.adjustrangesettings:
-                //
+
+                this.finish();
                 return true;
 
 
@@ -225,8 +273,45 @@ public class DrawRange extends AppCompatActivity {
         }
     }
 
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (resultCode == RESULT_OK) {
+            TextView DLRtext = (TextView) findViewById(R.id.DLRdrawview);
+            DLRtext.setText(data.getStringExtra("DLR"));
+            String DLRstring = DLRtext.getText().toString();
+            int DLRnum = Integer.parseInt(DLRstring);
+
+            TextView TWtext = (TextView) findViewById(R.id.TWdrawview);
+            TWtext.setText(data.getStringExtra("TW"));
+            String TWstring = TWtext.getText().toString();
+            int TWnum = Integer.parseInt(TWstring);
+
+            TextView DHtext = (TextView) findViewById(R.id.DHdrawview);
+            DHtext.setText(data.getStringExtra("DH"));
+            String DHstring = DHtext.getText().toString();
+            int DHnum = Integer.parseInt(DHstring);
+
+            TextView DDtext = (TextView) findViewById(R.id.DDdrawview);
+            DDtext.setText(data.getStringExtra("DD"));
+            String DDstring = DDtext.getText().toString();
+            int DDnum = Integer.parseInt(DDstring);
+
+
+
+            DLRtran=DLRnum;
+            TWtran=TWnum;
+            DHtran=DHnum;
+            DDtran=DDnum;
+            enterednewdlsettings=true;
+            juststarted=false;
+            grabdata();
+        }
+
+
+    }
+
 }
-
-
 
 
