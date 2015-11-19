@@ -37,11 +37,10 @@
         android:columnCount="5"
         android:layout_alignParentBottom="true"
         android:textAlignment="center"
-        android:backgroundTint="#b1c45454"
+        android:backgroundTint="#b1f6dddd"
         android:background="@android:color/background_dark"
         android:padding="0dp"
-        android:rowOrderPreserved="true"
-        android:scrollIndicators="right">
+        android:rowOrderPreserved="true">
         <!-- SAR-->
 
         <TextView
@@ -148,6 +147,10 @@
 
     <TextView
         android:id="@+id/SFdrawview"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"/>
+    <TextView
+        android:id="@+id/TOdrawview"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"/>
 </RelativeLayout>

@@ -15,7 +15,7 @@ import android.widget.EditText;
 public class InputRangeActivity extends AppCompatActivity {
     private static final String LOG_TAG = "LOG Cat";
     boolean juststarted;
-    private int TWval,DLRval,DDval,DHval;
+    private String TWval,DLRval,DDval,DHval, TOval;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -52,26 +52,27 @@ public class InputRangeActivity extends AppCompatActivity {
 
         if(juststarted!=true) {
 
-            final EditText editDLreach = (EditText) findViewById(R.id.DLreach);
-            String DLRval = editDLreach.getText().toString();
+            final EditText editDLreach = (EditText) findViewById(R.id.DLreachview);
+            DLRval = editDLreach.getText().toString();
 
-            final EditText editTubW = (EditText) findViewById(R.id.TubW);
-            String TWval = editTubW.getText().toString();
+            final EditText editTubW = (EditText) findViewById(R.id.TubWview);
+            TWval = editTubW.getText().toString();
 
             final EditText editDD = (EditText) findViewById(R.id.DigDView);
-            String DDval = editDD.getText().toString();
+            DDval = editDD.getText().toString();
 
             final EditText editDH = (EditText) findViewById(R.id.DumpHView);
-            String DHval = editDH.getText().toString();
+            DHval = editDH.getText().toString();
 
-
+            final EditText editTO = (EditText) findViewById(R.id.TubOffview);
+            TOval = editTO.getText().toString();
 
         }else {
-            String DLRval ="300";
-            String TWval ="80";
-            String DDval="150";
-            String DHval= "150";
-
+            DLRval ="300";
+            TWval ="80";
+            DDval="150";
+            DHval= "150";
+            TOval= "25";
         }
 
         //Convert string to parse int
@@ -95,11 +96,11 @@ public class InputRangeActivity extends AppCompatActivity {
         draw.putExtra("Benchh", Benchhval);
         draw.putExtra("DLR", DLRval);
         draw.putExtra("TW", TWval);
-        draw.putExtra("DH", DDval);
-        draw.putExtra("DD", DHval);
+        draw.putExtra("DD", DDval);
+        draw.putExtra("DH", DHval);
         draw.putExtra("Source",true);
         draw.putExtra("SF", SFval);
-
+        draw.putExtra("TO", TOval);
         startActivity(draw);
     }
 

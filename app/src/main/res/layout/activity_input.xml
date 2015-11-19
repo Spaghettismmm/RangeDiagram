@@ -151,13 +151,13 @@
             android:text="1.2"/>
 
         <TextView
-            android:id="@+id/DLreach"
+            android:id="@+id/DLreachview"
             android:layout_height="0dp"
             android:layout_width="0dp"/>
 
 
         <TextView
-            android:id="@+id/TubW"
+            android:id="@+id/TubWview"
             android:layout_height="0dp"
             android:layout_width="0dp"/>
 

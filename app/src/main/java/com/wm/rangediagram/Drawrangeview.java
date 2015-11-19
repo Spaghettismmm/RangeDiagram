@@ -23,7 +23,7 @@ public class Drawrangeview extends View {
     private String drawLabel;
     private Paint drawPaint;
     private int labelColor, drawColor;
-    private int HWx, HWy, PWx, PWy, SARx, SARy, Sx, Sy, DLR, TW,HWxo, HWyo, PWxo, PWyo, SARxo, SARyo, Sxo, Syo, Sxf,Syf,Sxfo,Syfo;
+    private int HWx, HWy, PWx, PWy, SARx, SARy, Sx, Sy, DLR, TW,HWxo, HWyo, PWxo, PWyo, SARxo, SARyo, Sxo, Syo, Sxf,Syf,Sxfo,Syfo, TO;
     private static final String LOG_TAG = "LOG Cat";
     private int w, h;
     private boolean myCalculationsAreReady=false;
@@ -73,7 +73,7 @@ public class Drawrangeview extends View {
     }
 
     public void setSides(int HWxi, int HWyi, int PWxi,int PWyi,int SARxi,int SARyi,int Sxi,int Syi,int Sxfi, int Syfi, Boolean yesi, int DLRi, int TWi,
-                         int HWxio, int HWyio, int PWxio,int PWyio,int SARxio,int SARyio,int Sxio,int Syio, int Sxfio, int Syfio, double Pitareai, double Spoilareai, double SFi, double bankspoilareai) {
+                         int HWxio, int HWyio, int PWxio,int PWyio,int SARxio,int SARyio,int Sxio,int Syio, int Sxfio, int Syfio, double Pitareai, double Spoilareai, double SFi, double bankspoilareai, int TOi) {
         Log.i(LOG_TAG, "setSides called");
         HWx =HWxi;
         HWy=HWyi;
@@ -90,7 +90,7 @@ public class Drawrangeview extends View {
         DLR=DLRi;
         TW=TWi;
         bankspoilarea=bankspoilareai;
-
+        TO=TOi;
         HWxo =HWxio;
         HWyo=HWyio;
         PWxo=PWxio;
@@ -149,13 +149,13 @@ public class Drawrangeview extends View {
 
 
             //FOR DRAGLINE REACH AND TUB
-            DLRx1=HWx-TW/2;
+            DLRx1=HWx-TW/2-TO;
             DLRy1=HWy;
             DLRx2=DLRx1+DLR;
             DLRy2=HWy+dlheight;
 
-            TWX1=HWx-TW;
-            TWX2=HWx;
+            TWX1=HWx-TW-TO;
+            TWX2=HWx-TO;
             TWY1=HWy;
             TWY2=HWy+10;
 
