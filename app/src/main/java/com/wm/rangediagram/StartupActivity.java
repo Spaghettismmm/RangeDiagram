@@ -13,8 +13,9 @@ public class StartupActivity extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.startup_activity);
 
-
+        boolean juststarted=true;
         Intent intent = new Intent(StartupActivity.this,InputRangeActivity.class);
+        intent.putExtra("juststarted",juststarted);
         startActivity(intent);
 
     }

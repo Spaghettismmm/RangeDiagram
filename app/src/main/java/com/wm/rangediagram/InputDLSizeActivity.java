@@ -59,6 +59,11 @@ public class InputDLSizeActivity extends AppCompatActivity {
         final EditText editTO = (EditText) findViewById(R.id.TubOffview);
         String TOval = editTO.getText().toString();
 
+        getIntent().removeExtra("DLR");
+        getIntent().removeExtra("TW");
+        getIntent().removeExtra("DH");
+        getIntent().removeExtra("TO");
+        getIntent().removeExtra("juststarted");
 
         Log.i(LOG_TAG, "Store Values dl settings");
 
@@ -71,6 +76,7 @@ public class InputDLSizeActivity extends AppCompatActivity {
         dldrawsettings.putExtra("DD", DHval);
         dldrawsettings.putExtra("TO", TOval);
         dldrawsettings.putExtra("Source", false);
+        dldrawsettings.putExtra("juststarted", false);
         setResult(RESULT_OK, dldrawsettings);
         finish();
     }

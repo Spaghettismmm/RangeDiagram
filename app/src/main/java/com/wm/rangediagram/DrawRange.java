@@ -50,14 +50,16 @@ public class DrawRange extends AppCompatActivity {
 
         br.setDisplayHomeAsUpEnabled(true);
         /* Get values from Intent */
-        enterednewdlsettings=false;
+        Intent intent =getIntent();
+        juststarted=intent.getBooleanExtra("juststarted",true);
+        enterednewdlsettings=juststarted;
         grabdata();
     }
 
     public void grabdata() {
         //Convert input to String
 
-        if (enterednewdlsettings==false){
+        if (juststarted){
 
             TextView DLRtext = (TextView) findViewById(R.id.DLRdrawview);
             DLRtext.setText("300");
@@ -280,9 +282,7 @@ public class DrawRange extends AppCompatActivity {
                 startActivityForResult(dlsize, 1);
                 return true;
             case R.id.listdimensions:
-                parameterListView=(GridLayout)findViewById(R.id.listdimensions);
-
-                registerForContextMenu(parameterListView);
+                openContextMenu(parameterListView);
                 return true;
             case R.id.adjustrangesettings:
 

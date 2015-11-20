@@ -21,7 +21,8 @@ public class InputRangeActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_input);
-        juststarted=true;
+        Intent intent =getIntent();
+        juststarted=intent.getBooleanExtra("juststarted",true);
     }
 
     public void sendPitdim(View ButtonCreatePit) {
