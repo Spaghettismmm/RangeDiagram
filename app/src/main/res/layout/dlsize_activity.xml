@@ -6,6 +6,16 @@
         android:layout_width="match_parent"
         android:orientation="vertical"
         android:weightSum="1">
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/my_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        android:clickable="false"
+        android:padding="0dp" />
         <ScrollView
             android:id="@+id/dlsize_container_scrollView"
             android:layout_width="match_parent"
@@ -21,6 +31,24 @@
                 android:columnCount="3"
                 android:columnOrderPreserved="false"
                 android:orientation="vertical">
+                <TextView
+                    android:text="Swing Angle"
+                    android:layout_gravity="start"
+                    android:layout_row="4"
+                    android:layout_column="0"
+                    android:layout_columnSpan="1"
+                    android:textSize="20sp"/>
+
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/Swingangleview"
+                    android:hint="@string/Swingangle"
+                    android:layout_gravity="end"
+                    android:layout_column="2"
+                    android:layout_row="4"
+                    android:inputType="number"
+                    />
                 <TextView
                     android:text="DL Reach"
                     android:layout_gravity="start"

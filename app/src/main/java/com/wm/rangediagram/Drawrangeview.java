@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
@@ -23,18 +24,18 @@ public class Drawrangeview extends View {
     private String drawLabel;
     private Paint drawPaint;
     private int labelColor, drawColor;
-    private int HWx, HWy, PWx, PWy, SARx, SARy, Sx, Sy, DLR, TW,HWxo, HWyo, PWxo, PWyo, SARxo, SARyo, Sxo, Syo, Sxf,Syf,Sxfo,Syfo, TO;
+    private int HWx, HWy, PWx, PWy, SARx, SARy, Sx, Sy, DLR, TW,HWxo, HWyo, PWxo, PWyo, SARxo, SARyo, Sxo, Syo, Sxf,Syf,Sxfo,Syfo, TO, SA;
     private static final String LOG_TAG = "LOG Cat";
     private int w, h;
     private boolean myCalculationsAreReady=false;
     private boolean yes;
     Paint mPaint=new Paint();
-    private Paint gridPaint, dlPaint, drawoldpitPaint;
+    private Paint gridPaint, dlPaint, drawoldpitPaint, dumpPaint, dumpText;
     Context context;
     private RectF mRangeBounds = new RectF();
-    private float totallength,totalheight,drawpadl,drawpadh,HWxp,HWyp, PWxp,PWyp,SARxp,SARyp,Sxp,Syp, DLRx1,DLRy1,DLRx2,DLRy2,textSize,textSize1, DLRX1p,DLRX2p,DLRY1p,DLRY2p;
+    private float totallength,totalheight,drawpadl,drawpadh,HWxp,HWyp, PWxp,PWyp,SARxp,SARyp,Sxp,Syp, DLRx1,DLRy1,DLRx2,DLRy2,textSize,textSize1,textSize2, DLRX1p,DLRX2p,DLRY1p,DLRY2p;
     private float TWX1,TWX2,TWY1,TWY2, TWX1p,TWX2p,TWY1p,TWY2p,HWxpo,HWypo, PWxpo,PWypo,SARxpo,SARypo,Sxpo,Sypo, Areacutxp, Areacutyp, Areaspoilxp, Areaspoilyp;
-    private float Sxfp,Syfp,Sxfpo,Syfpo;
+    private float Sxfp,Syfp,Sxfpo,Syfpo,HouseX1,HouseX2,HouseY1,HouseY2, HouseX1p,HouseX2p,HouseY1p,HouseY2p, Dumplinex, Dumpliney,Dumplinefy,Dumplinexp, Dumplineyp,Dumplinefyp;
     private double Pitarea, Spoilarea, bankspoilarea, SF;
     private int gridintervaly = 20,gridintervalx = 50, dlheight = 150;
     private int ccount, grdcounty, grdcountx;
@@ -73,7 +74,7 @@ public class Drawrangeview extends View {
     }
 
     public void setSides(int HWxi, int HWyi, int PWxi,int PWyi,int SARxi,int SARyi,int Sxi,int Syi,int Sxfi, int Syfi, Boolean yesi, int DLRi, int TWi,
-                         int HWxio, int HWyio, int PWxio,int PWyio,int SARxio,int SARyio,int Sxio,int Syio, int Sxfio, int Syfio, double Pitareai, double Spoilareai, double SFi, double bankspoilareai, int TOi) {
+                         int HWxio, int HWyio, int PWxio,int PWyio,int SARxio,int SARyio,int Sxio,int Syio, int Sxfio, int Syfio, double Pitareai, double Spoilareai, double SFi, double bankspoilareai, int TOi, int SAi) {
         Log.i(LOG_TAG, "setSides called");
         HWx =HWxi;
         HWy=HWyi;
@@ -99,7 +100,7 @@ public class Drawrangeview extends View {
         SARyo=SARyio;
         Sxo = Sxio;
         Syo=Syio;
-
+        SA=SAi;
 
         Sxf=Sxfi;
         Syf=Syfi;
@@ -131,7 +132,7 @@ public class Drawrangeview extends View {
             w=resolveSize(widthMeasureSpec,minw);
 
             int minh=getPaddingBottom() + getPaddingTop()+getSuggestedMinimumHeight();
-            int canvasdim=resolveSize(MeasureSpec.getSize(R.layout.main_activity),minh);
+            //int canvasdim=resolveSize(MeasureSpec.getSize(R.layout.main_activity),minh);
             h = resolveSize(heightMeasureSpec, minh);
 
             setMeasuredDimension(w, h);
@@ -144,20 +145,31 @@ public class Drawrangeview extends View {
             drawpadl=20;
             totallength=Math.max(SARx,Math.max(PWx,Math.max(Sx,Math.max(SARxo,Math.max(PWxo,Math.max(Sxo,Math.max(HWx,HWxo)))))))+drawpadl*2;
             drawpadh=20;
-            totalheight=Math.max(SARy,Math.max(PWy,Math.max(Sy,HWy))) + dlheight+drawpadh;
+            totalheight=Math.max(SARy,Math.max(PWy,Math.max(Sy,HWy))) + (dlheight+HWy-Math.max(SARy,Math.max(PWy,Math.max(Sy,HWy))))+drawpadh;
             //Move Drawing to padding distance
 
 
             //FOR DRAGLINE REACH AND TUB
-            DLRx1=HWx-TW/2-TO;
+            DLRx1=HWxo-TW/2-TO;
             DLRy1=HWy;
             DLRx2=DLRx1+DLR;
             DLRy2=HWy+dlheight;
 
-            TWX1=HWx-TW-TO;
-            TWX2=HWx-TO;
+            TWX1=HWxo-TW-TO;
+            TWX2=HWxo-TO;
             TWY1=HWy;
             TWY2=HWy+10;
+
+            //FOR HOUSE OF DL
+            HouseX1=HWxo-TW-TO-70;
+            HouseX2=HWxo-TO+25;
+            HouseY1=HWy+10;
+            HouseY2=HWy+60;
+
+            //DUMP LINE AT ANGLE
+            Dumplinex=Sx;
+            Dumpliney=DLRy2;
+            Dumplinefy=Sy;
 
             //To Scale Drawing
             HWxp=w*(HWx/totallength)+drawpadl;
@@ -178,16 +190,28 @@ public class Drawrangeview extends View {
             Sxpo=w*(Sxo/totallength)+drawpadl;
             Sypo=h-h*(Syo/totalheight)-drawpadh;
 
-
+            //Scale DL REACH AND BOOM
             DLRX1p=w*(DLRx1/totallength)+drawpadl;
             DLRX2p=w*(DLRx2/totallength)+drawpadl;
             DLRY1p=h-h*(DLRy1/totalheight)-drawpadh;
             DLRY2p=h-h*(DLRy2/totalheight)-drawpadh;
 
+            //Scale TUB RECTANGLE
             TWX1p=w*(TWX1/totallength)+drawpadl;
             TWX2p=w*(TWX2/totallength)+drawpadl;
             TWY2p=h-h*(TWY1/totalheight)-drawpadh;
             TWY1p=h-h*(TWY2/totalheight)-drawpadh;
+
+            //Scale HOUSE
+            HouseX1p=w*(HouseX1/totallength)+drawpadl;
+            HouseX2p=w*(HouseX2/totallength)+drawpadl;
+            HouseY2p=h-h*(HouseY1/totalheight)-drawpadh;
+            HouseY1p=h-h*(HouseY2/totalheight)-drawpadh;
+
+            //Scale Dump Line
+            Dumplineyp=h-h*(Dumpliney/totalheight)-drawpadh;
+            Dumplinefyp=h-h*(Dumplinefy/totalheight)-drawpadh;
+            Dumplinexp=w*(Dumplinex/totallength)+drawpadl;
 
             Sxfp=w*((Sxf)/totallength)+drawpadl;
             Syfp=h-h*(Syf/totalheight)-drawpadh;
@@ -273,8 +297,15 @@ public class Drawrangeview extends View {
             oldpit.lineTo(Sxpo, Sypo);
             oldpit.lineTo(Sxfpo, Syfpo);
  //           canvas.drawRect(r,drawPaint);
-            canvas.drawLines(gridpntsy, gridPaint);
 
+
+            Path dumpline = new Path();
+            dumpline.moveTo(Dumplinexp, Dumplineyp); // origin
+            // add a line for side A
+            dumpline.lineTo(Dumplinexp, Dumplinefyp);
+
+
+            canvas.drawLines(gridpntsy, gridPaint);
 
             int beta=0;
                 for (int alpha=0; alpha<gridlbly.length; alpha++) {
@@ -290,6 +321,10 @@ public class Drawrangeview extends View {
 
             canvas.drawPath(path, drawPaint);
             canvas.drawPath(oldpit, drawoldpitPaint);
+            canvas.drawPath(dumpline,dumpPaint);
+
+            canvas.drawText(String.valueOf((SA))+"°",Dumplinexp,Dumplineyp,dumpText);
+
             Path dragline = new Path();
             // start the path at the "origin"
             dragline.moveTo(DLRX1p, DLRY1p); // origin
@@ -306,9 +341,10 @@ public class Drawrangeview extends View {
             // close the path to draw the hypotenuse
 
             canvas.drawRect(TWX1p, TWY1p, TWX2p, TWY2p, dlPaint);
+            canvas.drawRect(HouseX1p, HouseY1p, HouseX2p, HouseY2p, dlPaint);
 
-            canvas.drawText(String.valueOf(Math.round(Spoilarea)) + " ft^2", Areaspoilxp, Areaspoilyp, drawPaint);
-            canvas.drawText(String.valueOf(Math.round(bankspoilarea)) + " ft^2" + " @ Swell of " + String.valueOf((SF)), Areaspoilxp-textSize*10, Areaspoilyp + textSize*5, drawPaint);
+            canvas.drawText(String.valueOf(Math.round(Spoilarea)) + " ft^2", Areaspoilxp-textSize*10, Areaspoilyp, drawPaint);
+            canvas.drawText(String.valueOf(Math.round(bankspoilarea)) + " ft^2" + " @ Swell " + String.valueOf((SF)), Areaspoilxp-textSize*15, Areaspoilyp + textSize*5, drawPaint);
             canvas.drawText(String.valueOf(Math.round(Pitarea))+" ft^2", Areacutxp, Areacutyp, drawPaint);
             Log.i(LOG_TAG, "Drawn'd");
 
@@ -340,6 +376,20 @@ public class Drawrangeview extends View {
             textSize1 = drawPaint.getTextSize();
             drawPaint.setTextSize(textSize1 * 3);
 
+        dumpPaint = new Paint();
+            dumpPaint.setStrokeWidth(4);
+            dumpPaint.setPathEffect(null);
+            dumpPaint.setColor(Color.MAGENTA);
+            dumpPaint.setStyle(Paint.Style.STROKE);
+            dumpPaint.setPathEffect(new DashPathEffect(new float[]{5, 10, 15, 20}, 0));
+
+        dumpText = new Paint();
+            dumpText.setStrokeWidth(4);
+            dumpText.setPathEffect(null);
+            dumpText.setColor(Color.MAGENTA);
+            dumpText.setStyle(Paint.Style.STROKE);
+            textSize2 = dumpText.getTextSize();
+            dumpText.setTextSize(textSize2 * 3);
 
         drawoldpitPaint = new Paint();
             drawoldpitPaint.setStrokeWidth(4);
@@ -361,36 +411,7 @@ public class Drawrangeview extends View {
             dlPaint.setPathEffect(null);
             dlPaint.setStyle(Paint.Style.STROKE);
     }
-      /*
-        @Override
-        protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        super.onSizeChanged(w, h, oldw, oldh);
-        Log.i(LOG_TAG, "onSizeChanged called");
-        //
-        // Set dimensions for text, pie chart, etc
-        //
-        // Account for padding
-        float xpad = (float) (getPaddingLeft() + getPaddingRight());
-        float ypad = (float) (getPaddingTop() + getPaddingBottom());
 
-        float ww = (float) w - xpad;
-        float hh = (float) h - ypad;
-
-        // Figure out how big we can make the pie.
-        float diameter = Math.min(ww, hh);
-        mRangeBounds = new RectF(
-                0.0f,
-                0.0f,
-                diameter,
-                diameter);
-        mRangeBounds.offsetTo(getPaddingLeft(), getPaddingTop());
-        // Lay out the child view that actually draws the pie.
-        mrangeview.layout((int) mRangeBounds.left,
-                (int) mRangeBounds.top,
-                (int) mRangeBounds.right,
-                (int) mRangeBounds.bottom);
-        }
-        */
 
 
 

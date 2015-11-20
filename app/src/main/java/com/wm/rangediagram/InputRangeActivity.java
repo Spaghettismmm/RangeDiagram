@@ -2,7 +2,9 @@ package com.wm.rangediagram;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -15,14 +17,49 @@ import android.widget.EditText;
 public class InputRangeActivity extends AppCompatActivity {
     private static final String LOG_TAG = "LOG Cat";
     boolean juststarted;
-    private String TWval,DLRval,DDval,DHval, TOval;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_input);
-        Intent intent =getIntent();
-        juststarted=intent.getBooleanExtra("juststarted",true);
+
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        setSupportActionBar(myToolbar);
+
+
+        Bundle extras = getIntent().getExtras();
+
+        juststarted=extras.getBoolean("juststarted");
+
+        if(!juststarted) {
+            ActionBar br = getSupportActionBar();
+
+            br.setDisplayHomeAsUpEnabled(true);
+            Intent intent = getIntent();
+
+            EditText SAReditview= (EditText) findViewById(R.id.SAReditView);
+            SAReditview.setText(Integer.toString((intent.getIntExtra("SAR",0))));
+
+            EditText HWeditview= (EditText) findViewById(R.id.HWeditView);
+            HWeditview.setText(Integer.toString((intent.getIntExtra("HW",0))));
+
+            EditText PWeditview= (EditText) findViewById(R.id.PWeditView);
+            PWeditview.setText(Integer.toString((intent.getIntExtra("PW", 0))));
+
+            EditText BWeditview= (EditText) findViewById(R.id.BenchwidthView);
+            BWeditview.setText(Integer.toString((intent.getIntExtra("BW", 0))));
+
+            EditText BHeditview= (EditText) findViewById(R.id.BenchheightView);
+            BHeditview.setText(Integer.toString((intent.getIntExtra("BH", 0))));
+
+            EditText SFeditview= (EditText) findViewById(R.id.SFeditView);
+            SFeditview.setText(Double.toString((intent.getDoubleExtra("SF", 0.0))));
+
+
+        }
+
+
+
     }
 
     public void sendPitdim(View ButtonCreatePit) {
@@ -48,61 +85,34 @@ public class InputRangeActivity extends AppCompatActivity {
         final EditText editBenchh = (EditText) findViewById(R.id.BenchheightView);
         String Benchhval = editBenchh.getText().toString();
 
-        final EditText editSF = (EditText) findViewById(R.id.SFView);
+        final EditText editSF = (EditText) findViewById(R.id.SFeditView);
         String SFval = editSF.getText().toString();
 
-        if(juststarted!=true) {
-
-            final EditText editDLreach = (EditText) findViewById(R.id.DLreachview);
-            DLRval = editDLreach.getText().toString();
-
-            final EditText editTubW = (EditText) findViewById(R.id.TubWview);
-            TWval = editTubW.getText().toString();
-
-            final EditText editDD = (EditText) findViewById(R.id.DigDView);
-            DDval = editDD.getText().toString();
-
-            final EditText editDH = (EditText) findViewById(R.id.DumpHView);
-            DHval = editDH.getText().toString();
-
-            final EditText editTO = (EditText) findViewById(R.id.TubOffview);
-            TOval = editTO.getText().toString();
-
-        }else {
-            DLRval ="300";
-            TWval ="80";
-            DDval="150";
-            DHval= "150";
-            TOval= "25";
+        if(juststarted) {
+            juststarted=true;
         }
 
-        //Convert string to parse int
-       // int PWnum = Integer.parseInt(PWval);
-        //int Benchnum = Integer.parseInt(Benchval);
-        //int HWnum = Integer.parseInt(HWval);
-       // int SARnum = Integer.parseInt(SARval);
-       // int Benchheightnum = Integer.parseInt(Benchhval);
-        //int DLReachnum = Integer.parseInt(DLRval);
-      //  int TWnum = Integer.parseInt(TWval);
-
         Log.i(LOG_TAG, "Store Values");
-
-
 
         Intent draw = new Intent(InputRangeActivity.this, DrawRange.class);
         draw.putExtra("SAR", SARval);
         draw.putExtra("HW", HWval);
         draw.putExtra("PW", PWval);
-        draw.putExtra("Benchw", Benchval);
-        draw.putExtra("Benchh", Benchhval);
-        draw.putExtra("DLR", DLRval);
-        draw.putExtra("TW", TWval);
-        draw.putExtra("DD", DDval);
-        draw.putExtra("DH", DHval);
-        draw.putExtra("Source",true);
+        draw.putExtra("BW", Benchval);
+        draw.putExtra("BH", Benchhval);
+        draw.putExtra("FromRangeInput",true);
+        draw.putExtra("juststarted", juststarted);
         draw.putExtra("SF", SFval);
-        draw.putExtra("TO", TOval);
-        startActivity(draw);
-    }
 
+        if(!juststarted) {
+                setResult(RESULT_OK, draw);
+                finish();
+            } else {
+
+                startActivity(draw);
+
+        }
+    }
 }
+
+

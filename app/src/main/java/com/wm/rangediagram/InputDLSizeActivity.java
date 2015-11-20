@@ -2,13 +2,15 @@ package com.wm.rangediagram;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
 /**
- * Created by xscz on 11/9/2015.
+ * Created by WM on 11/9/2015.
  */
 public class InputDLSizeActivity extends AppCompatActivity {
     private static final String LOG_TAG = "LOG Cat";
@@ -20,7 +22,26 @@ public class InputDLSizeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dlsize_activity);
 
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        setSupportActionBar(myToolbar);
+        ActionBar br = getSupportActionBar();
+
+        br.setDisplayHomeAsUpEnabled(true);
+        Bundle extras = getIntent().getExtras();
+
+        if(extras == null) {
+            Intent dldrawsettings = new Intent(this, DrawRange.class);
+
+            dldrawsettings.putExtra("FromRangeInput", false);
+            dldrawsettings.putExtra("juststarted", true);
+            setResult(RESULT_CANCELED, dldrawsettings);
+            finish();
+        } else {
+
         Intent intent = getIntent();
+
+        EditText SAeditview= (EditText) findViewById(R.id.Swingangleview);
+        SAeditview.setText(Integer.toString((intent.getIntExtra("SA",0))));
 
         EditText DLReditview= (EditText) findViewById(R.id.DLreachview);
         DLReditview.setText(Integer.toString((intent.getIntExtra("DLR",0))));
@@ -39,10 +60,15 @@ public class InputDLSizeActivity extends AppCompatActivity {
 
         EditText TOeditview= (EditText) findViewById(R.id.TubOffview);
         TOeditview.setText(Integer.toString((intent.getIntExtra("TO", 0))));
+        }
+
     }
 
 
     public void DLDim_onClick(View dlsize_button) {
+
+        final EditText editSA = (EditText) findViewById(R.id.Swingangleview);
+        String SAval = editSA.getText().toString();
 
         final EditText editDLreach = (EditText) findViewById(R.id.DLreachview);
         String DLRval = editDLreach.getText().toString();
@@ -59,17 +85,12 @@ public class InputDLSizeActivity extends AppCompatActivity {
         final EditText editTO = (EditText) findViewById(R.id.TubOffview);
         String TOval = editTO.getText().toString();
 
-        getIntent().removeExtra("DLR");
-        getIntent().removeExtra("TW");
-        getIntent().removeExtra("DH");
-        getIntent().removeExtra("TO");
-        getIntent().removeExtra("juststarted");
-
         Log.i(LOG_TAG, "Store Values dl settings");
 
 
         Intent dldrawsettings = new Intent(this, DrawRange.class);
 
+        dldrawsettings.putExtra("SA", SAval);
         dldrawsettings.putExtra("DLR", DLRval);
         dldrawsettings.putExtra("TW", TWval);
         dldrawsettings.putExtra("DH", DDval);
@@ -77,6 +98,7 @@ public class InputDLSizeActivity extends AppCompatActivity {
         dldrawsettings.putExtra("TO", TOval);
         dldrawsettings.putExtra("Source", false);
         dldrawsettings.putExtra("juststarted", false);
+        dldrawsettings.putExtra("FromRangeInput", false);
         setResult(RESULT_OK, dldrawsettings);
         finish();
     }

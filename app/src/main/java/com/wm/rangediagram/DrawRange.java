@@ -4,17 +4,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.GridLayout;
-import android.widget.GridView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 /**
@@ -24,13 +20,13 @@ public class DrawRange extends AppCompatActivity {
     Drawrangeview rangeview;
 
     private static final String LOG_TAG = "LOG Cat";
-    private double HWx, HWy, SARx, SARy, PWx, PWy, Sx, Sy, HWxo, HWyo, PWxo, PWyo, SARxo, SARyo, Sxo, Syo, TOx, TOxo;
-    private double Syf, Sxf, Syfo, Sxfo, Sxftest,SFnum;
+    private double HWx, HWy, SARx, SARy, PWx, PWy, Sx, Sy, HWxo, HWyo, PWxo, PWyo, SARxo, SARyo, Sxo, Syo, TOx, TOxo, SAReach;
+    private double Syf, Sxf, Syfo, Sxfo, Sxftest,SFnum,SFtran;
     private double Pitarea, Spoilarea, bankspoilarea;
-    private int TWtran, DLRtran, DHtran,DDtran,TOtran, DLRnum,TWnum,DHnum,DDnum, SARnum,HWnum,BWnum, BHnum, PWnum, TOnum;
+    private int TWtran, DLRtran, DHtran,DDtran,TOtran,SAtran, SARtran,HWtran ,PWtran,BWtran,BHtran, DLRnum,TWnum,DHnum,DDnum, SARnum,HWnum,BWnum, BHnum, PWnum, TOnum, SAnum;
     private boolean yes;
     boolean juststarted;
-    private boolean enterednewdlsettings;
+    private boolean FromRangeInput;
     GridLayout parameterListView;
 
     @Override
@@ -46,13 +42,11 @@ public class DrawRange extends AppCompatActivity {
 
         registerForContextMenu(parameterListView);
 
-        ActionBar br = getSupportActionBar();
 
-        br.setDisplayHomeAsUpEnabled(true);
         /* Get values from Intent */
         Intent intent =getIntent();
         juststarted=intent.getBooleanExtra("juststarted",true);
-        enterednewdlsettings=juststarted;
+        FromRangeInput=intent.getBooleanExtra("FromRangeInput",true);
         grabdata();
     }
 
@@ -61,73 +55,119 @@ public class DrawRange extends AppCompatActivity {
 
         if (juststarted){
 
-            TextView DLRtext = (TextView) findViewById(R.id.DLRdrawview);
-            DLRtext.setText("300");
-            String DLRstring = DLRtext.getText().toString();
+            String SAstring = "90";
+            SAnum = Integer.parseInt(SAstring);
+            String DLRstring = "300";
             DLRnum = Integer.parseInt(DLRstring);
-
-            TextView TWtext = (TextView) findViewById(R.id.TWdrawview);
-            TWtext.setText("80");
-            String TWstring = TWtext.getText().toString();
+            String TWstring = "80";
             TWnum = Integer.parseInt(TWstring);
-
-            TextView DHtext = (TextView) findViewById(R.id.DHdrawview);
-            DHtext.setText("150");
-            String DHstring = DHtext.getText().toString();
+            String DHstring = "150";
             DHnum = Integer.parseInt(DHstring);
-
-            TextView DDtext = (TextView) findViewById(R.id.DDdrawview);
-            DDtext.setText("150");
-            String DDstring = DDtext.getText().toString();
+            String DDstring = "150";
             DDnum = Integer.parseInt(DDstring);
-
-            TextView TOtext = (TextView) findViewById(R.id.TOdrawview);
-            TOtext.setText("25");
-            String TOstring = TOtext.getText().toString();
+            String TOstring = "25";
             TOnum = Integer.parseInt(TOstring);
+
+            Bundle extra = getIntent().getExtras();
+            TextView SARtext = (TextView) findViewById(R.id.Sardrawview);
+            SARtext.setText(getIntent().getStringExtra("SAR"));
+            String SARstring = SARtext.getText().toString();
+            SARnum = Integer.parseInt(SARstring);
+
+            TextView HWtext = (TextView) findViewById(R.id.HWdrawview);
+            HWtext.setText(getIntent().getStringExtra("HW"));
+            String HWstring = HWtext.getText().toString();
+            HWnum = Integer.parseInt(HWstring);
+
+            TextView PWtext = (TextView) findViewById(R.id.PWdrawview);
+            PWtext.setText(getIntent().getStringExtra("PW"));
+            String PWstring = PWtext.getText().toString();
+            PWnum = Integer.parseInt(PWstring);
+
+            TextView BWtext = (TextView) findViewById(R.id.BWdrawview);
+            BWtext.setText(getIntent().getStringExtra("BW"));
+            String BWstring = BWtext.getText().toString();
+            BWnum = Integer.parseInt(BWstring);
+
+            TextView BHtext = (TextView) findViewById(R.id.BHdrawview);
+            BHtext.setText(getIntent().getStringExtra("BH"));
+            String BHstring = BHtext.getText().toString();
+            BHnum = Integer.parseInt(BHstring);
+
+            String SFstring = extra.getString("SF");
+            SFnum = Double.parseDouble(SFstring);
+
         } else {
 
-            DLRnum=DLRtran;
-            TWnum=TWtran;
-            DHnum=DHtran;
-            DDnum=DDtran;
-            TOnum=TOtran;
+            if(FromRangeInput) {
+                SARnum = SARtran;
+                HWnum = HWtran;
+                PWnum = PWtran;
+                BWnum = BWtran;
+                BHnum = BHtran;
+                SFnum = SFtran;
+                Intent extras = getIntent();
+                extras.putExtra("SAR", SARnum);
+                extras.putExtra("HW", HWnum);
+                extras.putExtra("PW", PWnum);
+                extras.putExtra("BW", BWnum);
+                extras.putExtra("BH", BHnum);
+                extras.putExtra("SF", SFnum);
 
+            }else if(!FromRangeInput) {
+                DLRnum = DLRtran;
+                TWnum = TWtran;
+                DHnum = DHtran;
+                DDnum = DDtran;
+                TOnum = TOtran;
+                SAnum = SAtran;
+                Intent extras = getIntent();
+                extras.putExtra("DLR", DLRnum);
+                extras.putExtra("SA", SAnum);
+                extras.putExtra("TW", TWnum);
+                extras.putExtra("DH", DHnum);
+                extras.putExtra("DD", DDnum);
+                extras.putExtra("TO", TOnum);
+
+                Bundle extra = getIntent().getExtras();
+
+                    if(extra == null) {
+                        finish();
+                    } else {
+                        TextView SARtext = (TextView) findViewById(R.id.Sardrawview);
+                        SARtext.setText(getIntent().getStringExtra("SAR"));
+                        String SARstring = SARtext.getText().toString();
+                        SARnum = Integer.parseInt(SARstring);
+
+                        TextView HWtext = (TextView) findViewById(R.id.HWdrawview);
+                        HWtext.setText(getIntent().getStringExtra("HW"));
+                        String HWstring = HWtext.getText().toString();
+                        HWnum = Integer.parseInt(HWstring);
+
+                        TextView PWtext = (TextView) findViewById(R.id.PWdrawview);
+                        PWtext.setText(getIntent().getStringExtra("PW"));
+                        String PWstring = PWtext.getText().toString();
+                        PWnum = Integer.parseInt(PWstring);
+
+                        TextView BWtext = (TextView) findViewById(R.id.BWdrawview);
+                        BWtext.setText(getIntent().getStringExtra("BW"));
+                        String BWstring = BWtext.getText().toString();
+                        BWnum = Integer.parseInt(BWstring);
+
+                        TextView BHtext = (TextView) findViewById(R.id.BHdrawview);
+                        BHtext.setText(getIntent().getStringExtra("BH"));
+                        String BHstring = BHtext.getText().toString();
+                        BHnum = Integer.parseInt(BHstring);
+
+                        String SFstring = extra.getString("SF");
+                        SFnum = Double.parseDouble(SFstring);
+                    }
+            }
         }
-        TextView SARtext = (TextView) findViewById(R.id.Sardrawview);
-        SARtext.setText(getIntent().getStringExtra("SAR"));
-        String SARstring = SARtext.getText().toString();
-        SARnum = Integer.parseInt(SARstring);
-
-        TextView HWtext = (TextView) findViewById(R.id.HWdrawview);
-        HWtext.setText(getIntent().getStringExtra("HW"));
-        String HWstring = HWtext.getText().toString();
-        HWnum = Integer.parseInt(HWstring);
-
-        TextView PWtext = (TextView) findViewById(R.id.PWdrawview);
-        PWtext.setText(getIntent().getStringExtra("PW"));
-        String PWstring = PWtext.getText().toString();
-        PWnum = Integer.parseInt(PWstring);
-
-        TextView BWtext = (TextView) findViewById(R.id.BWdrawview);
-        BWtext.setText(getIntent().getStringExtra("Benchw"));
-        String BWstring = BWtext.getText().toString();
-        BWnum = Integer.parseInt(BWstring);
-
-        TextView BHtext = (TextView) findViewById(R.id.BHdrawview);
-        BHtext.setText(getIntent().getStringExtra("Benchh"));
-        String BHstring = BHtext.getText().toString();
-        BHnum = Integer.parseInt(BHstring);
-
-        TextView SFtext = (TextView) findViewById(R.id.SFdrawview);
-        SFtext.setText(getIntent().getStringExtra("SF"));
-        String SFstring = SFtext.getText().toString();
-        SFnum = Double.parseDouble(SFstring);
-
 
         Log.i(LOG_TAG, "Retrieved");
 
-        docalcs(SARnum, HWnum, BWnum, PWnum, BHnum, DLRnum, TWnum, DHnum, DDnum, SFnum, TOnum);
+        norehandlecalcs(SARnum, HWnum, BWnum, PWnum, BHnum, DLRnum, TWnum, DHnum, DDnum, SFnum, TOnum, SAnum);
 
         Log.i(LOG_TAG, "Calculated");
         Log.d(LOG_TAG, "HWx: " + Double.toString(HWx));
@@ -162,18 +202,19 @@ public class DrawRange extends AppCompatActivity {
         int Syfi = (int) Syf;
         int TOfi = (int) TOx;
         double SFi = SFnum;
+        int SAi=SAnum;
         yes = true;
 
         rangeview = (Drawrangeview) findViewById(R.id.draw_canvas_main_activity);
 
         rangeview.setSides(HWxi, HWyi, PWxi, PWyi, SARxi, SARyi, Sxi, Syi, Sxfi, Syfi, yes, DLRnum, TWnum,
-                HWxio, HWyio, PWxio, PWyio, SARxio, SARyio, Sxio, Syio, Sxfio, Syfio, Pitarea, Spoilarea, SFi, bankspoilarea, TOfi);
+                HWxio, HWyio, PWxio, PWyio, SARxio, SARyio, Sxio, Syio, Sxfio, Syfio, Pitarea, Spoilarea, SFi, bankspoilarea, TOfi, SAi);
         //setContentView(rangeview);
 
     }
 
 
-    public void docalcs(double Sar, double HW, double BW, double PW, double BH, double Reach, double Tub, double DD, double DH, double SF , double TO) {
+    public void norehandlecalcs(double Sar, double HW, double BW, double PW, double BH, double Reach, double Tub, double DD, double DH, double SF, double TO, double SA) {
         HWx = BW;
         HWy = BH;
         double HWangle = Math.toRadians(HW);
@@ -183,7 +224,10 @@ public class DrawRange extends AppCompatActivity {
         SARy = PWy;
         SARx = PWx + PW;
         TOx=TO;
-        double Newreach = (Reach - (Tub / 2)- TO- (SARx - BW));
+
+        double Tubloc=BW+PW-TO-Tub/2;
+        SAReach=Reach*(Math.sin(Math.toRadians(SA)));
+        double Newreach = SAReach - (Tub / 2)- TO-(BH / (Math.tan(HWangle)));
 
         Sx = SARx + (Newreach);
         if ((SARy + (Newreach * (Math.tan(SARangle)))) < (HWy + DH)) {
@@ -193,7 +237,7 @@ public class DrawRange extends AppCompatActivity {
         }
 
         //for old pit
-        HWxo = BW * 2;
+        HWxo = BW +PW;
         HWyo = BH;
         PWxo = HWxo + BH / (Math.tan(HWangle));
         PWyo = HWyo - BH;
@@ -216,7 +260,7 @@ public class DrawRange extends AppCompatActivity {
             Syf = SARy;
         }
 
-        Sxfo = Sxo + (Newreach);
+        Sxfo = SARxo + Sxf-SARx;
         Syfo = Syf;
 
 
@@ -246,47 +290,55 @@ public class DrawRange extends AppCompatActivity {
         switch (item.getItemId()) {
 
             case R.id.draglinedims:
+                /*
+                if (!juststarted) {
+                    Bundle extras = getIntent().getExtras();
+                    String SAstring = extras.getString("SA");
+                    SAnum = Integer.parseInt(SAstring);
+
+                    String DLRstring = extras.getString("DLR");
+                    DLRnum = Integer.parseInt(DLRstring);
+
+                    String TWstring = extras.getString("TW");
+                    TWnum = Integer.parseInt(TWstring);
+
+                    String DHstring = extras.getString("DH");
+                    DHnum = Integer.parseInt(DHstring);
+
+                    String DDstring = extras.getString("DD");
+                    DDnum = Integer.parseInt(DDstring);
+
+                    String TOstring = extras.getString("TO");
+                    TOnum = Integer.parseInt(TOstring);
+                }
+                */
+                    Intent dlsize = new Intent(this, InputDLSizeActivity.class);
+                    dlsize.putExtra("SA", SAnum);
+                    dlsize.putExtra("DLR", DLRnum);
+                    dlsize.putExtra("TW", TWnum);
+                    dlsize.putExtra("DH", DHnum);
+                    dlsize.putExtra("DD", DDnum);
+                    dlsize.putExtra("TO", TOnum);
+                    startActivityForResult(dlsize, 1);
 
 
-                TextView DLRtext = (TextView) findViewById(R.id.DLRdrawview);
-                DLRtext.setText(getIntent().getStringExtra("DLR"));
-                String DLRstring = DLRtext.getText().toString();
-                int DLRnum = Integer.parseInt(DLRstring);
-
-                TextView TWtext = (TextView) findViewById(R.id.TWdrawview);
-                TWtext.setText(getIntent().getStringExtra("TW"));
-                String TWstring = TWtext.getText().toString();
-                int TWnum = Integer.parseInt(TWstring);
-
-                TextView DHtext = (TextView) findViewById(R.id.DHdrawview);
-                DHtext.setText(getIntent().getStringExtra("DH"));
-                String DHstring = DHtext.getText().toString();
-                int DHnum = Integer.parseInt(DHstring);
-
-                TextView DDtext = (TextView) findViewById(R.id.DDdrawview);
-                DDtext.setText(getIntent().getStringExtra("DD"));
-                String DDstring = DDtext.getText().toString();
-                int DDnum = Integer.parseInt(DDstring);
-
-                TextView TOtext = (TextView) findViewById(R.id.TOdrawview);
-                TOtext.setText(getIntent().getStringExtra("TO"));
-                String TOstring = TOtext.getText().toString();
-                int TOnum = Integer.parseInt(TOstring);
-
-                Intent dlsize = new Intent(this, InputDLSizeActivity.class);
-                dlsize.putExtra("DLR", DLRnum);
-                dlsize.putExtra("TW", TWnum);
-                dlsize.putExtra("DH", DHnum);
-                dlsize.putExtra("DD", DDnum);
-                dlsize.putExtra("TO", TOnum);
-                startActivityForResult(dlsize, 1);
                 return true;
             case R.id.listdimensions:
                 openContextMenu(parameterListView);
                 return true;
             case R.id.adjustrangesettings:
+                Intent rangesize = new Intent(this, InputRangeActivity.class);
+                rangesize.putExtra("SAR", SARnum);
+                rangesize.putExtra("HW", HWnum);
+                rangesize.putExtra("PW", PWnum);
+                rangesize.putExtra("BW", BWnum);
+                rangesize.putExtra("BH", BHnum);
 
-                this.finish();
+                rangesize.putExtra("FromRangeInput",false);
+                rangesize.putExtra("SF", SFnum);
+
+                startActivityForResult(rangesize, 1);
+
                 return true;
 
 
@@ -298,40 +350,72 @@ public class DrawRange extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
+        String SAstring,DLRstring,TWstring,DHstring,DDstring,TOstring,SARstring,SFstring,HWstring,BHstring,BWstring,PWstring;
+        int SAnumretrieve,DLRnumretrieve,TWnumretrieve,DHnumretrieve,DDnumretrieve,TOnumretrieve, SARnumretrieve,HWnumretrieve,PWnumretrieve,BWnumretrieve,BHnumretrieve;
+        double SFnumretrieve;
         if (resultCode == RESULT_OK) {
-            TextView DLRtext = (TextView) findViewById(R.id.DLRdrawview);
-            DLRtext.setText(data.getStringExtra("DLR"));
-            String DLRstring = DLRtext.getText().toString();
-            int DLRnum = Integer.parseInt(DLRstring);
 
-            TextView TWtext = (TextView) findViewById(R.id.TWdrawview);
-            TWtext.setText(data.getStringExtra("TW"));
-            String TWstring = TWtext.getText().toString();
-            int TWnum = Integer.parseInt(TWstring);
+                Bundle extras = data.getExtras();
 
-            TextView DHtext = (TextView) findViewById(R.id.DHdrawview);
-            DHtext.setText(data.getStringExtra("DH"));
-            String DHstring = DHtext.getText().toString();
-            int DHnum = Integer.parseInt(DHstring);
+            FromRangeInput= extras.getBoolean("FromRangeInput");
+                if(FromRangeInput) {
+                    SARstring= extras.getString("SAR");
+                    SARnumretrieve = Integer.parseInt(SARstring);
 
-            TextView DDtext = (TextView) findViewById(R.id.DDdrawview);
-            DDtext.setText(data.getStringExtra("DD"));
-            String DDstring = DDtext.getText().toString();
-            int DDnum = Integer.parseInt(DDstring);
+                    HWstring = extras.getString("HW");
+                    HWnumretrieve = Integer.parseInt(HWstring);
 
-            TextView TOtext = (TextView) findViewById(R.id.TOdrawview);
-            TOtext.setText(getIntent().getStringExtra("TO"));
-            String TOstring = TOtext.getText().toString();
-            int TOnum = Integer.parseInt(TOstring);
+                    PWstring = extras.getString("PW");
+                    PWnumretrieve = Integer.parseInt(PWstring);
 
-            DLRtran=DLRnum;
-            TWtran=TWnum;
-            DHtran=DHnum;
-            DDtran=DDnum;
-            TOtran=TOnum;
-            enterednewdlsettings=true;
-            juststarted=false;
+                    BWstring = extras.getString("BW");
+                    BWnumretrieve = Integer.parseInt(BWstring);
+
+                    BHstring = extras.getString("BH");
+                    BHnumretrieve = Integer.parseInt(BHstring);
+
+                    SFstring = extras.getString("SF");
+                    SFnumretrieve = Double.parseDouble(SFstring);
+
+                    SARtran=SARnumretrieve;
+                    HWtran=HWnumretrieve;
+                    PWtran=PWnumretrieve;
+                    BWtran=BWnumretrieve;
+                    BHtran=BHnumretrieve;
+                    SFtran=SFnumretrieve;
+                    juststarted=false;
+
+
+                } else {
+                    SAstring= extras.getString("SA");
+                    SAnumretrieve = Integer.parseInt(SAstring);
+
+                    DLRstring = extras.getString("DLR");
+                    DLRnumretrieve = Integer.parseInt(DLRstring);
+
+                    TWstring = extras.getString("TW");
+                    TWnumretrieve = Integer.parseInt(TWstring);
+
+                    DHstring = extras.getString("DH");
+                    DHnumretrieve = Integer.parseInt(DHstring);
+
+                    DDstring = extras.getString("DD");
+                    DDnumretrieve = Integer.parseInt(DDstring);
+
+                    TOstring = extras.getString("TO");
+                    TOnumretrieve = Integer.parseInt(TOstring);
+
+                    DLRtran=DLRnumretrieve;
+                    TWtran=TWnumretrieve;
+                    DHtran=DHnumretrieve;
+                    DDtran=DDnumretrieve;
+                    TOtran=TOnumretrieve;
+                    SAtran=SAnumretrieve;
+
+                    juststarted=false;
+                }
+
+
             grabdata();
         }
 
