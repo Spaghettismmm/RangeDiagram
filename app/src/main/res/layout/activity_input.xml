@@ -23,7 +23,8 @@
     android:layout_width="match_parent"
     android:layout_height="0dp"
     android:layout_weight="1"
-    android:elevation="4dp">
+    android:elevation="4dp"
+    android:fillViewport="false">
     <GridLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -158,8 +159,36 @@
             android:layout_column="2"
             android:layout_row="9"
             android:inputType="numberDecimal" />
+        <TextView
+            android:text=" "
+            android:layout_gravity="start"
+            android:layout_row="11"
+            android:layout_column="0"
+            android:layout_columnSpan="1"
+            android:textSize="20sp"/>
 
 
+
+            />
+        <TextView
+            android:text="Match spoil to pit area (Enables Rehandle)"
+            android:layout_gravity="start"
+            android:layout_row="12"
+            android:layout_column="0"
+            android:layout_columnSpan="1"
+            android:textSize="20sp"
+            />
+
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/RHcheckBox"
+            android:layout_row="12"
+            android:layout_column="2"
+            android:layout_gravity="end"
+            android:enabled="true"
+            android:checked="true" />
     </GridLayout>
 
 

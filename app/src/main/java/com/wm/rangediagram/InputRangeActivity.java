@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 
 /**
@@ -88,6 +89,10 @@ public class InputRangeActivity extends AppCompatActivity {
         final EditText editSF = (EditText) findViewById(R.id.SFeditView);
         String SFval = editSF.getText().toString();
 
+        final CheckBox editRH = (CheckBox) findViewById(R.id.RHcheckBox);
+        Boolean RHval = editRH.isChecked();
+
+
         if(juststarted) {
             juststarted=true;
         }
@@ -103,6 +108,7 @@ public class InputRangeActivity extends AppCompatActivity {
         draw.putExtra("FromRangeInput",true);
         draw.putExtra("juststarted", juststarted);
         draw.putExtra("SF", SFval);
+        draw.putExtra("RH",RHval);
 
         if(!juststarted) {
                 setResult(RESULT_OK, draw);

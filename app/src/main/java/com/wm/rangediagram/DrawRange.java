@@ -20,11 +20,11 @@ public class DrawRange extends AppCompatActivity {
     Drawrangeview rangeview;
 
     private static final String LOG_TAG = "LOG Cat";
-    private double HWx, HWy, SARx, SARy, PWx, PWy, Sx, Sy, HWxo, HWyo, PWxo, PWyo, SARxo, SARyo, Sxo, Syo, TOx, TOxo, SAReach;
-    private double Syf, Sxf, Syfo, Sxfo, Sxftest,SFnum,SFtran;
+    private double HWx, HWy, SARx, SARy, PWx, PWy, Sx, Sy, HWxo, HWyo, PWxo, PWyo, SARxo, SARyo, Sxo, Syo, TOx, TOxo, SAReach, RHx, RHy;
+    private double Syf, Sxf, Syfo, Sxfo, Sxftest,SFnum,SFtran, RHxo, RHyo;
     private double Pitarea, Spoilarea, bankspoilarea;
     private int TWtran, DLRtran, DHtran,DDtran,TOtran,SAtran, SARtran,HWtran ,PWtran,BWtran,BHtran, DLRnum,TWnum,DHnum,DDnum, SARnum,HWnum,BWnum, BHnum, PWnum, TOnum, SAnum;
-    private boolean yes;
+    private boolean SARchange, yes, RHnum, RHtran;
     boolean juststarted;
     private boolean FromRangeInput;
     GridLayout parameterListView;
@@ -54,14 +54,14 @@ public class DrawRange extends AppCompatActivity {
         //Convert input to String
 
         if (juststarted){
-
+            SARchange=false;
             String SAstring = "90";
             SAnum = Integer.parseInt(SAstring);
             String DLRstring = "300";
             DLRnum = Integer.parseInt(DLRstring);
             String TWstring = "80";
             TWnum = Integer.parseInt(TWstring);
-            String DHstring = "150";
+            String DHstring = "115";
             DHnum = Integer.parseInt(DHstring);
             String DDstring = "150";
             DDnum = Integer.parseInt(DDstring);
@@ -97,6 +97,9 @@ public class DrawRange extends AppCompatActivity {
             String SFstring = extra.getString("SF");
             SFnum = Double.parseDouble(SFstring);
 
+            Boolean RHbool = extra.getBoolean("RH");
+            RHnum = RHbool;
+
         } else {
 
             if(FromRangeInput) {
@@ -106,6 +109,7 @@ public class DrawRange extends AppCompatActivity {
                 BWnum = BWtran;
                 BHnum = BHtran;
                 SFnum = SFtran;
+                RHnum=RHtran;
                 Intent extras = getIntent();
                 extras.putExtra("SAR", SARnum);
                 extras.putExtra("HW", HWnum);
@@ -113,7 +117,7 @@ public class DrawRange extends AppCompatActivity {
                 extras.putExtra("BW", BWnum);
                 extras.putExtra("BH", BHnum);
                 extras.putExtra("SF", SFnum);
-
+                extras.putExtra("RH", RHnum);
             }else if(!FromRangeInput) {
                 DLRnum = DLRtran;
                 TWnum = TWtran;
@@ -161,14 +165,22 @@ public class DrawRange extends AppCompatActivity {
 
                         String SFstring = extra.getString("SF");
                         SFnum = Double.parseDouble(SFstring);
+
+                        Boolean RHbool = extra.getBoolean("RH");
+                        RHnum = RHbool;
                     }
             }
         }
 
         Log.i(LOG_TAG, "Retrieved");
 
-        norehandlecalcs(SARnum, HWnum, BWnum, PWnum, BHnum, DLRnum, TWnum, DHnum, DDnum, SFnum, TOnum, SAnum);
 
+        if (RHnum){
+            norehandlecalcs(SARnum, HWnum, BWnum, PWnum, BHnum, DLRnum, TWnum, DHnum, DDnum, SFnum, TOnum, SAnum);
+            bestfitwrehandle(SARnum, HWnum, BWnum, PWnum, BHnum, DLRnum, TWnum, DHnum, DDnum, SFnum, TOnum, SAnum);
+        }else {
+            norehandlecalcs(SARnum, HWnum, BWnum, PWnum, BHnum, DLRnum, TWnum, DHnum, DDnum, SFnum, TOnum, SAnum);
+        }
         Log.i(LOG_TAG, "Calculated");
         Log.d(LOG_TAG, "HWx: " + Double.toString(HWx));
         Log.d(LOG_TAG, "HWy: " + Double.toString(HWy));
@@ -201,20 +213,63 @@ public class DrawRange extends AppCompatActivity {
         int Sxfi = (int) Sxf;
         int Syfi = (int) Syf;
         int TOfi = (int) TOx;
+        int RHxi = (int) RHx;
+        int RHyi = (int) RHy;
+        int RHxio = (int) RHxo;
+        int RHyio = (int) RHyo;
         double SFi = SFnum;
         int SAi=SAnum;
-        yes = true;
+        yes=true;
+
+        if(SARchange){
+            Intent extras = getIntent();
+            extras.putExtra("SAR", SARnum);
+
+            TextView SARtext = (TextView) findViewById(R.id.Sardrawview);
+            SARtext.setText(String.valueOf(SARnum));
+
+        }
 
         rangeview = (Drawrangeview) findViewById(R.id.draw_canvas_main_activity);
 
         rangeview.setSides(HWxi, HWyi, PWxi, PWyi, SARxi, SARyi, Sxi, Syi, Sxfi, Syfi, yes, DLRnum, TWnum,
-                HWxio, HWyio, PWxio, PWyio, SARxio, SARyio, Sxio, Syio, Sxfio, Syfio, Pitarea, Spoilarea, SFi, bankspoilarea, TOfi, SAi);
+                HWxio, HWyio, PWxio, PWyio, SARxio, SARyio, Sxio, Syio, Sxfio, Syfio, Pitarea, Spoilarea, SFi, bankspoilarea, TOfi, SAi, SARchange, DHnum, RHxi, RHyi, RHxio, RHyio);
         //setContentView(rangeview);
 
     }
 
+    public void bestfitwrehandle(double Sar, double HW, double BW, double PW, double BH, double Reach, double Tub, double DH, double DD, double SF, double TO, double SA) {
+        double HWangle = Math.toRadians(HW);
+        double SARangle = Math.toRadians(Sar);
+        SAReach=Reach*(Math.sin(Math.toRadians(SA)));
+        double Newreach = SAReach - (Tub / 2)- TO-(BH / (Math.tan(HWangle)));
 
-    public void norehandlecalcs(double Sar, double HW, double BW, double PW, double BH, double Reach, double Tub, double DD, double DH, double SF, double TO, double SA) {
+        if(bankspoilarea<Pitarea){
+            int count;
+            for (RHx=SARx, RHy=SARy,count=0; bankspoilarea>= Pitarea; RHx--, RHy++, count++) {
+                Sy -= count;
+                Sx -= count;
+                Sxf -= count;
+                Syf -= count;
+
+                if (Sxf > SARxo) {
+                    bankspoilarea = (((.5 * (Sx - SARx) * Sy) - .5 * (RHy / Math.tan(HWangle) * RHy) - .5 * (RHy / Math.tan(SARangle) * RHy)) + ((.5 * (Sx - SARx) * Sy) - (Syf / Math.tan(SARangle) * Syf))) / 1.2;
+                } else {
+                    bankspoilarea = ((.5 * (Sx - SARx) * Sy) * 2 - .5 * (RHy / Math.tan(HWangle) * RHy) - .5 * (RHy / Math.tan(SARangle) * RHy)) / 1.2;
+                }
+            }
+        }else{
+
+
+
+
+
+        }
+
+
+    }
+
+    public void norehandlecalcs(double Sar, double HW, double BW, double PW, double BH, double Reach, double Tub, double DH, double DD, double SF, double TO, double SA) {
         HWx = BW;
         HWy = BH;
         double HWangle = Math.toRadians(HW);
@@ -234,6 +289,9 @@ public class DrawRange extends AppCompatActivity {
             Sy = SARy + (Newreach * (Math.tan(SARangle)));
         } else {
             Sy = HWy + DH;
+            SARangle=Math.atan(Sy/Newreach);
+            SARnum=(int) Math.round(Math.toDegrees(SARangle));
+            SARchange=true;
         }
 
         //for old pit
@@ -258,6 +316,7 @@ public class DrawRange extends AppCompatActivity {
         } else {
             Sxf = Sx + ((Newreach));
             Syf = SARy;
+
         }
 
         Sxfo = SARxo + Sxf-SARx;
@@ -272,7 +331,11 @@ public class DrawRange extends AppCompatActivity {
         } else {
             Spoilarea = (.5 * (Sx - SARx) * Sy) * 2;
         }
+        RHx=SARx;
+        RHy=SARy;
 
+        RHxo=SARxo;
+        RHyo=SARyo;
         bankspoilarea=Spoilarea/SF;
     }
 
@@ -377,12 +440,16 @@ public class DrawRange extends AppCompatActivity {
                     SFstring = extras.getString("SF");
                     SFnumretrieve = Double.parseDouble(SFstring);
 
+                    Boolean RHboolretrieve = extras.getBoolean("RH");
+                    RHnum = RHboolretrieve;
+
                     SARtran=SARnumretrieve;
                     HWtran=HWnumretrieve;
                     PWtran=PWnumretrieve;
                     BWtran=BWnumretrieve;
                     BHtran=BHnumretrieve;
                     SFtran=SFnumretrieve;
+                    RHtran=RHboolretrieve;
                     juststarted=false;
 
 

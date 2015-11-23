@@ -24,20 +24,20 @@ public class Drawrangeview extends View {
     private String drawLabel;
     private Paint drawPaint;
     private int labelColor, drawColor;
-    private int HWx, HWy, PWx, PWy, SARx, SARy, Sx, Sy, DLR, TW,HWxo, HWyo, PWxo, PWyo, SARxo, SARyo, Sxo, Syo, Sxf,Syf,Sxfo,Syfo, TO, SA;
+    private int HWx, HWy, PWx, PWy, SARx, SARy, Sx, Sy, DLR, TW,HWxo, HWyo, PWxo, PWyo, SARxo, SARyo, Sxo, Syo, Sxf,Syf,Sxfo,Syfo, TO, SA, RHx, RHy,RHxo, RHyo;
     private static final String LOG_TAG = "LOG Cat";
     private int w, h;
     private boolean myCalculationsAreReady=false;
-    private boolean yes;
+    private boolean yes, SARchange;
     Paint mPaint=new Paint();
     private Paint gridPaint, dlPaint, drawoldpitPaint, dumpPaint, dumpText;
     Context context;
     private RectF mRangeBounds = new RectF();
     private float totallength,totalheight,drawpadl,drawpadh,HWxp,HWyp, PWxp,PWyp,SARxp,SARyp,Sxp,Syp, DLRx1,DLRy1,DLRx2,DLRy2,textSize,textSize1,textSize2, DLRX1p,DLRX2p,DLRY1p,DLRY2p;
-    private float TWX1,TWX2,TWY1,TWY2, TWX1p,TWX2p,TWY1p,TWY2p,HWxpo,HWypo, PWxpo,PWypo,SARxpo,SARypo,Sxpo,Sypo, Areacutxp, Areacutyp, Areaspoilxp, Areaspoilyp;
+    private float TWX1,TWX2,TWY1,TWY2, TWX1p,TWX2p,TWY1p,TWY2p,HWxpo,HWypo, PWxpo,PWypo,SARxpo,SARypo,Sxpo,Sypo, Areacutxp, Areacutyp, Areaspoilxp, Areaspoilyp, RHxpo,RHypo,RHxp,RHyp;
     private float Sxfp,Syfp,Sxfpo,Syfpo,HouseX1,HouseX2,HouseY1,HouseY2, HouseX1p,HouseX2p,HouseY1p,HouseY2p, Dumplinex, Dumpliney,Dumplinefy,Dumplinexp, Dumplineyp,Dumplinefyp;
     private double Pitarea, Spoilarea, bankspoilarea, SF;
-    private int gridintervaly = 20,gridintervalx = 50, dlheight = 150;
+    private int gridintervaly = 20,gridintervalx = 50, dlheight;
     private int ccount, grdcounty, grdcountx;
     private float[] gridpntsy, gridpntsx;
     private String[] gridlbly, gridlblx;
@@ -74,7 +74,8 @@ public class Drawrangeview extends View {
     }
 
     public void setSides(int HWxi, int HWyi, int PWxi,int PWyi,int SARxi,int SARyi,int Sxi,int Syi,int Sxfi, int Syfi, Boolean yesi, int DLRi, int TWi,
-                         int HWxio, int HWyio, int PWxio,int PWyio,int SARxio,int SARyio,int Sxio,int Syio, int Sxfio, int Syfio, double Pitareai, double Spoilareai, double SFi, double bankspoilareai, int TOi, int SAi) {
+                         int HWxio, int HWyio, int PWxio,int PWyio,int SARxio,int SARyio,int Sxio,int Syio, int Sxfio, int Syfio, double Pitareai,
+                         double Spoilareai, double SFi, double bankspoilareai, int TOi, int SAi, boolean SARchangei, int DHi, int RHxi, int RHyi, int RHxio, int RHyio) {
         Log.i(LOG_TAG, "setSides called");
         HWx =HWxi;
         HWy=HWyi;
@@ -101,14 +102,16 @@ public class Drawrangeview extends View {
         Sxo = Sxio;
         Syo=Syio;
         SA=SAi;
-
+        SARchange=SARchangei;
         Sxf=Sxfi;
         Syf=Syfi;
         Sxfo=Sxfio;
         Syfo=Syfio;
-
-
-
+        dlheight=DHi;
+        RHx=RHxi;
+        RHy=RHyi;
+        RHxo=RHxio;
+        RHyo=RHyio;
 
         Log.i(LOG_TAG, "setSides done");
         if(yes==true){
@@ -180,6 +183,9 @@ public class Drawrangeview extends View {
             SARyp=h-h*(SARy/totalheight)-drawpadh;
             Sxp=w*(Sx/totallength)+drawpadl;
             Syp=h-h*(Sy/totalheight)-drawpadh;
+            RHxp=w*(RHx/totallength)+drawpadl;
+            RHyp=h-h*(RHy/totalheight)-drawpadh;
+
 
             HWxpo=w*((HWxo)/totallength)+drawpadl;
             HWypo=h-h*(HWyo/totalheight)-drawpadh;
@@ -189,6 +195,9 @@ public class Drawrangeview extends View {
             SARypo=h-h*(SARyo/totalheight)-drawpadh;
             Sxpo=w*(Sxo/totallength)+drawpadl;
             Sypo=h-h*(Syo/totalheight)-drawpadh;
+            RHxpo=w*(RHxo/totallength)+drawpadl;
+            RHypo=h-h*(RHyo/totalheight)-drawpadh;
+
 
             //Scale DL REACH AND BOOM
             DLRX1p=w*(DLRx1/totallength)+drawpadl;
@@ -226,7 +235,7 @@ public class Drawrangeview extends View {
 
             //For Grid
 
-            grdcounty = Math.round(totalheight)/ gridintervaly;
+            grdcounty = (int) Math.ceil(totalheight)/ gridintervaly;
             grdcountx = (int) Math.ceil(totallength / gridintervalx);
             gridpntsy = new float[4* grdcounty];
             gridpntsx= new float[4*grdcountx];
@@ -280,8 +289,10 @@ public class Drawrangeview extends View {
             path.lineTo(HWxp, HWyp);
             // add a line for side B
             path.lineTo(PWxp, PWyp);
+
             // close the path to draw the hypotenuse
             path.lineTo(SARxp, SARyp);
+            path.lineTo(RHxp, RHyp);
             path.lineTo(Sxp, Syp);
             path.lineTo(Sxfp, Syfp);
 
@@ -294,6 +305,7 @@ public class Drawrangeview extends View {
             oldpit.lineTo(PWxpo, PWypo);
             // close the path to draw the hypotenuse
             oldpit.lineTo(SARxpo, SARypo);
+            oldpit.lineTo(RHxpo, RHypo);
             oldpit.lineTo(Sxpo, Sypo);
             oldpit.lineTo(Sxfpo, Syfpo);
  //           canvas.drawRect(r,drawPaint);
