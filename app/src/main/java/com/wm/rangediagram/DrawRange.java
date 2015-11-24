@@ -245,19 +245,28 @@ public class DrawRange extends AppCompatActivity {
         double Newreach = SAReach - (Tub / 2)- TO-(BH / (Math.tan(HWangle)));
 
         if(bankspoilarea<Pitarea){
-            int count;
-            for (RHx=SARx, RHy=SARy,count=0; bankspoilarea>= Pitarea; RHx--, RHy++, count++) {
-                Sy -= count;
-                Sx -= count;
-                Sxf -= count;
-                Syf -= count;
 
-                if (Sxf > SARxo) {
-                    bankspoilarea = (((.5 * (Sx - SARx) * Sy) - .5 * (RHy / Math.tan(HWangle) * RHy) - .5 * (RHy / Math.tan(SARangle) * RHy)) + ((.5 * (Sx - SARx) * Sy) - (Syf / Math.tan(SARangle) * Syf))) / 1.2;
+            for (RHy=SARy; bankspoilarea<= Pitarea; RHy++) {
+
+                RHx=RHy/Math.tan(HWangle);
+
+                Sx = SARx-RHx + (Newreach);
+                if ((SARy-RHy+(Newreach * (Math.tan(SARangle)))) < (HWy + DH)) {
+                    Sy = SARy -RHy+ (Newreach * (Math.tan(SARangle)));
                 } else {
-                    bankspoilarea = ((.5 * (Sx - SARx) * Sy) * 2 - .5 * (RHy / Math.tan(HWangle) * RHy) - .5 * (RHy / Math.tan(SARangle) * RHy)) / 1.2;
+                    Sy = HWy-RHy + DH;
+                    SARangle=Math.atan((Sy-RHy)/Newreach);
+                    SARnum=(int) Math.round(Math.toDegrees(SARangle));
+                    SARchange=true;
                 }
+                if (Sxf > SARxo) {
+                    bankspoilarea = (((.5 * (Sx - SARx) * Sy) - .5 * (RHy / Math.tan(HWangle) * RHy) - .5 * (RHy / Math.tan(SARangle) * RHy)) + ((.5 * (Sx - SARx) * Sy) - (Syf / Math.tan(SARangle) * Syf))) / SF;
+                } else {
+                    bankspoilarea = ((.5 * (Sx - SARx) * Sy) * 2 - .5 * (RHy / Math.tan(HWangle) * RHy) - .5 * (RHy / Math.tan(SARangle) * RHy)) / SF;
+                }
+                RHx=SARx-RHx;
             }
+
         }else{
 
 
@@ -322,20 +331,20 @@ public class DrawRange extends AppCompatActivity {
         Sxfo = SARxo + Sxf-SARx;
         Syfo = Syf;
 
-
-        //Areas
-        Pitarea = (SARx - PWx-2*(PWx - HWx)) * HWy + 2 * (.5 * HWy * (PWx - HWx));
-
-        if (Sxf > SARxo) {
-            Spoilarea = (.5 * (Sx - SARx) * Sy) + ((.5 * (Sx - SARx) * Sy) - (Syf / Math.tan(SARangle) * Syf));
-        } else {
-            Spoilarea = (.5 * (Sx - SARx) * Sy) * 2;
-        }
         RHx=SARx;
         RHy=SARy;
 
         RHxo=SARxo;
         RHyo=SARyo;
+        //Areas
+        Pitarea = (SARx - PWx-2*(PWx - HWx)) * HWy + 2 * (.5 * HWy * (PWx - HWx));
+
+        if (Sxf > SARxo) {
+            Spoilarea = (((.5 * (Sx - SARx) * Sy) - .5 * (RHy / Math.tan(HWangle) * RHy) - .5 * (RHy / Math.tan(SARangle) * RHy)) + ((.5 * (Sx - SARx) * Sy) - (Syf / Math.tan(SARangle) * Syf)));
+        } else {
+            Spoilarea = ((.5 * (Sx - SARx) * Sy) * 2 - .5 * (RHy / Math.tan(HWangle) * RHy) - .5 * (RHy / Math.tan(SARangle) * RHy));
+        }
+
         bankspoilarea=Spoilarea/SF;
     }
 
