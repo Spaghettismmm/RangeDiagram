@@ -247,9 +247,7 @@ public class DrawRange extends AppCompatActivity {
         if(bankspoilarea<Pitarea){
 
             for (RHy=SARy; bankspoilarea<= Pitarea; RHy++) {
-
-                RHx=RHy/Math.tan(HWangle);
-
+                    RHx = RHy / Math.tan(HWangle);
                 Sx = SARx-RHx + (Newreach);
                 if ((SARy-RHy+(Newreach * (Math.tan(SARangle)))) < (HWy + DH)) {
                     Sy = SARy -RHy+ (Newreach * (Math.tan(SARangle)));
@@ -264,17 +262,62 @@ public class DrawRange extends AppCompatActivity {
                 } else {
                     bankspoilarea = ((.5 * (Sx - SARx) * Sy) * 2 - .5 * (RHy / Math.tan(HWangle) * RHy) - .5 * (RHy / Math.tan(SARangle) * RHy)) / SF;
                 }
-                RHx=SARx-RHx;
             }
+        }else if(bankspoilarea>=Pitarea){
 
-        }else{
+            RHy=SARy;
+            RHyo=SARyo;
 
 
+            for (RHx=SARx; bankspoilarea>= Pitarea; RHx++) {
+                if ((SARy-RHy+((Sx-RHx) * (Math.tan(SARangle)))) < (HWy + DH)) {
+                    Sy = ((Sx-RHx) * (Math.tan(SARangle)));
+                } else {
+                    Sy = HWy-RHy + DH;
+                    SARangle=Math.atan((Sy-RHy)/(Sx-RHx));
+                    SARnum=(int) Math.round(Math.toDegrees(SARangle));
+                    SARchange=true;
+                }
+                double rehandlediff=(RHx-SARx);
+                //Calculate Intercept for Spoil Toe between old and new spoil
+
+                SARxo = PWxo + PW+(rehandlediff);
+                Sxo = SARxo +(Sx-RHx);
+                if (SARyo -RHy+((Sx-RHx)* (Math.tan(SARangle))) < (HWyo + DH)) {
+                    Syo = ((Sx-RHx)) * (Math.tan(SARangle));
+                } else {
+                    Syo = HWyo + DH;
+                }
+                //Calculate Intercept for Spoil Toe between old and new spoil
+                Sxftest = (((Sx + (Sx-RHx)) * Math.tan(SARangle) - (-Math.tan(SARangle) * SARxo)) / (2 * (Math.tan(SARangle))));
+
+                if (Sxftest > SARxo) {
+                    Sxf = Sxftest;
+                    Syf = -Math.tan(SARangle) * (Sxf) + ((Sx + ((Sx-RHx))) * Math.tan(SARangle));
+                } else {
+                    Sxf = Sx + (((Sx-RHx)));
+                    Syf = SARy;
+
+                }
 
 
+                Sxfo = SARxo + Sxf-(Sx-RHx);
+                Syfo = Syf;
 
+                if (Sxf > SARxo) {
+                    bankspoilarea = (((.5 * (Sx - SARx) * Sy) - .5 * (RHy / Math.tan(HWangle) * RHy) - .5 * (RHy / Math.tan(SARangle) * RHy)) + ((.5 * (Sx - SARx) * Sy) - (Syf / Math.tan(SARangle) * Syf))) / SF;
+                } else {
+                    bankspoilarea = ((.5 * (Sx - SARx) * Sy) * 2 - .5 * (RHy / Math.tan(HWangle) * RHy) - .5 * (RHy / Math.tan(SARangle) * RHy)) / SF;
+                }
+            }
+            RHxo=SARxo+(Sx-RHx);
+
+            if (Sxf > SARxo) {
+                Spoilarea = (((.5 * (Sx - SARx) * Sy) - .5 * (RHy / Math.tan(HWangle) * RHy) - .5 * (RHy / Math.tan(SARangle) * RHy)) + ((.5 * (Sx - SARx) * Sy) - (Syf / Math.tan(SARangle) * Syf)));
+            } else {
+                Spoilarea = ((.5 * (Sx - SARx) * Sy) * 2 - .5 * (RHy / Math.tan(HWangle) * RHy) - .5 * (RHy / Math.tan(SARangle) * RHy));
+            }
         }
-
 
     }
 
