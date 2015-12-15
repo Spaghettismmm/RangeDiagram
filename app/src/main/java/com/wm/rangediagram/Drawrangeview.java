@@ -30,11 +30,11 @@ public class Drawrangeview extends View {
     private boolean myCalculationsAreReady=false;
     private boolean yes, SARchange;
     Paint mPaint=new Paint();
-    private Paint gridPaint, dlPaint, drawoldpitPaint, dumpPaint, dumpText;
+    private Paint gridPaint, dlPaint, drawoldpitPaint, dumpPaint, dumpText,rehandlePaint;
     Context context;
     private RectF mRangeBounds = new RectF();
     private float totallength,totalheight,drawpadl,drawpadh,HWxp,HWyp, PWxp,PWyp,SARxp,SARyp,Sxp,Syp, DLRx1,DLRy1,DLRx2,DLRy2,textSize,textSize1,textSize2, DLRX1p,DLRX2p,DLRY1p,DLRY2p;
-    private float TWX1,TWX2,TWY1,TWY2, TWX1p,TWX2p,TWY1p,TWY2p,HWxpo,HWypo, PWxpo,PWypo,SARxpo,SARypo,Sxpo,Sypo, Areacutxp, Areacutyp, Areaspoilxp, Areaspoilyp, RHxpo,RHypo,RHxp,RHyp;
+    private float TWX1,TWX2,TWY1,TWY2, TWX1p,TWX2p,TWY1p,TWY2p,HWxpo,HWypo, PWxpo,PWypo,SARxpo,SARypo,Sxpo,Sypo, Areacutxp, Areacutyp, Areaspoilxp, Areaspoilyp, RHxpo,RHypo,RHxp,RHyp,RHPeakxp, RHPeakx;
     private float Sxfp,Syfp,Sxfpo,Syfpo,HouseX1,HouseX2,HouseY1,HouseY2, HouseX1p,HouseX2p,HouseY1p,HouseY2p, Dumplinex, Dumpliney,Dumplinefy,Dumplinexp, Dumplineyp,Dumplinefyp;
     private double Pitarea, Spoilarea, bankspoilarea, SF;
     private int gridintervaly = 20,gridintervalx = 50, dlheight;
@@ -112,7 +112,7 @@ public class Drawrangeview extends View {
         RHy=RHyi;
         RHxo=RHxio;
         RHyo=RHyio;
-
+        RHPeakx=Sx-((RHy-Sy)/((Sy-SARy)/(Sx-SARx)));
         Log.i(LOG_TAG, "setSides done");
         if(yes==true){
         myCalculationsAreReady=true;}
@@ -185,7 +185,7 @@ public class Drawrangeview extends View {
             Syp=h-h*(Sy/totalheight)-drawpadh;
             RHxp=w*(RHx/totallength)+drawpadl;
             RHyp=h-h*(RHy/totalheight)-drawpadh;
-
+            RHPeakxp=w*(RHPeakx/totallength)+drawpadl;
 
             HWxpo=w*((HWxo)/totallength)+drawpadl;
             HWypo=h-h*(HWyo/totalheight)-drawpadh;
@@ -292,7 +292,7 @@ public class Drawrangeview extends View {
 
             // close the path to draw the hypotenuse
             path.lineTo(SARxp, SARyp);
-            path.lineTo(RHxp, RHyp);
+
             path.lineTo(Sxp, Syp);
             path.lineTo(Sxfp, Syfp);
 
@@ -305,10 +305,15 @@ public class Drawrangeview extends View {
             oldpit.lineTo(PWxpo, PWypo);
             // close the path to draw the hypotenuse
             oldpit.lineTo(SARxpo, SARypo);
-            oldpit.lineTo(RHxpo, RHypo);
+
             oldpit.lineTo(Sxpo, Sypo);
             oldpit.lineTo(Sxfpo, Syfpo);
  //           canvas.drawRect(r,drawPaint);
+
+            Path rehandle = new Path();
+            rehandle.moveTo(RHxp, SARyp);
+            rehandle.lineTo(RHPeakxp, RHyp);
+            rehandle.lineTo(Sxp,Syp);
 
 
             Path dumpline = new Path();
@@ -334,7 +339,7 @@ public class Drawrangeview extends View {
             canvas.drawPath(path, drawPaint);
             canvas.drawPath(oldpit, drawoldpitPaint);
             canvas.drawPath(dumpline,dumpPaint);
-
+            canvas.drawPath(rehandle,rehandlePaint);
             canvas.drawText(String.valueOf((SA))+"°",Dumplinexp,Dumplineyp,dumpText);
 
             Path dragline = new Path();
@@ -351,6 +356,7 @@ public class Drawrangeview extends View {
             dragline1.lineTo(DLRX2p, DLRY2p);
             canvas.drawPath(dragline1, dlPaint);
             // close the path to draw the hypotenuse
+
 
             canvas.drawRect(TWX1p, TWY1p, TWX2p, TWY2p, dlPaint);
             canvas.drawRect(HouseX1p, HouseY1p, HouseX2p, HouseY2p, dlPaint);
@@ -402,6 +408,16 @@ public class Drawrangeview extends View {
             dumpText.setStyle(Paint.Style.STROKE);
             textSize2 = dumpText.getTextSize();
             dumpText.setTextSize(textSize2 * 3);
+
+
+        rehandlePaint = new Paint();
+            rehandlePaint.setStrokeWidth(4);
+            rehandlePaint.setPathEffect(null);
+            rehandlePaint.setColor(Color.MAGENTA);
+            rehandlePaint.setStyle(Paint.Style.STROKE);
+            rehandlePaint.setPathEffect(new DashPathEffect(new float[]{5, 10, 15, 20}, 0));
+
+
 
         drawoldpitPaint = new Paint();
             drawoldpitPaint.setStrokeWidth(4);

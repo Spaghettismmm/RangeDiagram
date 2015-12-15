@@ -22,7 +22,7 @@ public class DrawRange extends AppCompatActivity {
     private static final String LOG_TAG = "LOG Cat";
     private double HWx, HWy, SARx, SARy, PWx, PWy, Sx, Sy, HWxo, HWyo, PWxo, PWyo, SARxo, SARyo, Sxo, Syo, TOx, TOxo, SAReach, RHx, RHy;
     private double Syf, Sxf, Syfo, Sxfo, Sxftest,SFnum,SFtran, RHxo, RHyo;
-    private double Pitarea, Spoilarea, bankspoilarea;
+    private double Pitarea, Spoilarea, bankspoilarea, RHarea, CombSpoilarea;
     private int TWtran, DLRtran, DHtran,DDtran,TOtran,SAtran, SARtran,HWtran ,PWtran,BWtran,BHtran, DLRnum,TWnum,DHnum,DDnum, SARnum,HWnum,BWnum, BHnum, PWnum, TOnum, SAnum;
     private boolean SARchange, yes, RHnum, RHtran;
     boolean juststarted;
@@ -245,24 +245,16 @@ public class DrawRange extends AppCompatActivity {
         double Newreach = SAReach - (Tub / 2)- TO-(BH / (Math.tan(HWangle)));
 
         if(bankspoilarea<Pitarea){
+            RHarea=0;
+            CombSpoilarea=(bankspoilarea+RHarea);
+            for ( RHx=SARx;CombSpoilarea<= Pitarea && RHx>=HWx ;RHx--) {
 
-            for (RHy=SARy; bankspoilarea<= Pitarea; RHy++) {
-                    RHx = RHy / Math.tan(HWangle);
-                Sx = SARx-RHx + (Newreach);
-                if ((SARy-RHy+(Newreach * (Math.tan(SARangle)))) < (HWy + DH)) {
-                    Sy = SARy -RHy+ (Newreach * (Math.tan(SARangle)));
-                } else {
-                    Sy = HWy-RHy + DH;
-                    SARangle=Math.atan((Sy-RHy)/Newreach);
-                    SARnum=(int) Math.round(Math.toDegrees(SARangle));
-                    SARchange=true;
-                }
-                if (Sxf > SARxo) {
-                    bankspoilarea = (((.5 * (Sx - SARx) * Sy) - .5 * (RHy / Math.tan(HWangle) * RHy) - .5 * (RHy / Math.tan(SARangle) * RHy)) + ((.5 * (Sx - SARx) * Sy) - (Syf / Math.tan(SARangle) * Syf))) / SF;
-                } else {
-                    bankspoilarea = ((.5 * (Sx - SARx) * Sy) * 2 - .5 * (RHy / Math.tan(HWangle) * RHy) - .5 * (RHy / Math.tan(SARangle) * RHy)) / SF;
-                }
+                RHy=Sy+(SARx-RHx) * (Math.tan(SARangle));
+                RHarea=Sy*(-RHx+SARx)+(RHy-Sy)*((RHy-Sy)/Math.tan(SARangle));
+                CombSpoilarea=(bankspoilarea+RHarea);
             }
+
+
         }else if(bankspoilarea>=Pitarea){
 
             RHy=SARy;
@@ -270,7 +262,7 @@ public class DrawRange extends AppCompatActivity {
 
 
             for (RHx=SARx; bankspoilarea>= Pitarea; RHx++) {
-                if ((SARy-RHy+((Sx-RHx) * (Math.tan(SARangle)))) < (HWy + DH)) {
+                if (Math.abs((SARy-RHy+((Sx-RHx) * (Math.tan(SARangle))))) < (HWy + DH)) {
                     Sy = ((Sx-RHx) * (Math.tan(SARangle)));
                 } else {
                     Sy = HWy-RHy + DH;
@@ -338,9 +330,9 @@ public class DrawRange extends AppCompatActivity {
 
         Sx = SARx + (Newreach);
         if ((SARy + (Newreach * (Math.tan(SARangle)))) < (HWy + DH)) {
-            Sy = SARy + (Newreach * (Math.tan(SARangle)));
+            Sy = Math.abs(SARy + (Newreach * (Math.tan(SARangle))));
         } else {
-            Sy = HWy + DH;
+            Sy = Math.abs(HWy + DH);
             SARangle=Math.atan(Sy/Newreach);
             SARnum=(int) Math.round(Math.toDegrees(SARangle));
             SARchange=true;
@@ -355,19 +347,19 @@ public class DrawRange extends AppCompatActivity {
         SARxo = PWxo + PW;
         Sxo = SARxo + (Newreach);
         if (SARyo + (Newreach * (Math.tan(SARangle))) < (HWyo + DH)) {
-            Syo = SARyo + (Newreach * (Math.tan(SARangle)));
+            Syo = Math.abs(SARyo + (Newreach * (Math.tan(SARangle))));
         } else {
-            Syo = HWyo + DH;
+            Syo = Math.abs(HWyo + DH);
         }
         //Calculate Intercept for Spoil Toe between old and new spoil
         Sxftest = (((Sx + Newreach) * Math.tan(SARangle) - (-Math.tan(SARangle) * SARxo)) / (2 * (Math.tan(SARangle))));
 
         if (Sxftest > SARxo) {
             Sxf = Sxftest;
-            Syf = -Math.tan(SARangle) * (Sxf) + ((Sx + Newreach) * Math.tan(SARangle));
+            Syf = Math.abs(-Math.tan(SARangle) * (Sxf) + ((Sx + Newreach) * Math.tan(SARangle)));
         } else {
             Sxf = Sx + ((Newreach));
-            Syf = SARy;
+            Syf = Math.abs(SARy);
 
         }
 
@@ -380,7 +372,7 @@ public class DrawRange extends AppCompatActivity {
         RHxo=SARxo;
         RHyo=SARyo;
         //Areas
-        Pitarea = (SARx - PWx-2*(PWx - HWx)) * HWy + 2 * (.5 * HWy * (PWx - HWx));
+        Pitarea = (PW* BH);
 
         if (Sxf > SARxo) {
             Spoilarea = (((.5 * (Sx - SARx) * Sy) - .5 * (RHy / Math.tan(HWangle) * RHy) - .5 * (RHy / Math.tan(SARangle) * RHy)) + ((.5 * (Sx - SARx) * Sy) - (Syf / Math.tan(SARangle) * Syf)));
@@ -542,19 +534,18 @@ public class DrawRange extends AppCompatActivity {
     }
 
     @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo)
-    {
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
         menu.setHeaderTitle("Parameters and Volumes");
-        menu.add(0, v.getId(), 0, "SAR " + SARnum + " deg");
+        menu.add(0, v.getId(), 0, "SAR @ " + SARnum + " deg");
         menu.add(0, v.getId(), 0, "HW @ " + HWnum + " deg");
         menu.add(0, v.getId(), 0, "PW " + PWnum + " ft");
         menu.add(0, v.getId(), 0, "BW " + BWnum + " ft");
         menu.add(0, v.getId(), 0, "BH " + BHnum + " ft");
-        menu.add(0, v.getId(), 0, "SF " + SFnum + " ft");
+        menu.add(0, v.getId(), 0, "SF " + SFnum);
         menu.add(0, v.getId(), 0, "Bank Pit Area " + Math.round(Pitarea) + " ft^2");
-        menu.add(0, v.getId(), 0, "Loose Spoil Area " + Math.round(Spoilarea) + " ft");
-        menu.add(0, v.getId(), 0, "Bank Spoil Area " + Math.round(bankspoilarea) + " ft");
+        menu.add(0, v.getId(), 0, "Loose Spoil Area " + Math.round(Spoilarea) + " ft^2");
+        menu.add(0, v.getId(), 0, "Bank Spoil Area " + Math.round(bankspoilarea) + " ft^2");
         menu.add(0, v.getId(), 0, "HW Offset " + (PWx-HWx) + " ft");
 
     }
