@@ -354,7 +354,7 @@ public class Drawrangeview extends View {
             canvas.drawRect(TWX1p, TWY1p, TWX2p, TWY2p, dlPaint);
             canvas.drawRect(HouseX1p, HouseY1p, HouseX2p, HouseY2p, dlPaint);
 
-            canvas.drawText(String.valueOf(Math.round(Spoilarea)) + " ft^2", Areaspoilxp + textSize * 1, Areaspoilyp, drawPaint);
+            canvas.drawText(String.valueOf(Math.round(Spoilarea)) + " ft^2", Areaspoilxp - textSize * 3, Areaspoilyp, drawPaint);
             canvas.drawText(String.valueOf(Math.round(Pitarea * SF)) + " ft^2" + " @ Swell " + String.valueOf((SF)), Areacutxp, Areacutyp + textSize * 5 - textSize * 4, drawPaint);
             canvas.drawText(String.valueOf(Math.round(Pitarea)) + " ft^2", Areacutxp, Areacutyp - textSize * 4, drawPaint);
 
@@ -380,7 +380,7 @@ public class Drawrangeview extends View {
         }
 
         drawPaint = new Paint();
-            drawPaint.setStrokeWidth(4);
+            drawPaint.setStrokeWidth(6);
             drawPaint.setPathEffect(null);
             int myColor = context.getResources().getColor(R.color.currentpit);
             drawPaint.setColor(myColor);
@@ -389,14 +389,14 @@ public class Drawrangeview extends View {
             drawPaint.setTextSize(textSize1 * 3);
 
         dumpPaint = new Paint();
-            dumpPaint.setStrokeWidth(4);
+            dumpPaint.setStrokeWidth(6);
             dumpPaint.setPathEffect(null);
             dumpPaint.setColor(Color.MAGENTA);
             dumpPaint.setStyle(Paint.Style.STROKE);
             dumpPaint.setPathEffect(new DashPathEffect(new float[]{5, 10, 15, 20}, 0));
 
         dumpText = new Paint();
-            dumpText.setStrokeWidth(4);
+            dumpText.setStrokeWidth(6);
             dumpText.setPathEffect(null);
             dumpText.setColor(Color.MAGENTA);
             dumpText.setStyle(Paint.Style.STROKE);
@@ -415,7 +415,7 @@ public class Drawrangeview extends View {
 
 
         drawoldpitPaint = new Paint();
-            drawoldpitPaint.setStrokeWidth(4);
+            drawoldpitPaint.setStrokeWidth(6);
             drawoldpitPaint.setPathEffect(null);
             drawoldpitPaint.setColor(Color.RED);
             drawoldpitPaint.setStyle(Paint.Style.STROKE);
@@ -429,7 +429,7 @@ public class Drawrangeview extends View {
 
 
             dlPaint = new Paint();
-            dlPaint.setStrokeWidth(4);
+            dlPaint.setStrokeWidth(6);
             dlPaint.setColor(Color.BLUE);
             dlPaint.setPathEffect(null);
             dlPaint.setStyle(Paint.Style.STROKE);
