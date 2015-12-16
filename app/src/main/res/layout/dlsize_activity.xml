@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/dlsize_activity"
-        android:layout_height="fill_parent"
         android:layout_width="match_parent"
+    android:layout_height="fill_parent"
         android:orientation="vertical"
         android:weightSum="1">
     <android.support.v7.widget.Toolbar
@@ -11,11 +11,11 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
-        android:elevation="4dp"
-        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         android:clickable="false"
-        android:padding="0dp" />
+        android:elevation="4dp"
+        android:padding="0dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
         <ScrollView
             android:id="@+id/dlsize_container_scrollView"
             android:layout_width="match_parent"
@@ -23,133 +23,132 @@
             android:layout_weight="1"
             android:elevation="4dp">
             <GridLayout
+                android:id="@+id/dlsize_GridLayout"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:useDefaultMargins="true"
                 android:alignmentMode="alignBounds"
-                android:id="@+id/dlsize_GridLayout"
                 android:columnCount="3"
                 android:columnOrderPreserved="false"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:useDefaultMargins="true">
                 <TextView
+                    android:layout_column="0"
+                    android:layout_columnSpan="1"
+                    android:layout_gravity="start"
+                    android:layout_row="4"
                     android:text="Swing Angle"
-                    android:layout_gravity="start"
-                    android:layout_row="4"
-                    android:layout_column="0"
-                    android:layout_columnSpan="1"
                     android:textSize="20sp"/>
 
                 <EditText
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
                     android:id="@+id/Swingangleview"
-                    android:hint="@string/Swingangle"
-                    android:layout_gravity="end"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_column="2"
+                    android:layout_gravity="end"
                     android:layout_row="4"
+                    android:hint="@string/Swingangle"
                     android:inputType="number"
                     />
                 <TextView
+                    android:layout_column="0"
+                    android:layout_columnSpan="1"
+                    android:layout_gravity="start"
+                    android:layout_row="5"
                     android:text="DL Reach"
-                    android:layout_gravity="start"
-                    android:layout_row="5"
-                    android:layout_column="0"
-                    android:layout_columnSpan="1"
                     android:textSize="20sp"/>
 
                 <EditText
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
                     android:id="@+id/DLreachview"
-                    android:hint="@string/DLreach"
-                    android:layout_gravity="end"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_column="2"
+                    android:layout_gravity="end"
                     android:layout_row="5"
+                    android:hint="@string/DLreach"
                     android:inputType="number"
                     />
                 <TextView
+                    android:layout_column="0"
+                    android:layout_columnSpan="1"
+                    android:layout_gravity="start"
+                    android:layout_row="6"
                     android:text="Tub Width"
-                    android:layout_gravity="start"
-                    android:layout_row="6"
-                    android:layout_column="0"
-                    android:layout_columnSpan="1"
                     android:textSize="20sp"/>
 
                 <EditText
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
                     android:id="@+id/TubWview"
-                    android:hint="@string/TubW"
-                    android:layout_gravity="end"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_column="2"
+                    android:layout_gravity="end"
                     android:layout_row="6"
+                    android:hint="@string/TubW"
                     android:inputType="number"
                     />
                 <TextView
+                    android:layout_column="0"
+                    android:layout_columnSpan="1"
+                    android:layout_gravity="start"
+                    android:layout_row="7"
                     android:text="Tub Offset"
-                    android:layout_gravity="start"
-                    android:layout_row="7"
-                    android:layout_column="0"
-                    android:layout_columnSpan="1"
                     android:textSize="20sp"/>
 
                 <EditText
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
                     android:id="@+id/TubOffview"
-                    android:hint="@string/Tuboff"
-                    android:layout_gravity="end"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_column="2"
+                    android:layout_gravity="end"
                     android:layout_row="7"
+                    android:hint="@string/Tuboff"
                     android:inputType="number"
                     />
                 <TextView
+                    android:layout_column="0"
+                    android:layout_columnSpan="1"
+                    android:layout_gravity="start"
+                    android:layout_row="8"
                     android:text="Dump Height"
-                    android:layout_gravity="start"
-                    android:layout_row="8"
-                    android:layout_column="0"
-                    android:layout_columnSpan="1"
                     android:textSize="20sp"/>
 
                 <EditText
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
                     android:id="@+id/DumpHView"
-                    android:hint="@string/DumpHView"
-                    android:layout_gravity="end"
-                    android:layout_column="2"
-                    android:layout_row="8"
-                    android:inputType="number"
-                    />
-
-                <TextView
-                    android:text="Dig Depth"
-                    android:layout_gravity="start"
-                    android:layout_row="9"
-                    android:layout_column="0"
-                    android:layout_columnSpan="1"
-                    android:textSize="20sp"/>
-
-                <EditText
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/DigDView"
-                    android:hint="@string/DigDView"
-                    android:layout_gravity="end"
                     android:layout_column="2"
-                    android:layout_row="9"
+                    android:layout_gravity="end"
+                    android:layout_row="8"
+                    android:hint="@string/DumpHView"
                     android:inputType="number"
                     />
+                <!--             <TextView
+                                    android:text="Dig Depth"
+                                    android:layout_gravity="start"
+                                    android:layout_row="9"
+                                    android:layout_column="0"
+                                    android:layout_columnSpan="1"
+                                    android:textSize="20sp"/>
 
+                                <EditText
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/DigDView"
+                                    android:hint="@string/DigDView"
+                                    android:layout_gravity="end"
+                                    android:layout_column="2"
+                                    android:layout_row="9"
+                                    android:inputType="number"
+                                    />
 
+                -->
             </GridLayout>
         </ScrollView>
     <Button
         android:id="@+id/dlsize_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Done"
-        android:orientation="vertical"
+        android:elevation="4dp"
         android:onClick="DLDim_onClick"
-        android:elevation="4dp"/>
+        android:orientation="vertical"
+        android:text="Done" />
 </LinearLayout>

@@ -8,13 +8,13 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 /**
  * Created by WM on 11/9/2015.
  */
 public class InputDLSizeActivity extends AppCompatActivity {
     private static final String LOG_TAG = "LOG Cat";
-
 
 
     @Override
@@ -29,7 +29,7 @@ public class InputDLSizeActivity extends AppCompatActivity {
         br.setDisplayHomeAsUpEnabled(true);
         Bundle extras = getIntent().getExtras();
 
-        if(extras == null) {
+        if (extras == null) {
             Intent dldrawsettings = new Intent(this, DrawRange.class);
 
             dldrawsettings.putExtra("FromRangeInput", false);
@@ -38,28 +38,28 @@ public class InputDLSizeActivity extends AppCompatActivity {
             finish();
         } else {
 
-        Intent intent = getIntent();
+            Intent intent = getIntent();
 
-        EditText SAeditview= (EditText) findViewById(R.id.Swingangleview);
-        SAeditview.setText(Integer.toString((intent.getIntExtra("SA",0))));
+            EditText SAeditview = (EditText) findViewById(R.id.Swingangleview);
+            SAeditview.setText(Integer.toString((intent.getIntExtra("SA", 0))));
 
-        EditText DLReditview= (EditText) findViewById(R.id.DLreachview);
-        DLReditview.setText(Integer.toString((intent.getIntExtra("DLR",0))));
-
-
-        EditText TWeditview= (EditText) findViewById(R.id.TubWview);
-        TWeditview.setText(Integer.toString((intent.getIntExtra("TW", 0))));
+            EditText DLReditview = (EditText) findViewById(R.id.DLreachview);
+            DLReditview.setText(Integer.toString((intent.getIntExtra("DLR", 0))));
 
 
-        EditText DHeditview= (EditText) findViewById(R.id.DumpHView);
-        DHeditview.setText(Integer.toString((intent.getIntExtra("DH", 0))));
+            EditText TWeditview = (EditText) findViewById(R.id.TubWview);
+            TWeditview.setText(Integer.toString((intent.getIntExtra("TW", 0))));
 
 
-        EditText DDeditview= (EditText) findViewById(R.id.DigDView);
-        DDeditview.setText(Integer.toString((intent.getIntExtra("DD", 0))));
+            EditText DHeditview = (EditText) findViewById(R.id.DumpHView);
+            DHeditview.setText(Integer.toString((intent.getIntExtra("DH", 0))));
 
-        EditText TOeditview= (EditText) findViewById(R.id.TubOffview);
-        TOeditview.setText(Integer.toString((intent.getIntExtra("TO", 0))));
+
+            // EditText DDeditview = (EditText) findViewById(R.id.DigDView);
+            // DDeditview.setText(Integer.toString((intent.getIntExtra("DD", 0))));
+
+            EditText TOeditview = (EditText) findViewById(R.id.TubOffview);
+            TOeditview.setText(Integer.toString((intent.getIntExtra("TO", 0))));
         }
 
     }
@@ -69,21 +69,37 @@ public class InputDLSizeActivity extends AppCompatActivity {
 
         final EditText editSA = (EditText) findViewById(R.id.Swingangleview);
         String SAval = editSA.getText().toString();
-
+        if (SAval.matches("")) {
+            Toast.makeText(this, "Enter a Swing Angle", Toast.LENGTH_SHORT).show();
+            return;
+        }
         final EditText editDLreach = (EditText) findViewById(R.id.DLreachview);
         String DLRval = editDLreach.getText().toString();
-
+        if (DLRval.matches("")) {
+            Toast.makeText(this, "Enter a DL Reach", Toast.LENGTH_SHORT).show();
+            return;
+        }
         final EditText editTubW = (EditText) findViewById(R.id.TubWview);
         String TWval = editTubW.getText().toString();
-
-        final EditText editDD = (EditText) findViewById(R.id.DigDView);
-        String DDval = editDD.getText().toString();
-
+        if (TWval.matches("")) {
+            Toast.makeText(this, "Enter a Tub Width", Toast.LENGTH_SHORT).show();
+            return;
+        }
+//            final EditText editDD = (EditText) findViewById(R.id.DigDView);
+//            String DDval = editDD.getText().toString();
+//                if(DDval.matches("")){Toast.makeText(this,"Enter a Dig Depth",Toast.LENGTH_SHORT).show();return;}
         final EditText editDH = (EditText) findViewById(R.id.DumpHView);
         String DHval = editDH.getText().toString();
-
+        if (DHval.matches("")) {
+            Toast.makeText(this, "Enter a Dump Height", Toast.LENGTH_SHORT).show();
+            return;
+        }
         final EditText editTO = (EditText) findViewById(R.id.TubOffview);
         String TOval = editTO.getText().toString();
+        if (TOval.matches("")) {
+            Toast.makeText(this, "Enter a Tub offset", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         Log.i(LOG_TAG, "Store Values dl settings");
 
@@ -93,14 +109,16 @@ public class InputDLSizeActivity extends AppCompatActivity {
         dldrawsettings.putExtra("SA", SAval);
         dldrawsettings.putExtra("DLR", DLRval);
         dldrawsettings.putExtra("TW", TWval);
-        dldrawsettings.putExtra("DH", DDval);
-        dldrawsettings.putExtra("DD", DHval);
+        dldrawsettings.putExtra("DH", DHval);
+//            dldrawsettings.putExtra("DD", DDval);
         dldrawsettings.putExtra("TO", TOval);
         dldrawsettings.putExtra("Source", false);
         dldrawsettings.putExtra("juststarted", false);
         dldrawsettings.putExtra("FromRangeInput", false);
         setResult(RESULT_OK, dldrawsettings);
         finish();
-    }
 
+
+
+    }
 }

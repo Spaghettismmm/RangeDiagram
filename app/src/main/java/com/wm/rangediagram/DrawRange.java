@@ -1,8 +1,9 @@
 package com.wm.rangediagram;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -10,24 +11,23 @@ import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.GridLayout;
+import android.widget.TableLayout;
 import android.widget.TextView;
 
 /**
- * Created by Bomb Shit on 9/30/2015.
+ * Created by WM on 9/30/2015.
  */
 public class DrawRange extends AppCompatActivity {
-    Drawrangeview rangeview;
-
     private static final String LOG_TAG = "LOG Cat";
-    private double HWx, HWy, SARx, SARy, PWx, PWy, Sx, Sy, HWxo, HWyo, PWxo, PWyo, SARxo, SARyo, Sxo, Syo, TOx, TOxo, SAReach, RHx, RHy;
-    private double Syf, Sxf, Syfo, Sxfo, Sxftest,SFnum,SFtran, RHxo, RHyo;
-    private double Pitarea, Spoilarea, bankspoilarea, RHarea, CombSpoilarea;
-    private int TWtran, DLRtran, DHtran,DDtran,TOtran,SAtran, SARtran,HWtran ,PWtran,BWtran,BHtran, DLRnum,TWnum,DHnum,DDnum, SARnum,HWnum,BWnum, BHnum, PWnum, TOnum, SAnum;
-    private boolean SARchange, yes, RHnum, RHtran;
+    Drawrangeview rangeview;
     boolean juststarted;
+    private double HWx, HWy, SARx, SARy, PWx, PWy, Sx, Sy, HWxo, HWyo, PWxo, PWyo, SARxo, SARyo, Sxo, Syo, TOx, TOxo, SAReach, RHx, RHy;
+    private double Syf, Sxf, Syfo, Sxfo, Sxftest, SFnum, SFtran, RHxo, RHyo, RHPeakx;
+    private double Pitarea, Spoilarea, bankspoilarea, RHarea, CombSpoilarea;
+    private int TWtran, DLRtran, DHtran, DDtran, TOtran, SAtran, SARtran, HWtran, PWtran, BWtran, BHtran, DLRnum, TWnum, DHnum, DDnum, SARnum, HWnum, BWnum, BHnum, PWnum, TOnum, SAnum, OGSARnum;
+    private boolean SARchange, yes, RHnum, RHtran;
     private boolean FromRangeInput;
-    GridLayout parameterListView;
+    private TableLayout parameterListView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -38,23 +38,22 @@ public class DrawRange extends AppCompatActivity {
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
 
-        parameterListView=(GridLayout)findViewById(R.id.GridLayoutResults);
+        parameterListView = (TableLayout) this.findViewById(R.id.TableLayoutResults);
 
         registerForContextMenu(parameterListView);
 
-
         /* Get values from Intent */
-        Intent intent =getIntent();
-        juststarted=intent.getBooleanExtra("juststarted",true);
-        FromRangeInput=intent.getBooleanExtra("FromRangeInput",true);
+        Bundle intent = getIntent().getExtras();
+        juststarted = intent.getBoolean("juststarted", true);
+        FromRangeInput = intent.getBoolean("FromRangeInput", true);
         grabdata();
     }
 
     public void grabdata() {
         //Convert input to String
-
-        if (juststarted){
-            SARchange=false;
+        if (juststarted) {
+            SARchange = false;
+            juststarted = false;
             String SAstring = "90";
             SAnum = Integer.parseInt(SAstring);
             String DLRstring = "300";
@@ -73,7 +72,7 @@ public class DrawRange extends AppCompatActivity {
             SARtext.setText(getIntent().getStringExtra("SAR"));
             String SARstring = SARtext.getText().toString();
             SARnum = Integer.parseInt(SARstring);
-
+            OGSARnum = SARnum;
             TextView HWtext = (TextView) findViewById(R.id.HWdrawview);
             HWtext.setText(getIntent().getStringExtra("HW"));
             String HWstring = HWtext.getText().toString();
@@ -102,14 +101,14 @@ public class DrawRange extends AppCompatActivity {
 
         } else {
 
-            if(FromRangeInput) {
+            if (FromRangeInput) {
                 SARnum = SARtran;
                 HWnum = HWtran;
                 PWnum = PWtran;
                 BWnum = BWtran;
                 BHnum = BHtran;
                 SFnum = SFtran;
-                RHnum=RHtran;
+                RHnum = RHtran;
                 Intent extras = getIntent();
                 extras.putExtra("SAR", SARnum);
                 extras.putExtra("HW", HWnum);
@@ -118,7 +117,7 @@ public class DrawRange extends AppCompatActivity {
                 extras.putExtra("BH", BHnum);
                 extras.putExtra("SF", SFnum);
                 extras.putExtra("RH", RHnum);
-            }else if(!FromRangeInput) {
+            } else if (!FromRangeInput) {
                 DLRnum = DLRtran;
                 TWnum = TWtran;
                 DHnum = DHtran;
@@ -135,50 +134,49 @@ public class DrawRange extends AppCompatActivity {
 
                 Bundle extra = getIntent().getExtras();
 
-                    if(extra == null) {
-                        finish();
-                    } else {
-                        TextView SARtext = (TextView) findViewById(R.id.Sardrawview);
-                        SARtext.setText(getIntent().getStringExtra("SAR"));
-                        String SARstring = SARtext.getText().toString();
-                        SARnum = Integer.parseInt(SARstring);
+                if (extra == null) {
+                    finish();
+                } else {
+                    extras.putExtra("SAR", OGSARnum);
+                    SARnum = OGSARnum;
+                    SARchange = false;
 
-                        TextView HWtext = (TextView) findViewById(R.id.HWdrawview);
-                        HWtext.setText(getIntent().getStringExtra("HW"));
-                        String HWstring = HWtext.getText().toString();
-                        HWnum = Integer.parseInt(HWstring);
+                    TextView HWtext = (TextView) findViewById(R.id.HWdrawview);
+                    HWtext.setText(getIntent().getStringExtra("HW"));
+                    String HWstring = HWtext.getText().toString();
+                    HWnum = Integer.parseInt(HWstring);
 
-                        TextView PWtext = (TextView) findViewById(R.id.PWdrawview);
-                        PWtext.setText(getIntent().getStringExtra("PW"));
-                        String PWstring = PWtext.getText().toString();
-                        PWnum = Integer.parseInt(PWstring);
+                    TextView PWtext = (TextView) findViewById(R.id.PWdrawview);
+                    PWtext.setText(getIntent().getStringExtra("PW"));
+                    String PWstring = PWtext.getText().toString();
+                    PWnum = Integer.parseInt(PWstring);
 
-                        TextView BWtext = (TextView) findViewById(R.id.BWdrawview);
-                        BWtext.setText(getIntent().getStringExtra("BW"));
-                        String BWstring = BWtext.getText().toString();
-                        BWnum = Integer.parseInt(BWstring);
+                    TextView BWtext = (TextView) findViewById(R.id.BWdrawview);
+                    BWtext.setText(getIntent().getStringExtra("BW"));
+                    String BWstring = BWtext.getText().toString();
+                    BWnum = Integer.parseInt(BWstring);
 
-                        TextView BHtext = (TextView) findViewById(R.id.BHdrawview);
-                        BHtext.setText(getIntent().getStringExtra("BH"));
-                        String BHstring = BHtext.getText().toString();
-                        BHnum = Integer.parseInt(BHstring);
+                    TextView BHtext = (TextView) findViewById(R.id.BHdrawview);
+                    BHtext.setText(getIntent().getStringExtra("BH"));
+                    String BHstring = BHtext.getText().toString();
+                    BHnum = Integer.parseInt(BHstring);
 
-                        String SFstring = extra.getString("SF");
-                        SFnum = Double.parseDouble(SFstring);
+                    String SFstring = extra.getString("SF");
+                    SFnum = Double.parseDouble(SFstring);
 
-                        Boolean RHbool = extra.getBoolean("RH");
-                        RHnum = RHbool;
-                    }
+                    Boolean RHbool = extra.getBoolean("RH");
+                    RHnum = RHbool;
+                }
             }
         }
 
         Log.i(LOG_TAG, "Retrieved");
 
 
-        if (RHnum){
+        if (RHnum) {
             norehandlecalcs(SARnum, HWnum, BWnum, PWnum, BHnum, DLRnum, TWnum, DHnum, DDnum, SFnum, TOnum, SAnum);
             bestfitwrehandle(SARnum, HWnum, BWnum, PWnum, BHnum, DLRnum, TWnum, DHnum, DDnum, SFnum, TOnum, SAnum);
-        }else {
+        } else {
             norehandlecalcs(SARnum, HWnum, BWnum, PWnum, BHnum, DLRnum, TWnum, DHnum, DDnum, SFnum, TOnum, SAnum);
         }
         Log.i(LOG_TAG, "Calculated");
@@ -217,11 +215,12 @@ public class DrawRange extends AppCompatActivity {
         int RHyi = (int) RHy;
         int RHxio = (int) RHxo;
         int RHyio = (int) RHyo;
+        int RHPeakxi = (int) RHPeakx;
         double SFi = SFnum;
-        int SAi=SAnum;
-        yes=true;
+        int SAi = SAnum;
+        yes = true;
 
-        if(SARchange){
+        if (SARchange) {
             Intent extras = getIntent();
             extras.putExtra("SAR", SARnum);
 
@@ -233,7 +232,7 @@ public class DrawRange extends AppCompatActivity {
         rangeview = (Drawrangeview) findViewById(R.id.draw_canvas_main_activity);
 
         rangeview.setSides(HWxi, HWyi, PWxi, PWyi, SARxi, SARyi, Sxi, Syi, Sxfi, Syfi, yes, DLRnum, TWnum,
-                HWxio, HWyio, PWxio, PWyio, SARxio, SARyio, Sxio, Syio, Sxfio, Syfio, Pitarea, Spoilarea, SFi, bankspoilarea, TOfi, SAi, SARchange, DHnum, RHxi, RHyi, RHxio, RHyio);
+                HWxio, HWyio, PWxio, PWyio, SARxio, SARyio, Sxio, Syio, Sxfio, Syfio, Pitarea, Spoilarea, SFi, bankspoilarea, TOfi, SAi, SARchange, DHnum, RHxi, RHyi, RHxio, RHyio, RHPeakxi, RHarea);
         //setContentView(rangeview);
 
     }
@@ -241,74 +240,64 @@ public class DrawRange extends AppCompatActivity {
     public void bestfitwrehandle(double Sar, double HW, double BW, double PW, double BH, double Reach, double Tub, double DH, double DD, double SF, double TO, double SA) {
         double HWangle = Math.toRadians(HW);
         double SARangle = Math.toRadians(Sar);
-        SAReach=Reach*(Math.sin(Math.toRadians(SA)));
-        double Newreach = SAReach - (Tub / 2)- TO-(BH / (Math.tan(HWangle)));
+        SAReach = Reach * (Math.sin(Math.toRadians(SA)));
+        double Newreach = SAReach - (Tub / 2) - TO - (BH / (Math.tan(HWangle)));
 
-        if(bankspoilarea<Pitarea){
-            RHarea=0;
-            CombSpoilarea=(bankspoilarea+RHarea);
-            for ( RHx=SARx;CombSpoilarea<= Pitarea && RHx>=HWx ;RHx--) {
+        if (bankspoilarea < Pitarea) {
+            RHarea = 0;
+            CombSpoilarea = (bankspoilarea + RHarea);
+            for (RHx = SARx; CombSpoilarea <= Pitarea && RHx >= HWx; RHx--) {
 
-                RHy=Sy+(SARx-RHx) * (Math.tan(SARangle));
-                RHarea=Sy*(-RHx+SARx)+(RHy-Sy)*((RHy-Sy)/Math.tan(SARangle));
-                CombSpoilarea=(bankspoilarea+RHarea);
+                RHy = Sy + ((SARx - RHx) / 2) * (Math.tan(SARangle));
+                RHarea = Sy * (-RHx + SARx) + (RHy - Sy) * ((RHy - Sy) / Math.tan(SARangle));
+                CombSpoilarea = (bankspoilarea + RHarea);
+                RHPeakx = Sx - ((RHy - Sy) / ((Sy - SARy) / (Sx - SARx)));
             }
 
 
-        }else if(bankspoilarea>=Pitarea){
+        } else if (bankspoilarea >= Pitarea) {
+            RHy = SARy;
+            int count = 1;
+            RHyo = SARyo;
+            for (RHx = 0; bankspoilarea >= Pitarea; RHx++) {
+                double rehandlediff = (RHx);
 
-            RHy=SARy;
-            RHyo=SARyo;
-
-
-            for (RHx=SARx; bankspoilarea>= Pitarea; RHx++) {
-                if (Math.abs((SARy-RHy+((Sx-RHx) * (Math.tan(SARangle))))) < (HWy + DH)) {
-                    Sy = ((Sx-RHx) * (Math.tan(SARangle)));
-                } else {
-                    Sy = HWy-RHy + DH;
-                    SARangle=Math.atan((Sy-RHy)/(Sx-RHx));
-                    SARnum=(int) Math.round(Math.toDegrees(SARangle));
-                    SARchange=true;
-                }
-                double rehandlediff=(RHx-SARx);
+                SARx++;
+                Sy = Sy - (count * (Math.tan(SARangle)));
                 //Calculate Intercept for Spoil Toe between old and new spoil
-
-                SARxo = PWxo + PW+(rehandlediff);
-                Sxo = SARxo +(Sx-RHx);
-                if (SARyo -RHy+((Sx-RHx)* (Math.tan(SARangle))) < (HWyo + DH)) {
-                    Syo = ((Sx-RHx)) * (Math.tan(SARangle));
-                } else {
-                    Syo = HWyo + DH;
-                }
+                SARxo++;
+                Syo = Syo - (count * (Math.tan(SARangle)));
                 //Calculate Intercept for Spoil Toe between old and new spoil
-                Sxftest = (((Sx + (Sx-RHx)) * Math.tan(SARangle) - (-Math.tan(SARangle) * SARxo)) / (2 * (Math.tan(SARangle))));
-
+                Sxftest = (((Sx + (Newreach - RHx)) * Math.tan(SARangle) - (-Math.tan(SARangle) * SARxo)) / (2 * (Math.tan(SARangle))));
                 if (Sxftest > SARxo) {
                     Sxf = Sxftest;
-                    Syf = -Math.tan(SARangle) * (Sxf) + ((Sx + ((Sx-RHx))) * Math.tan(SARangle));
+                    Syf = Math.abs(-Math.tan(SARangle) * (Sxf) + ((Sx + (Newreach - RHx)) * Math.tan(SARangle)));
                 } else {
-                    Sxf = Sx + (((Sx-RHx)));
+                    Sxf = 2 * Sx - SARx;
                     Syf = SARy;
-
                 }
 
 
-                Sxfo = SARxo + Sxf-(Sx-RHx);
+                Sxfo = SARxo + Sxf - SARx;
                 Syfo = Syf;
 
                 if (Sxf > SARxo) {
-                    bankspoilarea = (((.5 * (Sx - SARx) * Sy) - .5 * (RHy / Math.tan(HWangle) * RHy) - .5 * (RHy / Math.tan(SARangle) * RHy)) + ((.5 * (Sx - SARx) * Sy) - (Syf / Math.tan(SARangle) * Syf))) / SF;
+                    bankspoilarea = ((.5 * (Sx - SARx) * Sy) + ((.5 * (Sx - SARx) * Sy) - (Syf / Math.tan(SARangle) * Syf))) / SF;
                 } else {
-                    bankspoilarea = ((.5 * (Sx - SARx) * Sy) * 2 - .5 * (RHy / Math.tan(HWangle) * RHy) - .5 * (RHy / Math.tan(SARangle) * RHy)) / SF;
+                    bankspoilarea = ((.5 * (Sx - SARx) * Sy) * 2) / SF;
                 }
             }
-            RHxo=SARxo+(Sx-RHx);
+            RHxo = SARxo + (Sx - RHx);
 
             if (Sxf > SARxo) {
-                Spoilarea = (((.5 * (Sx - SARx) * Sy) - .5 * (RHy / Math.tan(HWangle) * RHy) - .5 * (RHy / Math.tan(SARangle) * RHy)) + ((.5 * (Sx - SARx) * Sy) - (Syf / Math.tan(SARangle) * Syf)));
+                Spoilarea = ((.5 * (Sx - SARx) * Sy) + ((.5 * (Sx - SARx) * Sy) - (Syf / Math.tan(SARangle) * Syf)));
             } else {
-                Spoilarea = ((.5 * (Sx - SARx) * Sy) * 2 - .5 * (RHy / Math.tan(HWangle) * RHy) - .5 * (RHy / Math.tan(SARangle) * RHy));
+                Spoilarea = ((.5 * (Sx - SARx) * Sy) * 2);
             }
+
+            RHx = 0;
+            RHarea = 0;
+
         }
 
     }
@@ -322,31 +311,31 @@ public class DrawRange extends AppCompatActivity {
         PWy = HWy - BH;
         SARy = PWy;
         SARx = PWx + PW;
-        TOx=TO;
+        TOx = TO;
 
-        double Tubloc=BW+PW-TO-Tub/2;
-        SAReach=Reach*(Math.sin(Math.toRadians(SA)));
-        double Newreach = SAReach - (Tub / 2)- TO-(BH / (Math.tan(HWangle)));
+        double Tubloc = BW + PW - TO - Tub / 2;
+        SAReach = Reach * (Math.sin(Math.toRadians(SA)));
+        double Newreach = SAReach - (Tub / 2) - TO - (BH / (Math.tan(HWangle)));
 
         Sx = SARx + (Newreach);
         if ((SARy + (Newreach * (Math.tan(SARangle)))) < (HWy + DH)) {
             Sy = Math.abs(SARy + (Newreach * (Math.tan(SARangle))));
         } else {
             Sy = Math.abs(HWy + DH);
-            SARangle=Math.atan(Sy/Newreach);
-            SARnum=(int) Math.round(Math.toDegrees(SARangle));
-            SARchange=true;
+            SARangle = Math.atan(Sy / Newreach);
+            SARnum = (int) Math.round(Math.toDegrees(SARangle));
+            SARchange = true;
         }
 
         //for old pit
-        HWxo = BW +PW;
+        HWxo = BW + PW;
         HWyo = BH;
         PWxo = HWxo + BH / (Math.tan(HWangle));
         PWyo = HWyo - BH;
         SARyo = PWyo;
         SARxo = PWxo + PW;
         Sxo = SARxo + (Newreach);
-        if (SARyo + (Newreach * (Math.tan(SARangle))) < (HWyo + DH)) {
+        if (!SARchange) {
             Syo = Math.abs(SARyo + (Newreach * (Math.tan(SARangle))));
         } else {
             Syo = Math.abs(HWyo + DH);
@@ -363,24 +352,24 @@ public class DrawRange extends AppCompatActivity {
 
         }
 
-        Sxfo = SARxo + Sxf-SARx;
+        Sxfo = SARxo + Sxf - SARx;
         Syfo = Syf;
 
-        RHx=SARx;
-        RHy=SARy;
+        RHx = SARx;
+        RHy = SARy;
 
-        RHxo=SARxo;
-        RHyo=SARyo;
+        RHxo = SARxo;
+        RHyo = SARyo;
         //Areas
-        Pitarea = (PW* BH);
+        Pitarea = (PW * BH);
 
         if (Sxf > SARxo) {
             Spoilarea = (((.5 * (Sx - SARx) * Sy) - .5 * (RHy / Math.tan(HWangle) * RHy) - .5 * (RHy / Math.tan(SARangle) * RHy)) + ((.5 * (Sx - SARx) * Sy) - (Syf / Math.tan(SARangle) * Syf)));
         } else {
             Spoilarea = ((.5 * (Sx - SARx) * Sy) * 2 - .5 * (RHy / Math.tan(HWangle) * RHy) - .5 * (RHy / Math.tan(SARangle) * RHy));
         }
-
-        bankspoilarea=Spoilarea/SF;
+        RHx = 0;
+        bankspoilarea = Spoilarea / SF;
     }
 
     @Override
@@ -395,40 +384,15 @@ public class DrawRange extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
         switch (item.getItemId()) {
-
             case R.id.draglinedims:
-                /*
-                if (!juststarted) {
-                    Bundle extras = getIntent().getExtras();
-                    String SAstring = extras.getString("SA");
-                    SAnum = Integer.parseInt(SAstring);
-
-                    String DLRstring = extras.getString("DLR");
-                    DLRnum = Integer.parseInt(DLRstring);
-
-                    String TWstring = extras.getString("TW");
-                    TWnum = Integer.parseInt(TWstring);
-
-                    String DHstring = extras.getString("DH");
-                    DHnum = Integer.parseInt(DHstring);
-
-                    String DDstring = extras.getString("DD");
-                    DDnum = Integer.parseInt(DDstring);
-
-                    String TOstring = extras.getString("TO");
-                    TOnum = Integer.parseInt(TOstring);
-                }
-                */
-                    Intent dlsize = new Intent(this, InputDLSizeActivity.class);
-                    dlsize.putExtra("SA", SAnum);
-                    dlsize.putExtra("DLR", DLRnum);
-                    dlsize.putExtra("TW", TWnum);
-                    dlsize.putExtra("DH", DHnum);
-                    dlsize.putExtra("DD", DDnum);
-                    dlsize.putExtra("TO", TOnum);
-                    startActivityForResult(dlsize, 1);
-
-
+                Intent dlsize = new Intent(this, InputDLSizeActivity.class);
+                dlsize.putExtra("SA", SAnum);
+                dlsize.putExtra("DLR", DLRnum);
+                dlsize.putExtra("TW", TWnum);
+                dlsize.putExtra("DH", DHnum);
+                dlsize.putExtra("DD", DDnum);
+                dlsize.putExtra("TO", TOnum);
+                startActivityForResult(dlsize, 1);
                 return true;
             case R.id.listdimensions:
                 openContextMenu(parameterListView);
@@ -440,15 +404,10 @@ public class DrawRange extends AppCompatActivity {
                 rangesize.putExtra("PW", PWnum);
                 rangesize.putExtra("BW", BWnum);
                 rangesize.putExtra("BH", BHnum);
-
-                rangesize.putExtra("FromRangeInput",false);
+                rangesize.putExtra("FromRangeInput", false);
                 rangesize.putExtra("SF", SFnum);
-
                 startActivityForResult(rangesize, 1);
-
                 return true;
-
-
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -457,74 +416,74 @@ public class DrawRange extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        String SAstring,DLRstring,TWstring,DHstring,DDstring,TOstring,SARstring,SFstring,HWstring,BHstring,BWstring,PWstring;
-        int SAnumretrieve,DLRnumretrieve,TWnumretrieve,DHnumretrieve,DDnumretrieve,TOnumretrieve, SARnumretrieve,HWnumretrieve,PWnumretrieve,BWnumretrieve,BHnumretrieve;
+        String SAstring, DLRstring, TWstring, DHstring, DDstring, TOstring, SARstring, SFstring, HWstring, BHstring, BWstring, PWstring;
+        int SAnumretrieve, DLRnumretrieve, TWnumretrieve, DHnumretrieve, DDnumretrieve, TOnumretrieve, SARnumretrieve, HWnumretrieve, PWnumretrieve, BWnumretrieve, BHnumretrieve;
         double SFnumretrieve;
         if (resultCode == RESULT_OK) {
 
-                Bundle extras = data.getExtras();
+            Bundle extras = data.getExtras();
 
-            FromRangeInput= extras.getBoolean("FromRangeInput");
-                if(FromRangeInput) {
-                    SARstring= extras.getString("SAR");
-                    SARnumretrieve = Integer.parseInt(SARstring);
+            FromRangeInput = extras.getBoolean("FromRangeInput");
+            if (FromRangeInput) {
+                SARstring = extras.getString("SAR");
+                SARnumretrieve = Integer.parseInt(SARstring);
 
-                    HWstring = extras.getString("HW");
-                    HWnumretrieve = Integer.parseInt(HWstring);
+                HWstring = extras.getString("HW");
+                HWnumretrieve = Integer.parseInt(HWstring);
 
-                    PWstring = extras.getString("PW");
-                    PWnumretrieve = Integer.parseInt(PWstring);
+                PWstring = extras.getString("PW");
+                PWnumretrieve = Integer.parseInt(PWstring);
 
-                    BWstring = extras.getString("BW");
-                    BWnumretrieve = Integer.parseInt(BWstring);
+                BWstring = extras.getString("BW");
+                BWnumretrieve = Integer.parseInt(BWstring);
 
-                    BHstring = extras.getString("BH");
-                    BHnumretrieve = Integer.parseInt(BHstring);
+                BHstring = extras.getString("BH");
+                BHnumretrieve = Integer.parseInt(BHstring);
 
-                    SFstring = extras.getString("SF");
-                    SFnumretrieve = Double.parseDouble(SFstring);
+                SFstring = extras.getString("SF");
+                SFnumretrieve = Double.parseDouble(SFstring);
 
-                    Boolean RHboolretrieve = extras.getBoolean("RH");
-                    RHnum = RHboolretrieve;
+                Boolean RHboolretrieve = extras.getBoolean("RH");
+                RHnum = RHboolretrieve;
 
-                    SARtran=SARnumretrieve;
-                    HWtran=HWnumretrieve;
-                    PWtran=PWnumretrieve;
-                    BWtran=BWnumretrieve;
-                    BHtran=BHnumretrieve;
-                    SFtran=SFnumretrieve;
-                    RHtran=RHboolretrieve;
-                    juststarted=false;
+                SARtran = SARnumretrieve;
+                HWtran = HWnumretrieve;
+                PWtran = PWnumretrieve;
+                BWtran = BWnumretrieve;
+                BHtran = BHnumretrieve;
+                SFtran = SFnumretrieve;
+                RHtran = RHboolretrieve;
+                juststarted = false;
 
 
-                } else {
-                    SAstring= extras.getString("SA");
-                    SAnumretrieve = Integer.parseInt(SAstring);
+            } else {
+                SAstring = extras.getString("SA");
+                SAnumretrieve = Integer.parseInt(SAstring);
 
-                    DLRstring = extras.getString("DLR");
-                    DLRnumretrieve = Integer.parseInt(DLRstring);
+                DLRstring = extras.getString("DLR");
+                DLRnumretrieve = Integer.parseInt(DLRstring);
 
-                    TWstring = extras.getString("TW");
-                    TWnumretrieve = Integer.parseInt(TWstring);
+                TWstring = extras.getString("TW");
+                TWnumretrieve = Integer.parseInt(TWstring);
 
-                    DHstring = extras.getString("DH");
-                    DHnumretrieve = Integer.parseInt(DHstring);
+                DHstring = extras.getString("DH");
+                DHnumretrieve = Integer.parseInt(DHstring);
 
-                    DDstring = extras.getString("DD");
-                    DDnumretrieve = Integer.parseInt(DDstring);
+                //               DDstring = extras.getString("DD");
+                //               DDnumretrieve = Integer.parseInt(DDstring);
 
-                    TOstring = extras.getString("TO");
-                    TOnumretrieve = Integer.parseInt(TOstring);
+                TOstring = extras.getString("TO");
+                TOnumretrieve = Integer.parseInt(TOstring);
 
-                    DLRtran=DLRnumretrieve;
-                    TWtran=TWnumretrieve;
-                    DHtran=DHnumretrieve;
-                    DDtran=DDnumretrieve;
-                    TOtran=TOnumretrieve;
-                    SAtran=SAnumretrieve;
+                DLRtran = DLRnumretrieve;
+                TWtran = TWnumretrieve;
+                DHtran = DHnumretrieve;
+                //               DDtran = DDnumretrieve;
+                TOtran = TOnumretrieve;
+                SAtran = SAnumretrieve;
 
-                    juststarted=false;
-                }
+                juststarted = false;
+            }
 
 
             grabdata();
@@ -537,18 +496,50 @@ public class DrawRange extends AppCompatActivity {
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
         menu.setHeaderTitle("Parameters and Volumes");
+
+        menu.add(0, v.getId(), 0, "Bank Pit Area " + Math.round(Pitarea) + " ft^2");
+        menu.add(0, v.getId(), 0, "Swelled Pit Area " + Math.round(Pitarea * SFnum) + " ft^2");
+        menu.add(0, v.getId(), 0, "Loose Spoil Area " + Math.round(Spoilarea) + " ft^2");
+        menu.add(0, v.getId(), 0, "Rehandle Area " + Math.round(RHarea) + " ft^2");
+        menu.add(0, v.getId(), 0, "Total Spoil Area " + Math.round(Spoilarea + RHarea) + " ft^2");
+        menu.add(0, v.getId(), 0, "RH " + Math.round((RHarea / (Spoilarea + RHarea)) * 100) + " %");
+        menu.add(0, v.getId(), 0, "HW Offset " + Math.round(PWx - HWx) + " ft");
         menu.add(0, v.getId(), 0, "SAR @ " + SARnum + " deg");
         menu.add(0, v.getId(), 0, "HW @ " + HWnum + " deg");
         menu.add(0, v.getId(), 0, "PW " + PWnum + " ft");
         menu.add(0, v.getId(), 0, "BW " + BWnum + " ft");
         menu.add(0, v.getId(), 0, "BH " + BHnum + " ft");
         menu.add(0, v.getId(), 0, "SF " + SFnum);
-        menu.add(0, v.getId(), 0, "Bank Pit Area " + Math.round(Pitarea) + " ft^2");
-        menu.add(0, v.getId(), 0, "Loose Spoil Area " + Math.round(Spoilarea) + " ft^2");
-        menu.add(0, v.getId(), 0, "Bank Spoil Area " + Math.round(bankspoilarea) + " ft^2");
-        menu.add(0, v.getId(), 0, "HW Offset " + (PWx-HWx) + " ft");
 
     }
-}
 
+    @Override
+    public void onBackPressed() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setCancelable(false);
+        builder.setMessage("Are you sure you want to Exit?               (Use option menu to change settings");
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //if user pressed "yes", then he is allowed to exit from application
+
+                finish();
+            }
+        });
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                dialog.cancel();
+
+            }
+        });
+
+        AlertDialog alert1 = builder.create();
+        alert1.show();
+
+    }
+
+}
 

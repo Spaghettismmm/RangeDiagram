@@ -1,11 +1,11 @@
 package com.wm.rangediagram;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.app.Activity;
 
 /**
- * Created by Bomb Shit on 9/30/2015.
+ * Created by WM on 9/30/2015.
  */
 public class StartupActivity extends Activity{
     @Override
@@ -17,7 +17,7 @@ public class StartupActivity extends Activity{
         Intent intent = new Intent(StartupActivity.this,InputRangeActivity.class);
         intent.putExtra("juststarted",juststarted);
         startActivity(intent);
-
+        finish();
     }
 
 }

@@ -9,9 +9,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Toast;
 
 /**
- * Created by Bomb Shit on 9/30/2015.
+ * Created by WM on 9/30/2015.
  */
 
 
@@ -68,27 +69,43 @@ public class InputRangeActivity extends AppCompatActivity {
         //Convert input to String
 
         final EditText editSAR = (EditText) findViewById(R.id.SAReditView);
-        //if (editSAR.getText().toString().equals(""))
-         //   Toast.makeText(getApplicationContext(), "Need Value", Toast.LENGTH_LONG).show();
-        final String SARval = editSAR.getText().toString();
-
+        String SARval = editSAR.getText().toString();
+        if (SARval.matches("")) {
+            Toast.makeText(this, "Enter a SAR", Toast.LENGTH_SHORT).show();
+            return;
+        }
         final EditText editHW = (EditText) findViewById(R.id.HWeditView);
         String HWval = editHW.getText().toString();
-
+        if (HWval.matches("")) {
+            Toast.makeText(this, "Enter a High Wall Angle", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         final EditText editPW = (EditText) findViewById(R.id.PWeditView);
         String PWval = editPW.getText().toString();
-
+        if (PWval.matches("")) {
+            Toast.makeText(this, "Enter a Pit Width", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         final EditText editBench = (EditText) findViewById(R.id.BenchwidthView);
         String Benchval = editBench.getText().toString();
-
+        if (Benchval.matches("")) {
+            Toast.makeText(this, "Enter a Bench Width", Toast.LENGTH_SHORT).show();
+            return;
+        }
         final EditText editBenchh = (EditText) findViewById(R.id.BenchheightView);
         String Benchhval = editBenchh.getText().toString();
-
+        if (Benchhval.matches("")) {
+            Toast.makeText(this, "Enter a Bench Height", Toast.LENGTH_SHORT).show();
+            return;
+        }
         final EditText editSF = (EditText) findViewById(R.id.SFeditView);
         String SFval = editSF.getText().toString();
-
+        if (SFval.matches("")) {
+            Toast.makeText(this, "Enter a Swell Factor", Toast.LENGTH_SHORT).show();
+            return;
+        }
         final CheckBox editRH = (CheckBox) findViewById(R.id.RHcheckBox);
         Boolean RHval = editRH.isChecked();
 
@@ -116,6 +133,7 @@ public class InputRangeActivity extends AppCompatActivity {
             } else {
 
                 startActivity(draw);
+            finish();
 
         }
     }
