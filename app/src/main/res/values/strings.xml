@@ -16,7 +16,8 @@
 
     <string name="BacktoInput">Change Inputs</string>
     <string name="action_settings">Change Inputs</string>
-    <string name="draglinedims">Adjust DL Dims</string>
-    <string name="listdimensions">List Pit Dims</string>
+    <string name="draglinedims">Adjust DL Dimensions</string>
+    <string name="listdimensions">List Pit Volumes</string>
     <string name="adjustrangesettings">Adjust Range Settings</string>
+    <string name="helpmenu">Help!</string>
 </resources>

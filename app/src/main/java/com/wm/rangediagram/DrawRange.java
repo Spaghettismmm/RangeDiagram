@@ -408,6 +408,20 @@ public class DrawRange extends AppCompatActivity {
                 rangesize.putExtra("SF", SFnum);
                 startActivityForResult(rangesize, 1);
                 return true;
+            case R.id.help:
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage("Click 'List Pit Volumes' to display the calculated volumes and the used pit dimensions." + "\n" + "Click 'Adjust DL Dimensions' to change the dragline specifications."
+                        + "\n" + "Click 'Adjust Range Settings' to change the range diagram settings." + "\n" + "Click the red box at the bottom of the screen to display volumetrics.");
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //if user pressed "yes", then he is allowed to exit from application
+                        dialog.cancel();
+                    }
+                });
+                AlertDialog alert1 = builder.create();
+                alert1.show();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

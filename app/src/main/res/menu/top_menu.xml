@@ -1,6 +1,5 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:rangediagram="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:rangediagram="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/listdimensions"
         android:title="@string/listdimensions"
@@ -17,4 +16,9 @@
         android:title="@string/adjustrangesettings"
         rangediagram:showAsAction="never"
         />
+
+    <item
+        android:id="@+id/help"
+        android:title="@string/helpmenu"
+        rangediagram:showAsAction="never" />
 </menu>
