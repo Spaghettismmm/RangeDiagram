@@ -1,11 +1,15 @@
 package com.wm.rangediagram;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -29,11 +33,26 @@ public class InputRangeActivity extends AppCompatActivity {
         setSupportActionBar(myToolbar);
 
 
+
         Bundle extras = getIntent().getExtras();
 
         juststarted=extras.getBoolean("juststarted");
 
-        if(!juststarted) {
+        if (juststarted) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Instructions");
+            builder.setMessage("1. Fill in the pit dimensions then press 'Create Pit'." + "\n" + "\n" + "2. After pressing 'Create Pit' example range diagram will be drawn, and the dragline and pit dimensions can be changed."
+                    + "\n" + "\n" + "3. Pit volumes and rehandle will be calculated on the next screen.");
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    //if user pressed "yes", then he is allowed to exit from application
+                    dialog.cancel();
+                }
+            });
+            AlertDialog alert1 = builder.create();
+            alert1.show();
+        } else if (!juststarted) {
             ActionBar br = getSupportActionBar();
 
             br.setDisplayHomeAsUpEnabled(true);
@@ -50,6 +69,9 @@ public class InputRangeActivity extends AppCompatActivity {
 
             EditText BWeditview= (EditText) findViewById(R.id.BenchwidthView);
             BWeditview.setText(Integer.toString((intent.getIntExtra("BW", 0))));
+
+            EditText CHeditview = (EditText) findViewById(R.id.ChopheightView);
+            CHeditview.setText(Integer.toString((intent.getIntExtra("CH", 0))));
 
             EditText BHeditview= (EditText) findViewById(R.id.BenchheightView);
             BHeditview.setText(Integer.toString((intent.getIntExtra("BH", 0))));
@@ -91,13 +113,19 @@ public class InputRangeActivity extends AppCompatActivity {
         final EditText editBench = (EditText) findViewById(R.id.BenchwidthView);
         String Benchval = editBench.getText().toString();
         if (Benchval.matches("")) {
-            Toast.makeText(this, "Enter a Bench Width", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Enter a Chop Bench Width", Toast.LENGTH_SHORT).show();
             return;
         }
         final EditText editBenchh = (EditText) findViewById(R.id.BenchheightView);
         String Benchhval = editBenchh.getText().toString();
         if (Benchhval.matches("")) {
             Toast.makeText(this, "Enter a Bench Height", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        final EditText editChoph = (EditText) findViewById(R.id.ChopheightView);
+        String Chophval = editChoph.getText().toString();
+        if (Chophval.matches("")) {
+            Toast.makeText(this, "Enter a Chop Thickness", Toast.LENGTH_SHORT).show();
             return;
         }
         final EditText editSF = (EditText) findViewById(R.id.SFeditView);
@@ -122,6 +150,7 @@ public class InputRangeActivity extends AppCompatActivity {
         draw.putExtra("PW", PWval);
         draw.putExtra("BW", Benchval);
         draw.putExtra("BH", Benchhval);
+        draw.putExtra("CH", Chophval);
         draw.putExtra("FromRangeInput",true);
         draw.putExtra("juststarted", juststarted);
         draw.putExtra("SF", SFval);
@@ -137,6 +166,39 @@ public class InputRangeActivity extends AppCompatActivity {
 
         }
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.help_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    // Process clicks on Options Menu items
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.helpmenu:
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("Instructions");
+                builder.setMessage("1. Fill in the pit dimensions then press 'Create Pit'." + "\n" + "\n" + "2. After pressing 'Create Pit' example range diagram will be drawn, and the dragline and pit dimensions can be changed."
+                        + "\n" + "\n" + "3. Pit volumes and rehandle will be calculated on the next screen.");
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //if user pressed "yes", then he is allowed to exit from application
+                        dialog.cancel();
+                    }
+                });
+                AlertDialog alert1 = builder.create();
+                alert1.show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 }
+
 
 

@@ -4,8 +4,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/InputScreen"
-    android:layout_height="fill_parent"
     android:layout_width="match_parent"
+    android:layout_height="fill_parent"
     android:orientation="vertical"
     android:weightSum="1">
     <android.support.v7.widget.Toolbar
@@ -13,12 +13,13 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
-        android:elevation="4dp"
-        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         android:clickable="false"
-        android:padding="0dp" />
-<ScrollView
+        android:elevation="4dp"
+        android:padding="0dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+    <ScrollView
     android:id="@+id/container_scrollView"
     android:layout_width="match_parent"
     android:layout_height="0dp"
@@ -26,169 +27,188 @@
     android:elevation="4dp"
     android:fillViewport="false">
     <GridLayout
+        android:id="@+id/GridLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:useDefaultMargins="true"
         android:alignmentMode="alignBounds"
-        android:id="@+id/GridLayout"
         android:columnCount="3"
         android:columnOrderPreserved="false"
         android:orientation="vertical"
+        android:useDefaultMargins="true"
 
         >
         <!-- SAR-->
         <TextView
-            android:text="Spoil Angle of Repose"
-            android:layout_gravity="start"
-            android:layout_row="0"
             android:layout_column="0"
             android:layout_columnSpan="1"
+            android:layout_gravity="start"
+            android:layout_row="0"
+            android:text="Spoil Angle of Repose"
             android:textSize="20sp"/>
 
         <EditText
+            android:id="@+id/SAReditView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/SAReditView"
-            android:hint="@string/SARstring"
-            android:layout_gravity="end"
             android:layout_column="2"
-            android:layout_row="0"
             android:layout_columnSpan="1"
+            android:layout_gravity="end"
+            android:layout_row="0"
+            android:hint="@string/SARstring"
             android:inputType="number"
 
             />
         <!-- HW-->
         <TextView
-            android:text="Highwall Angle"
-            android:layout_gravity="start"
-            android:layout_row="1"
             android:layout_column="0"
             android:layout_columnSpan="1"
+            android:layout_gravity="start"
+            android:layout_row="1"
+            android:text="Highwall Angle"
             android:textSize="20sp"
             />
 
         <EditText
+            android:id="@+id/HWeditView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/HWeditView"
-            android:hint="@string/HWanglestring"
-            android:layout_gravity="end"
-            android:layout_columnSpan="1"
-            android:layout_row="1"
             android:layout_column="2"
+            android:layout_columnSpan="1"
+            android:layout_gravity="end"
+            android:layout_row="1"
+            android:hint="@string/HWanglestring"
             android:inputType="number"
 
             />
         <!-- PW-->
         <TextView
-            android:text="Pit Width"
-            android:layout_gravity="start"
-            android:layout_row="2"
             android:layout_column="0"
             android:layout_columnSpan="1"
+            android:layout_gravity="start"
+            android:layout_row="2"
+            android:text="Pit Width"
             android:textSize="20sp"
             />
 
         <EditText
+            android:id="@+id/PWeditView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/PWeditView"
-            android:hint="@string/PitWidthstring"
-            android:layout_gravity="end"
             android:layout_column="2"
+            android:layout_gravity="end"
             android:layout_row="2"
+            android:hint="@string/PitWidthstring"
             android:inputType="number"
 
 
             />
         <!-- BenchW-->
         <TextView
-            android:text="Bench Width"
-            android:layout_gravity="start"
-            android:layout_row="3"
             android:layout_column="0"
             android:layout_columnSpan="1"
+            android:layout_gravity="start"
+            android:layout_row="4"
+            android:text="Chop Width"
             android:textSize="20sp"/>
 
         <EditText
+            android:id="@+id/BenchwidthView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/BenchwidthView"
-            android:hint="@string/BenchWidthstring"
-            android:layout_gravity="end"
             android:layout_column="2"
-            android:layout_row="3"
+            android:layout_gravity="end"
+            android:layout_row="4"
+            android:hint="@string/BenchWidthstring"
             android:inputType="number"
 
             />
         <!-- BenchHeight-->
         <TextView
-            android:text="Bench Height"
-            android:layout_gravity="start"
-            android:layout_row="4"
             android:layout_column="0"
             android:layout_columnSpan="1"
+            android:layout_gravity="start"
+            android:layout_row="3"
+            android:text="DL Bench Height"
             android:textSize="20sp"/>
 
         <EditText
+            android:id="@+id/BenchheightView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/BenchheightView"
-            android:hint="@string/BenchHeightstring"
-            android:layout_gravity="end"
             android:layout_column="2"
-            android:layout_row="4"
+            android:layout_gravity="end"
+            android:layout_row="3"
+            android:hint="@string/BenchHeightstring"
             android:inputType="number"
 
             />
 
         <TextView
-            android:text="Swell Factor"
-            android:layout_gravity="start"
-            android:layout_row="9"
             android:layout_column="0"
             android:layout_columnSpan="1"
+            android:layout_gravity="start"
+            android:layout_row="5"
+            android:text="Chop Thickness"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/ChopheightView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="2"
+            android:layout_gravity="end"
+            android:layout_row="5"
+            android:hint="@string/ChopHeightstring"
+            android:inputType="number"
+
+            />
+        <TextView
+            android:layout_column="0"
+            android:layout_columnSpan="1"
+            android:layout_gravity="start"
+            android:layout_row="9"
+            android:text="Swell Factor"
             android:textSize="20sp"/>
 
         <EditText
+            android:id="@+id/SFeditView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/SFeditView"
-            android:hint="@string/SFView"
-            android:layout_gravity="end"
             android:layout_column="2"
+            android:layout_gravity="end"
             android:layout_row="9"
+            android:hint="@string/SFView"
             android:inputType="numberDecimal" />
         <TextView
-            android:text=" "
-            android:layout_gravity="start"
-            android:layout_row="11"
             android:layout_column="0"
             android:layout_columnSpan="1"
+            android:layout_gravity="start"
+            android:layout_row="11"
+            android:text=" "
             android:textSize="20sp"/>
 
 
 
             />
         <TextView
-            android:text="Match spoil to pit area (Enables Rehandle)"
-            android:layout_gravity="start"
-            android:layout_row="12"
             android:layout_column="0"
             android:layout_columnSpan="1"
+            android:layout_gravity="start"
+            android:layout_row="12"
+            android:text="Match spoil to pit area (Enables Rehandle)"
             android:textSize="20sp"
             />
 
 
         <CheckBox
+            android:id="@+id/RHcheckBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/RHcheckBox"
-            android:layout_row="12"
             android:layout_column="2"
             android:layout_gravity="end"
-            android:enabled="true"
-            android:checked="true" />
+            android:layout_row="12"
+            android:checked="true"
+            android:enabled="true" />
     </GridLayout>
 
 
@@ -197,9 +217,9 @@
         android:id="@+id/ButtonCreatePit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Create Pit"
-        android:orientation="vertical"
+        android:elevation="4dp"
         android:onClick="sendPitdim"
-        android:elevation="4dp"/>
+        android:orientation="vertical"
+        android:text="Create Pit" />
 </LinearLayout>
 

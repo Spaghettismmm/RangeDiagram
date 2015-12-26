@@ -12,6 +12,8 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 
+import java.text.NumberFormat;
+
 /**
  * Created by WM on 9/30/2015.
  */
@@ -23,16 +25,16 @@ public class Drawrangeview extends View {
     private String drawLabel;
     private Paint drawPaint;
     private int labelColor, drawColor;
-    private int HWx, HWy, PWx, PWy, SARx, SARy, Sx, Sy, DLR, TW, HWxo, HWyo, PWxo, PWyo, SARxo, SARyo, Sxo, Syo, Sxf, Syf, Sxfo, Syfo, TO, SA, RHx, RHy, RHxo, RHyo, RHPeakx;
+    private int HWx, HWy, PWx, PWy, SARx, SARy, Sx, Sy, DLR, TW, HWxo, HWyo, PWxo, PWyo, SARxo, SARyo, Sxo, Syo, Sxf, Syf, Sxfo, Syfo, TO, SA, RHx, RHy, RHxo, RHyo, RHPeakx, CHx, CHy, CHxo, CHyo, CHxoffset, CHxoffseto;
     private int w, h;
     private boolean myCalculationsAreReady=false;
     private boolean yes, SARchange;
     private Paint gridPaint, dlPaint, drawoldpitPaint, dumpPaint, dumpText,rehandlePaint;
     private RectF mRangeBounds = new RectF();
-    private float totallength,totalheight,drawpadl,drawpadh,HWxp,HWyp, PWxp,PWyp,SARxp,SARyp,Sxp,Syp, DLRx1,DLRy1,DLRx2,DLRy2,textSize,textSize1,textSize2, DLRX1p,DLRX2p,DLRY1p,DLRY2p;
-    private float TWX1, TWX2, TWY1, TWY2, TWX1p, TWX2p, TWY1p, TWY2p, HWxpo, HWypo, PWxpo, PWypo, SARxpo, SARypo, Sxpo, Sypo, Areacutxp, Areacutyp, Areaspoilxp, Areaspoilyp, RHxpo, RHypo, RHxp, RHyp, RHPeakxp;
+    private float totallength, totalheight, drawpadl, drawpadh, HWxp, HWyp, PWxp, PWyp, SARxp, SARyp, Sxp, Syp, DLRx1, DLRy1, DLRx2, DLRy2, textSize, textSize1, textSize2, DLRX1p, DLRX2p, DLRY1p, DLRY2p, CHxp, CHyp, CHxpo, CHypo, CHxoffsetp, CHxoffsetpo;
+    private float TWX1, TWX2, TWY1, TWY2, TWX1p, TWX2p, TWY1p, TWY2p, HWxpo, HWypo, PWxpo, PWypo, SARxpo, SARypo, Sxpo, Sypo, Areacutxp, Areacutyp, Areaspoilxp, Areaspoilyp, RHxpo, RHypo, RHxp, RHyp, RHPeakxp, AreaCHxp, AreaCHyp;
     private float Sxfp,Syfp,Sxfpo,Syfpo,HouseX1,HouseX2,HouseY1,HouseY2, HouseX1p,HouseX2p,HouseY1p,HouseY2p, Dumplinex, Dumpliney,Dumplinefy,Dumplinexp, Dumplineyp,Dumplinefyp;
-    private double Pitarea, Spoilarea, bankspoilarea, SF, RHarea;
+    private double Pitarea, Spoilarea, bankspoilarea, SF, RHarea, CHarea;
     private int gridintervaly = 20,gridintervalx = 50, dlheight;
     private int ccount, grdcounty, grdcountx;
     private float[] gridpntsy, gridpntsx;
@@ -69,10 +71,19 @@ public class Drawrangeview extends View {
         }
     }
 
-    public void setSides(int HWxi, int HWyi, int PWxi,int PWyi,int SARxi,int SARyi,int Sxi,int Syi,int Sxfi, int Syfi, Boolean yesi, int DLRi, int TWi,
-                         int HWxio, int HWyio, int PWxio,int PWyio,int SARxio,int SARyio,int Sxio,int Syio, int Sxfio, int Syfio, double Pitareai,
-                         double Spoilareai, double SFi, double bankspoilareai, int TOi, int SAi, boolean SARchangei, int DHi, int RHxi, int RHyi, int RHxio, int RHyio, int RHPeakxi, double RHareai) {
+    public void setSides(int HWxi, int HWyi, int PWxi, int PWyi, int SARxi, int SARyi, int Sxi, int Syi, int Sxfi, int Syfi,
+                         Boolean yesi, int DLRi, int TWi, int HWxio, int HWyio, int PWxio, int PWyio, int SARxio, int SARyio, int Sxio,
+                         int Syio, int Sxfio, int Syfio, double Pitareai, double Spoilareai, double SFi, double bankspoilareai, int TOi, int SAi, boolean SARchangei,
+                         int DHi, int RHxi, int RHyi, int RHxio, int RHyio, int RHPeakxi, double RHareai, int CHxi, int CHyi, int CHxio,
+                         int CHyio, double CHareai, int CHxoffseti, int CHxoffsetio) {
+        //  ^^10 variables per line ^^
         Log.i(LOG_TAG, "setSides called");
+        CHx = CHxi;
+        CHy = CHyi;
+        CHxoffset = CHxoffseti;
+        CHxoffseto = CHxoffsetio;
+        CHxo = CHxio;
+        CHyo = CHyio;
         HWx =HWxi;
         HWy=HWyi;
         PWx=PWxi;
@@ -110,8 +121,9 @@ public class Drawrangeview extends View {
         RHyo=RHyio;
         RHPeakx = RHPeakxi;
         RHarea = RHareai;
+        CHarea = CHareai;
         Log.i(LOG_TAG, "setSides done");
-        if(yes==true){
+        if (yes) {
         myCalculationsAreReady=true;}
 
         invalidate();
@@ -143,9 +155,9 @@ public class Drawrangeview extends View {
         private void findpath(){
             Log.i(LOG_TAG,"findpath called");
             drawpadl=20;
-            totallength=Math.max(SARx,Math.max(PWx,Math.max(Sx,Math.max(SARxo,Math.max(PWxo,Math.max(Sxo,Math.max(HWx,HWxo)))))))+drawpadl*2;
+            totallength = Math.max(SARx, Math.max(PWx, Math.max(Sx, Math.max(SARxo, Math.max(PWxo, Math.max(Sxo, Math.max(HWx, Math.max(CHx, HWxo)))))))) + drawpadl * 2;
             drawpadh=20;
-            totalheight=Math.max(SARy,Math.max(PWy,Math.max(Sy,HWy))) + (dlheight+HWy-Math.max(SARy,Math.max(PWy,Math.max(Sy,HWy))))+drawpadh;
+            totalheight = Math.max(SARy, Math.max(PWy, Math.max(Sy, Math.max(CHy, HWy)))) + (dlheight) + drawpadh;
             //Move Drawing to padding distance
 
 
@@ -161,10 +173,10 @@ public class Drawrangeview extends View {
             TWY2=HWy+10;
 
             //FOR HOUSE OF DL
-            HouseX1=HWxo-TW-TO-70;
-            HouseX2=HWxo-TO+25;
+            HouseX1 = HWxo - TW - TO - 40;
+            HouseX2 = HWxo - TO + 15;
             HouseY1=HWy+10;
-            HouseY2=HWy+60;
+            HouseY2 = HWy + 50;
 
             //DUMP LINE AT ANGLE
             Dumplinex=Sx;
@@ -172,6 +184,9 @@ public class Drawrangeview extends View {
             Dumplinefy=Sy;
 
             //To Scale Drawing
+            CHxp = w * (CHx / totallength) + drawpadl;
+            CHyp = h - h * (CHy / totalheight) - drawpadh;
+            CHxoffsetp = w * (CHxoffset / totallength) + drawpadl;
             HWxp=w*(HWx/totallength)+drawpadl;
             HWyp=h-h*(HWy/totalheight)-drawpadh;
             PWxp=w*(PWx/totallength)+drawpadl;
@@ -184,6 +199,9 @@ public class Drawrangeview extends View {
             RHyp=h-h*(RHy/totalheight)-drawpadh;
             RHPeakxp=w*(RHPeakx/totallength)+drawpadl;
 
+            CHxpo = w * (CHxo / totallength) + drawpadl;
+            CHypo = h - h * (CHyo / totalheight) - drawpadh;
+            CHxoffsetpo = w * (CHxoffseto / totallength) + drawpadl;
             HWxpo=w*((HWxo)/totallength)+drawpadl;
             HWypo=h-h*(HWyo/totalheight)-drawpadh;
             PWxpo=w*(PWxo/totallength)+drawpadl;
@@ -224,10 +242,11 @@ public class Drawrangeview extends View {
             Sxfpo=w*((Sxfo)/totallength)+drawpadl;
             Syfpo=h-h*(Syfo/totalheight)-drawpadh;
 
-
-            Areacutxp=w*(((SARx/2))/totallength)+drawpadl;
+            AreaCHxp = w * (((CHxoffset)) / totallength) + drawpadl;
+            AreaCHyp = h - h * (((HWy + (CHy - HWy) / 2)) / totalheight) - drawpadh;
+            Areacutxp = w * (((PWx)) / totallength) + drawpadl;
             Areacutyp=h-h*((HWy/2)/totalheight)-drawpadh;
-            Areaspoilxp=w*((Sx)/totallength)+drawpadl;
+            Areaspoilxp = w * ((SARx + (Sx - SARx) / 2) / totallength) + drawpadl;
             Areaspoilyp=h-h*((Sy/2)/totalheight)-drawpadh;
 
             //For Grid
@@ -275,9 +294,9 @@ public class Drawrangeview extends View {
             findpath();
 
             Path path = new Path();
-
-            path.moveTo(drawpadl, HWyp); // origin
-
+            path.moveTo(drawpadl, CHyp);
+            path.lineTo(CHxp, CHyp);
+            path.lineTo(CHxoffsetp, HWyp);
             path.lineTo(HWxp, HWyp);
 
             path.lineTo(PWxp, PWyp);
@@ -289,9 +308,9 @@ public class Drawrangeview extends View {
             path.lineTo(Sxfp, Syfp);
 
             Path oldpit = new Path();
-
-            oldpit.moveTo(HWxp, HWyp); // origin
-
+            oldpit.moveTo(CHxp, CHypo);// origin
+            oldpit.lineTo(CHxpo, CHypo);
+            oldpit.lineTo(CHxoffsetpo, HWypo);
             oldpit.lineTo(HWxpo, HWypo);
 
             oldpit.lineTo(PWxpo, PWypo);
@@ -334,7 +353,7 @@ public class Drawrangeview extends View {
                 rehandle.lineTo(RHPeakxp, RHyp);
                 rehandle.lineTo(Sxp, Syp);
                 canvas.drawPath(rehandle, rehandlePaint);
-                canvas.drawText(String.valueOf(Math.round(RHarea)) + " ft^2", RHPeakxp - textSize * 10, RHyp + textSize * 15, drawPaint);
+                canvas.drawText("RH: " + String.valueOf(NumberFormat.getIntegerInstance().format(Math.round(RHarea))) + " ft^2", RHxp + (RHPeakxp - RHxp) / 4, SARyp - (SARyp - Syp) / 4, drawPaint);
             }
             Path dragline = new Path();
 
@@ -354,9 +373,10 @@ public class Drawrangeview extends View {
             canvas.drawRect(TWX1p, TWY1p, TWX2p, TWY2p, dlPaint);
             canvas.drawRect(HouseX1p, HouseY1p, HouseX2p, HouseY2p, dlPaint);
 
-            canvas.drawText(String.valueOf(Math.round(Spoilarea)) + " ft^2", Areaspoilxp - textSize * 3, Areaspoilyp, drawPaint);
-            canvas.drawText(String.valueOf(Math.round(Pitarea * SF)) + " ft^2" + " @ Swell " + String.valueOf((SF)), Areacutxp, Areacutyp + textSize * 5 - textSize * 4, drawPaint);
-            canvas.drawText(String.valueOf(Math.round(Pitarea)) + " ft^2", Areacutxp, Areacutyp - textSize * 4, drawPaint);
+            canvas.drawText("Spoil: " + String.valueOf(NumberFormat.getIntegerInstance().format(Math.round(Spoilarea))) + " ft^2", Areaspoilxp, Areaspoilyp, drawPaint);
+            canvas.drawText("Chop: " + String.valueOf(NumberFormat.getIntegerInstance().format(Math.round(CHarea))) + " ft^2", AreaCHxp, AreaCHyp, drawPaint);
+            //canvas.drawText(String.valueOf(Math.round(Pitarea * SF)) + " ft^2" + " @ Swell " + String.valueOf((SF)), Areacutxp, Areacutyp + textSize * 5 - textSize * 4, drawPaint);
+            canvas.drawText(String.valueOf("Pit: " + NumberFormat.getIntegerInstance().format(Math.round(Pitarea))) + " ft^2", Areacutxp, Areacutyp, drawPaint);
 
             Log.i(LOG_TAG, "Drawn'd");
 

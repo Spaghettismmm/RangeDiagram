@@ -14,6 +14,8 @@ import android.view.View;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
+import java.text.NumberFormat;
+
 /**
  * Created by WM on 9/30/2015.
  */
@@ -21,11 +23,11 @@ public class DrawRange extends AppCompatActivity {
     private static final String LOG_TAG = "LOG Cat";
     Drawrangeview rangeview;
     boolean juststarted;
-    private double HWx, HWy, SARx, SARy, PWx, PWy, Sx, Sy, HWxo, HWyo, PWxo, PWyo, SARxo, SARyo, Sxo, Syo, TOx, TOxo, SAReach, RHx, RHy;
-    private double Syf, Sxf, Syfo, Sxfo, Sxftest, SFnum, SFtran, RHxo, RHyo, RHPeakx;
-    private double Pitarea, Spoilarea, bankspoilarea, RHarea, CombSpoilarea;
-    private int TWtran, DLRtran, DHtran, DDtran, TOtran, SAtran, SARtran, HWtran, PWtran, BWtran, BHtran, DLRnum, TWnum, DHnum, DDnum, SARnum, HWnum, BWnum, BHnum, PWnum, TOnum, SAnum, OGSARnum;
-    private boolean SARchange, yes, RHnum, RHtran;
+    private double HWx, HWy, SARx, SARy, PWx, PWy, Sx, Sy, HWxo, HWyo, PWxo, PWyo, SARxo, SARyo, Sxo, Syo, TOx, TOxo, SAReach, RHx, RHy, CHx, CHy, CHxoffset, CHxoffseto;
+    private double Syf, Sxf, Syfo, Sxfo, Sxftest, SFnum, SFtran, RHxo, RHyo, RHPeakx, CHxo, CHyo;
+    private double Pitarea, Spoilarea, bankspoilarea, RHarea, CombSpoilarea, CHarea;
+    private int TWtran, DLRtran, DHtran, DDtran, TOtran, SAtran, SARtran, HWtran, PWtran, BWtran, BHtran, DLRnum, TWnum, DHnum, DDnum, SARnum, HWnum, BWnum, BHnum, PWnum, TOnum, SAnum, OGSARnum, CHnum, CHtran;
+    private boolean SARchange, yes, RHnum, RHtran, juststartedhelp;
     private boolean FromRangeInput;
     private TableLayout parameterListView;
 
@@ -46,6 +48,7 @@ public class DrawRange extends AppCompatActivity {
         Bundle intent = getIntent().getExtras();
         juststarted = intent.getBoolean("juststarted", true);
         FromRangeInput = intent.getBoolean("FromRangeInput", true);
+
         grabdata();
     }
 
@@ -93,11 +96,17 @@ public class DrawRange extends AppCompatActivity {
             String BHstring = BHtext.getText().toString();
             BHnum = Integer.parseInt(BHstring);
 
+            String CHstring = extra.getString("CH");
+            CHnum = Integer.parseInt(CHstring);
+
+
             String SFstring = extra.getString("SF");
             SFnum = Double.parseDouble(SFstring);
 
             Boolean RHbool = extra.getBoolean("RH");
             RHnum = RHbool;
+
+            juststartedhelp = true;
 
         } else {
 
@@ -109,6 +118,7 @@ public class DrawRange extends AppCompatActivity {
                 BHnum = BHtran;
                 SFnum = SFtran;
                 RHnum = RHtran;
+                CHnum = CHtran;
                 Intent extras = getIntent();
                 extras.putExtra("SAR", SARnum);
                 extras.putExtra("HW", HWnum);
@@ -117,7 +127,8 @@ public class DrawRange extends AppCompatActivity {
                 extras.putExtra("BH", BHnum);
                 extras.putExtra("SF", SFnum);
                 extras.putExtra("RH", RHnum);
-            } else if (!FromRangeInput) {
+                extras.putExtra("CH", CHnum);
+            } else {
                 DLRnum = DLRtran;
                 TWnum = TWtran;
                 DHnum = DHtran;
@@ -131,53 +142,58 @@ public class DrawRange extends AppCompatActivity {
                 extras.putExtra("DH", DHnum);
                 extras.putExtra("DD", DDnum);
                 extras.putExtra("TO", TOnum);
-
+            }
                 Bundle extra = getIntent().getExtras();
 
                 if (extra == null) {
                     finish();
                 } else {
+                    Intent extras = getIntent();
                     extras.putExtra("SAR", OGSARnum);
                     SARnum = OGSARnum;
                     SARchange = false;
+                    if (FromRangeInput) {
+                        TextView HWtext = (TextView) findViewById(R.id.HWdrawview);
+                        HWtext.setText(Integer.toString(extras.getIntExtra("HW", 0)));
+                        String HWstring = HWtext.getText().toString();
+                        HWnum = Integer.parseInt(HWstring);
 
-                    TextView HWtext = (TextView) findViewById(R.id.HWdrawview);
-                    HWtext.setText(getIntent().getStringExtra("HW"));
-                    String HWstring = HWtext.getText().toString();
-                    HWnum = Integer.parseInt(HWstring);
+                        TextView PWtext = (TextView) findViewById(R.id.PWdrawview);
+                        PWtext.setText(Integer.toString(extras.getIntExtra("PW", 0)));
+                        String PWstring = PWtext.getText().toString();
+                        PWnum = Integer.parseInt(PWstring);
 
-                    TextView PWtext = (TextView) findViewById(R.id.PWdrawview);
-                    PWtext.setText(getIntent().getStringExtra("PW"));
-                    String PWstring = PWtext.getText().toString();
-                    PWnum = Integer.parseInt(PWstring);
+                        TextView BWtext = (TextView) findViewById(R.id.BWdrawview);
+                        BWtext.setText(Integer.toString(extras.getIntExtra("BW", 0)));
+                        String BWstring = BWtext.getText().toString();
+                        BWnum = Integer.parseInt(BWstring);
 
-                    TextView BWtext = (TextView) findViewById(R.id.BWdrawview);
-                    BWtext.setText(getIntent().getStringExtra("BW"));
-                    String BWstring = BWtext.getText().toString();
-                    BWnum = Integer.parseInt(BWstring);
+                        TextView BHtext = (TextView) findViewById(R.id.BHdrawview);
+                        BHtext.setText(Integer.toString(extras.getIntExtra("BH", 0)));
+                        String BHstring = BHtext.getText().toString();
+                        BHnum = Integer.parseInt(BHstring);
 
-                    TextView BHtext = (TextView) findViewById(R.id.BHdrawview);
-                    BHtext.setText(getIntent().getStringExtra("BH"));
-                    String BHstring = BHtext.getText().toString();
-                    BHnum = Integer.parseInt(BHstring);
+                        String SFstring = Double.toString(extras.getDoubleExtra("SF", 0));
+                        SFnum = Double.parseDouble(SFstring);
 
-                    String SFstring = extra.getString("SF");
-                    SFnum = Double.parseDouble(SFstring);
+                        String CHstring = Integer.toString(extras.getIntExtra("CH", 0));
+                        CHnum = Integer.parseInt(CHstring);
 
-                    Boolean RHbool = extra.getBoolean("RH");
-                    RHnum = RHbool;
+                        Boolean RHbool = (extras.getBooleanExtra("RH", false));
+                        RHnum = RHbool;
+                    }
                 }
-            }
+
         }
 
         Log.i(LOG_TAG, "Retrieved");
 
 
         if (RHnum) {
-            norehandlecalcs(SARnum, HWnum, BWnum, PWnum, BHnum, DLRnum, TWnum, DHnum, DDnum, SFnum, TOnum, SAnum);
-            bestfitwrehandle(SARnum, HWnum, BWnum, PWnum, BHnum, DLRnum, TWnum, DHnum, DDnum, SFnum, TOnum, SAnum);
+            norehandlecalcs(SARnum, HWnum, BWnum, PWnum, BHnum, DLRnum, TWnum, DHnum, DDnum, SFnum, TOnum, SAnum, CHnum);
+            bestfitwrehandle(SARnum, HWnum, BWnum, PWnum, BHnum, DLRnum, TWnum, DHnum, DDnum, SFnum, TOnum, SAnum, CHnum);
         } else {
-            norehandlecalcs(SARnum, HWnum, BWnum, PWnum, BHnum, DLRnum, TWnum, DHnum, DDnum, SFnum, TOnum, SAnum);
+            norehandlecalcs(SARnum, HWnum, BWnum, PWnum, BHnum, DLRnum, TWnum, DHnum, DDnum, SFnum, TOnum, SAnum, CHnum);
         }
         Log.i(LOG_TAG, "Calculated");
         Log.d(LOG_TAG, "HWx: " + Double.toString(HWx));
@@ -216,6 +232,12 @@ public class DrawRange extends AppCompatActivity {
         int RHxio = (int) RHxo;
         int RHyio = (int) RHyo;
         int RHPeakxi = (int) RHPeakx;
+        int CHxi = (int) CHx;
+        int CHyi = (int) CHy;
+        int CHxio = (int) CHxo;
+        int CHyio = (int) CHyo;
+        int CHxoffseti = (int) CHxoffset;
+        int CHxoffsetio = (int) CHxoffseto;
         double SFi = SFnum;
         int SAi = SAnum;
         yes = true;
@@ -231,22 +253,41 @@ public class DrawRange extends AppCompatActivity {
 
         rangeview = (Drawrangeview) findViewById(R.id.draw_canvas_main_activity);
 
-        rangeview.setSides(HWxi, HWyi, PWxi, PWyi, SARxi, SARyi, Sxi, Syi, Sxfi, Syfi, yes, DLRnum, TWnum,
-                HWxio, HWyio, PWxio, PWyio, SARxio, SARyio, Sxio, Syio, Sxfio, Syfio, Pitarea, Spoilarea, SFi, bankspoilarea, TOfi, SAi, SARchange, DHnum, RHxi, RHyi, RHxio, RHyio, RHPeakxi, RHarea);
-        //setContentView(rangeview);
+        rangeview.setSides(HWxi, HWyi, PWxi, PWyi, SARxi, SARyi, Sxi, Syi, Sxfi, Syfi,
+                yes, DLRnum, TWnum, HWxio, HWyio, PWxio, PWyio, SARxio, SARyio, Sxio,
+                Syio, Sxfio, Syfio, Pitarea, Spoilarea, SFi, bankspoilarea, TOfi, SAi, SARchange,
+                DHnum, RHxi, RHyi, RHxio, RHyio, RHPeakxi, RHarea, CHxi, CHyi, CHxio,
+                CHyio, CHarea, CHxoffseti, CHxoffsetio);
+        //  ^^10 variables per line ^^
 
+        if (juststartedhelp) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Instructions");
+            builder.setMessage("Click 'List Pit Volumes' to display the calculated volumes and the used pit dimensions." + "\n" + "\n" + "Click 'Adjust DL Dimensions' to change the dragline specifications."
+                    + "\n" + "\n" + "Click 'Adjust Range Settings' to change the range diagram settings." + "\n" + "\n" + "Click the red box at the bottom of the screen to display volumetrics and calculated quantities");
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    //if user pressed "yes", then he is allowed to exit from application
+                    dialog.cancel();
+                }
+            });
+            juststartedhelp = false;
+            AlertDialog alert1 = builder.create();
+            alert1.show();
+        }
     }
 
-    public void bestfitwrehandle(double Sar, double HW, double BW, double PW, double BH, double Reach, double Tub, double DH, double DD, double SF, double TO, double SA) {
+    public void bestfitwrehandle(double Sar, double HW, double BW, double PW, double BH, double Reach, double Tub, double DH, double DD, double SF, double TO, double SA, double CH) {
         double HWangle = Math.toRadians(HW);
         double SARangle = Math.toRadians(Sar);
         SAReach = Reach * (Math.sin(Math.toRadians(SA)));
         double Newreach = SAReach - (Tub / 2) - TO - (BH / (Math.tan(HWangle)));
 
-        if (bankspoilarea < Pitarea) {
+        if (bankspoilarea < (Pitarea + CHarea)) {
             RHarea = 0;
             CombSpoilarea = (bankspoilarea + RHarea);
-            for (RHx = SARx; CombSpoilarea <= Pitarea && RHx >= HWx; RHx--) {
+            for (RHx = SARx; CombSpoilarea <= (Pitarea + CHarea) && RHx >= HWx; RHx--) {
 
                 RHy = Sy + ((SARx - RHx) / 2) * (Math.tan(SARangle));
                 RHarea = Sy * (-RHx + SARx) + (RHy - Sy) * ((RHy - Sy) / Math.tan(SARangle));
@@ -255,11 +296,11 @@ public class DrawRange extends AppCompatActivity {
             }
 
 
-        } else if (bankspoilarea >= Pitarea) {
+        } else if (bankspoilarea >= (Pitarea + CHarea)) {
             RHy = SARy;
             int count = 1;
             RHyo = SARyo;
-            for (RHx = 0; bankspoilarea >= Pitarea; RHx++) {
+            for (RHx = 0; bankspoilarea >= (Pitarea + CHarea); RHx++) {
                 double rehandlediff = (RHx);
 
                 SARx++;
@@ -282,17 +323,17 @@ public class DrawRange extends AppCompatActivity {
                 Syfo = Syf;
 
                 if (Sxf > SARxo) {
-                    bankspoilarea = ((.5 * (Sx - SARx) * Sy) + ((.5 * (Sx - SARx) * Sy) - (Syf / Math.tan(SARangle) * Syf))) / SF;
+                    bankspoilarea = ((.5 * (Sx - SARx) * Sy) + ((.5 * (Sx - SARx) * Sy) - (Syf / Math.tan(SARangle) * Syf)) + (CH * BW)) / SF;
                 } else {
-                    bankspoilarea = ((.5 * (Sx - SARx) * Sy) * 2) / SF;
+                    bankspoilarea = ((.5 * (Sx - SARx) * Sy) * 2 + (CH * BW)) / SF;
                 }
             }
             RHxo = SARxo + (Sx - RHx);
 
             if (Sxf > SARxo) {
-                Spoilarea = ((.5 * (Sx - SARx) * Sy) + ((.5 * (Sx - SARx) * Sy) - (Syf / Math.tan(SARangle) * Syf)));
+                Spoilarea = ((.5 * (Sx - SARx) * Sy) + ((.5 * (Sx - SARx) * Sy) - (Syf / Math.tan(SARangle) * Syf)) + (CH * BW));
             } else {
-                Spoilarea = ((.5 * (Sx - SARx) * Sy) * 2);
+                Spoilarea = ((.5 * (Sx - SARx) * Sy) * 2 + (CH * BW));
             }
 
             RHx = 0;
@@ -302,10 +343,16 @@ public class DrawRange extends AppCompatActivity {
 
     }
 
-    public void norehandlecalcs(double Sar, double HW, double BW, double PW, double BH, double Reach, double Tub, double DH, double DD, double SF, double TO, double SA) {
-        HWx = BW;
-        HWy = BH;
+    public void norehandlecalcs(double Sar, double HW, double BW, double PW, double BH, double Reach, double Tub, double DH, double DD, double SF, double TO, double SA, double CH) {
         double HWangle = Math.toRadians(HW);
+        double Tubloc = BW + PW - TO - Tub / 2;
+        SAReach = Reach * (Math.sin(Math.toRadians(SA)));
+        CHy = CH + BH;
+        CHx = BW;
+        CHxoffset = CHx + CH / (Math.tan(HWangle));
+        HWx = CHxoffset + PW;
+        HWy = BH;
+
         double SARangle = Math.toRadians(Sar);
         PWx = HWx + BH / (Math.tan(HWangle));
         PWy = HWy - BH;
@@ -313,8 +360,7 @@ public class DrawRange extends AppCompatActivity {
         SARx = PWx + PW;
         TOx = TO;
 
-        double Tubloc = BW + PW - TO - Tub / 2;
-        SAReach = Reach * (Math.sin(Math.toRadians(SA)));
+
         double Newreach = SAReach - (Tub / 2) - TO - (BH / (Math.tan(HWangle)));
 
         Sx = SARx + (Newreach);
@@ -328,7 +374,10 @@ public class DrawRange extends AppCompatActivity {
         }
 
         //for old pit
-        HWxo = BW + PW;
+        CHxo = CHx + BW;
+        CHyo = CHy;
+        CHxoffseto = CHxo + CH / (Math.tan(HWangle));
+        HWxo = HWx + PW;
         HWyo = BH;
         PWxo = HWxo + BH / (Math.tan(HWangle));
         PWyo = HWyo - BH;
@@ -364,12 +413,13 @@ public class DrawRange extends AppCompatActivity {
         Pitarea = (PW * BH);
 
         if (Sxf > SARxo) {
-            Spoilarea = (((.5 * (Sx - SARx) * Sy) - .5 * (RHy / Math.tan(HWangle) * RHy) - .5 * (RHy / Math.tan(SARangle) * RHy)) + ((.5 * (Sx - SARx) * Sy) - (Syf / Math.tan(SARangle) * Syf)));
+            Spoilarea = (((.5 * (Sx - SARx) * Sy) - .5 * (RHy / Math.tan(HWangle) * RHy) - .5 * (RHy / Math.tan(SARangle) * RHy)) + ((.5 * (Sx - SARx) * Sy) - (Syf / Math.tan(SARangle) * Syf)) + (CH * BW));
         } else {
-            Spoilarea = ((.5 * (Sx - SARx) * Sy) * 2 - .5 * (RHy / Math.tan(HWangle) * RHy) - .5 * (RHy / Math.tan(SARangle) * RHy));
+            Spoilarea = ((.5 * (Sx - SARx) * Sy) * 2 - .5 * (RHy / Math.tan(HWangle) * RHy) - .5 * (RHy / Math.tan(SARangle) * RHy) + (CH * BW));
         }
         RHx = 0;
         bankspoilarea = Spoilarea / SF;
+        CHarea = CHx * CHy;
     }
 
     @Override
@@ -404,14 +454,15 @@ public class DrawRange extends AppCompatActivity {
                 rangesize.putExtra("PW", PWnum);
                 rangesize.putExtra("BW", BWnum);
                 rangesize.putExtra("BH", BHnum);
+                rangesize.putExtra("CH", CHnum);
                 rangesize.putExtra("FromRangeInput", false);
                 rangesize.putExtra("SF", SFnum);
                 startActivityForResult(rangesize, 1);
                 return true;
             case R.id.help:
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setMessage("Click 'List Pit Volumes' to display the calculated volumes and the used pit dimensions." + "\n" + "Click 'Adjust DL Dimensions' to change the dragline specifications."
-                        + "\n" + "Click 'Adjust Range Settings' to change the range diagram settings." + "\n" + "Click the red box at the bottom of the screen to display volumetrics.");
+                builder.setMessage("- Click 'List Pit Volumes' to display the calculated volumes and the used pit dimensions." + "\n" + "\n" + "- Click 'Adjust DL Dimensions' to change the dragline specifications."
+                        + "\n" + "\n" + "- Click 'Adjust Range Settings' to change the range diagram settings." + "\n" + "\n" + "- Click the red box at the bottom of the screen to display volumetrics.");
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -430,8 +481,8 @@ public class DrawRange extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        String SAstring, DLRstring, TWstring, DHstring, DDstring, TOstring, SARstring, SFstring, HWstring, BHstring, BWstring, PWstring;
-        int SAnumretrieve, DLRnumretrieve, TWnumretrieve, DHnumretrieve, DDnumretrieve, TOnumretrieve, SARnumretrieve, HWnumretrieve, PWnumretrieve, BWnumretrieve, BHnumretrieve;
+        String SAstring, DLRstring, TWstring, DHstring, DDstring, TOstring, SARstring, SFstring, HWstring, BHstring, BWstring, PWstring, CHstring;
+        int SAnumretrieve, DLRnumretrieve, TWnumretrieve, DHnumretrieve, DDnumretrieve, TOnumretrieve, SARnumretrieve, HWnumretrieve, PWnumretrieve, BWnumretrieve, BHnumretrieve, CHnumretrieve;
         double SFnumretrieve;
         if (resultCode == RESULT_OK) {
 
@@ -454,6 +505,9 @@ public class DrawRange extends AppCompatActivity {
                 BHstring = extras.getString("BH");
                 BHnumretrieve = Integer.parseInt(BHstring);
 
+                CHstring = extras.getString("CH");
+                CHnumretrieve = Integer.parseInt(CHstring);
+
                 SFstring = extras.getString("SF");
                 SFnumretrieve = Double.parseDouble(SFstring);
 
@@ -466,6 +520,7 @@ public class DrawRange extends AppCompatActivity {
                 BWtran = BWnumretrieve;
                 BHtran = BHnumretrieve;
                 SFtran = SFnumretrieve;
+                CHtran = CHnumretrieve;
                 RHtran = RHboolretrieve;
                 juststarted = false;
 
@@ -511,18 +566,20 @@ public class DrawRange extends AppCompatActivity {
         super.onCreateContextMenu(menu, v, menuInfo);
         menu.setHeaderTitle("Parameters and Volumes");
 
-        menu.add(0, v.getId(), 0, "Bank Pit Area " + Math.round(Pitarea) + " ft^2");
-        menu.add(0, v.getId(), 0, "Swelled Pit Area " + Math.round(Pitarea * SFnum) + " ft^2");
-        menu.add(0, v.getId(), 0, "Loose Spoil Area " + Math.round(Spoilarea) + " ft^2");
-        menu.add(0, v.getId(), 0, "Rehandle Area " + Math.round(RHarea) + " ft^2");
-        menu.add(0, v.getId(), 0, "Total Spoil Area " + Math.round(Spoilarea + RHarea) + " ft^2");
-        menu.add(0, v.getId(), 0, "RH " + Math.round((RHarea / (Spoilarea + RHarea)) * 100) + " %");
-        menu.add(0, v.getId(), 0, "HW Offset " + Math.round(PWx - HWx) + " ft");
+        menu.add(0, v.getId(), 0, "Bank Pit Area " + NumberFormat.getIntegerInstance().format(Math.round(Pitarea)) + " ft^2");
+        menu.add(0, v.getId(), 0, "Bank Chop Area " + NumberFormat.getIntegerInstance().format(Math.round(CHarea)) + " ft^2");
+        menu.add(0, v.getId(), 0, "Swelled Pit & Chop Area " + NumberFormat.getIntegerInstance().format((Pitarea + CHarea) * SFnum) + " ft^2");
+        menu.add(0, v.getId(), 0, "Loose Spoil Area " + NumberFormat.getIntegerInstance().format(Math.round(Spoilarea)) + " ft^2");
+        menu.add(0, v.getId(), 0, "Rehandle Area " + NumberFormat.getIntegerInstance().format(Math.round(RHarea)) + " ft^2");
+        menu.add(0, v.getId(), 0, "Total Spoil Area " + NumberFormat.getIntegerInstance().format(Math.round(Spoilarea + RHarea)) + " ft^2");
+        menu.add(0, v.getId(), 0, "RH " + NumberFormat.getIntegerInstance().format(Math.round((RHarea / (Spoilarea + RHarea)) * 100)) + " %");
+        menu.add(0, v.getId(), 0, "HW Offset " + NumberFormat.getIntegerInstance().format(Math.round(PWx - HWx)) + " ft");
         menu.add(0, v.getId(), 0, "SAR @ " + SARnum + " deg");
         menu.add(0, v.getId(), 0, "HW @ " + HWnum + " deg");
         menu.add(0, v.getId(), 0, "PW " + PWnum + " ft");
-        menu.add(0, v.getId(), 0, "BW " + BWnum + " ft");
         menu.add(0, v.getId(), 0, "BH " + BHnum + " ft");
+        menu.add(0, v.getId(), 0, "BW " + BWnum + " ft");
+        menu.add(0, v.getId(), 0, "CH " + BHnum + " ft");
         menu.add(0, v.getId(), 0, "SF " + SFnum);
 
     }

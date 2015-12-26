@@ -1,11 +1,15 @@
 package com.wm.rangediagram;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -119,6 +123,37 @@ public class InputDLSizeActivity extends AppCompatActivity {
         finish();
 
 
+    }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.help_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    // Process clicks on Options Menu items
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.helpmenu:
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("Instructions");
+                builder.setMessage("1. Fill in the dragline dimensions then press 'Done'." + "\n" + "\n" + "2. Next an example range diagram will be drawn, the dragline and pit dimensions can be changed."
+                        + "\n" + "\n" + "3. Pit volumes and rehandle will be calculated on the next screen and can be read by selection from the menu or by pressing the red parameter bar at the bottom of the screen.");
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //if user pressed "yes", then he is allowed to exit from application
+                        dialog.cancel();
+                    }
+                });
+                AlertDialog alert1 = builder.create();
+                alert1.show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }
