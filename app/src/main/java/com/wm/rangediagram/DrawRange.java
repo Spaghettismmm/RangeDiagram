@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TableLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.NumberFormat;
 
@@ -56,7 +57,7 @@ public class DrawRange extends AppCompatActivity {
         //Convert input to String
         if (juststarted) {
             SARchange = false;
-            juststarted = false;
+
             String SAstring = "90";
             SAnum = Integer.parseInt(SAstring);
             String DLRstring = "300";
@@ -71,11 +72,14 @@ public class DrawRange extends AppCompatActivity {
             TOnum = Integer.parseInt(TOstring);
 
             Bundle extra = getIntent().getExtras();
+
             TextView SARtext = (TextView) findViewById(R.id.Sardrawview);
             SARtext.setText(getIntent().getStringExtra("SAR"));
             String SARstring = SARtext.getText().toString();
             SARnum = Integer.parseInt(SARstring);
+
             OGSARnum = SARnum;
+
             TextView HWtext = (TextView) findViewById(R.id.HWdrawview);
             HWtext.setText(getIntent().getStringExtra("HW"));
             String HWstring = HWtext.getText().toString();
@@ -111,6 +115,7 @@ public class DrawRange extends AppCompatActivity {
         } else {
 
             if (FromRangeInput) {
+                OGSARnum = SARnum;
                 SARnum = SARtran;
                 HWnum = HWtran;
                 PWnum = PWtran;
@@ -149,10 +154,21 @@ public class DrawRange extends AppCompatActivity {
                     finish();
                 } else {
                     Intent extras = getIntent();
-                    extras.putExtra("SAR", OGSARnum);
-                    SARnum = OGSARnum;
-                    SARchange = false;
+                    if (SARchange) {
+                        extras.putExtra("SAR", OGSARnum);
+                        SARnum = OGSARnum;
+                        SARchange = false;
+                    }
+
                     if (FromRangeInput) {
+
+
+                        TextView SARtext = (TextView) findViewById(R.id.Sardrawview);
+                        SARtext.setText(Integer.toString(extras.getIntExtra("SAR", 0)));
+                        String SARstring = SARtext.getText().toString();
+                        SARnum = Integer.parseInt(SARstring);
+
+
                         TextView HWtext = (TextView) findViewById(R.id.HWdrawview);
                         HWtext.setText(Integer.toString(extras.getIntExtra("HW", 0)));
                         String HWstring = HWtext.getText().toString();
@@ -195,6 +211,20 @@ public class DrawRange extends AppCompatActivity {
         } else {
             norehandlecalcs(SARnum, HWnum, BWnum, PWnum, BHnum, DLRnum, TWnum, DHnum, DDnum, SFnum, TOnum, SAnum, CHnum);
         }
+        Intent sartest = getIntent();
+
+        if (SARchange) {
+            sartest.putExtra("SAR", SARnum);
+            SARchange = true;
+        }
+        if (!juststarted) {
+            TextView SARtext = (TextView) findViewById(R.id.Sardrawview);
+            SARtext.setText(Integer.toString(sartest.getIntExtra("SAR", 0)));
+            String SARstring = SARtext.getText().toString();
+            SARnum = Integer.parseInt(SARstring);
+
+        }
+        juststarted = false;
         Log.i(LOG_TAG, "Calculated");
         Log.d(LOG_TAG, "HWx: " + Double.toString(HWx));
         Log.d(LOG_TAG, "HWy: " + Double.toString(HWy));
@@ -242,14 +272,6 @@ public class DrawRange extends AppCompatActivity {
         int SAi = SAnum;
         yes = true;
 
-        if (SARchange) {
-            Intent extras = getIntent();
-            extras.putExtra("SAR", SARnum);
-
-            TextView SARtext = (TextView) findViewById(R.id.Sardrawview);
-            SARtext.setText(String.valueOf(SARnum));
-
-        }
 
         rangeview = (Drawrangeview) findViewById(R.id.draw_canvas_main_activity);
 
@@ -276,6 +298,9 @@ public class DrawRange extends AppCompatActivity {
             AlertDialog alert1 = builder.create();
             alert1.show();
         }
+        if (SARchange) {
+            Toast.makeText(this, "Entered SAR places spoil above DH, SAR changed to: " + SARnum + "°", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void bestfitwrehandle(double Sar, double HW, double BW, double PW, double BH, double Reach, double Tub, double DH, double DD, double SF, double TO, double SA, double CH) {
@@ -287,7 +312,7 @@ public class DrawRange extends AppCompatActivity {
         if (bankspoilarea < (Pitarea + CHarea)) {
             RHarea = 0;
             CombSpoilarea = (bankspoilarea + RHarea);
-            for (RHx = SARx; CombSpoilarea <= (Pitarea + CHarea) && RHx >= HWx; RHx--) {
+            for (RHx = SARx; CombSpoilarea <= (Pitarea + CHarea) && RHx >= PWx; RHx--) {
 
                 RHy = Sy + ((SARx - RHx) / 2) * (Math.tan(SARangle));
                 RHarea = Sy * (-RHx + SARx) + (RHy - Sy) * ((RHy - Sy) / Math.tan(SARangle));
@@ -300,7 +325,7 @@ public class DrawRange extends AppCompatActivity {
             RHy = SARy;
             int count = 1;
             RHyo = SARyo;
-            for (RHx = 0; bankspoilarea >= (Pitarea + CHarea); RHx++) {
+            for (RHx = 0; bankspoilarea >= (Pitarea + CHarea) && (SARx >= PWxo); RHx++) {
                 double rehandlediff = (RHx);
 
                 SARx++;

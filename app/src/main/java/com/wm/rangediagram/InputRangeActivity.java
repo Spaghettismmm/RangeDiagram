@@ -96,13 +96,22 @@ public class InputRangeActivity extends AppCompatActivity {
             Toast.makeText(this, "Enter a SAR", Toast.LENGTH_SHORT).show();
             return;
         }
+        int SARtestval = Integer.parseInt(SARval);
+        if (SARtestval >= 90 || SARtestval <= 0) {
+            Toast.makeText(this, "Enter a SAR between 90 and 0", Toast.LENGTH_SHORT).show();
+            return;
+        }
         final EditText editHW = (EditText) findViewById(R.id.HWeditView);
         String HWval = editHW.getText().toString();
         if (HWval.matches("")) {
             Toast.makeText(this, "Enter a High Wall Angle", Toast.LENGTH_SHORT).show();
             return;
         }
-
+        int HWtestval = Integer.parseInt(HWval);
+        if (HWtestval >= 90 || HWtestval <= 0) {
+            Toast.makeText(this, "Enter a HW between 90 and 0", Toast.LENGTH_SHORT).show();
+            return;
+        }
         final EditText editPW = (EditText) findViewById(R.id.PWeditView);
         String PWval = editPW.getText().toString();
         if (PWval.matches("")) {

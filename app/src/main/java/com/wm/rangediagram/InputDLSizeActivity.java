@@ -77,6 +77,11 @@ public class InputDLSizeActivity extends AppCompatActivity {
             Toast.makeText(this, "Enter a Swing Angle", Toast.LENGTH_SHORT).show();
             return;
         }
+        int SAtestval = Integer.parseInt(SAval);
+        if (SAtestval >= 180 || SAtestval <= 0) {
+            Toast.makeText(this, "Enter a SA between 180 and 0", Toast.LENGTH_SHORT).show();
+            return;
+        }
         final EditText editDLreach = (EditText) findViewById(R.id.DLreachview);
         String DLRval = editDLreach.getText().toString();
         if (DLRval.matches("")) {
